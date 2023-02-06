@@ -1,18 +1,28 @@
 package com.shibuiwilliam.arcoremeasurement
 
+import android.Manifest
 import android.annotation.SuppressLint
-import androidx.appcompat.app.AppCompatActivity
-import android.os.Bundle
 import android.app.Activity
 import android.app.ActivityManager
 import android.app.AlertDialog
 import android.content.Context
+import android.content.pm.PackageManager
+import android.graphics.Bitmap
+import android.graphics.Canvas
 import android.graphics.Color
+import android.graphics.Rect
+import android.os.Bundle
+import android.os.Environment
+import android.provider.MediaStore
 import android.util.Log
 import android.view.Gravity
 import android.view.MotionEvent
+import android.view.PixelCopy
 import android.view.View
 import android.widget.*
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import com.google.ar.core.*
 import com.google.ar.sceneform.AnchorNode
 import com.google.ar.sceneform.FrameTime
@@ -22,10 +32,13 @@ import com.google.ar.sceneform.math.Vector3
 import com.google.ar.sceneform.rendering.*
 import com.google.ar.sceneform.ux.ArFragment
 import com.google.ar.sceneform.ux.TransformableNode
-import com.google.ar.sceneform.rendering.Color as arColor
-import java.util.Objects
+import java.io.File
+import java.io.FileOutputStream
+import java.text.SimpleDateFormat
+import java.util.*
 import kotlin.math.pow
 import kotlin.math.sqrt
+import com.google.ar.sceneform.rendering.Color as arColor
 
 
 class Measurement : AppCompatActivity(), Scene.OnUpdateListener {
@@ -71,6 +84,7 @@ class Measurement : AppCompatActivity(), Scene.OnUpdateListener {
     private lateinit var initCM: String
 
     private lateinit var clearButton: Button
+    private lateinit var saveButton: Button
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -94,6 +108,8 @@ class Measurement : AppCompatActivity(), Scene.OnUpdateListener {
         initArrowView()
         initRenderable()
         clearButton()
+        saveButton()
+
 
         arFragment!!.setOnTapArPlaneListener { hitResult: HitResult, plane: Plane?, motionEvent: MotionEvent? ->
             if (cubeRenderable == null || distanceCardViewRenderable == null) return@setOnTapArPlaneListener
@@ -114,11 +130,14 @@ class Measurement : AppCompatActivity(), Scene.OnUpdateListener {
                 }
                 else -> {
                     clearAllAnchors()
+
                     placeAnchor(hitResult, distanceCardViewRenderable!!)
                 }
             }
         }
     }
+
+
 
     private fun initDistanceTable(){
         for (i in 0 until Constants.maxNumMultiplePoints+1){
@@ -353,6 +372,74 @@ class Measurement : AppCompatActivity(), Scene.OnUpdateListener {
                 clearAllAnchors()
             }
         })
+    }
+   private fun saveButton(){
+       saveButton = findViewById(R.id.saveButton)
+       saveButton.setOnClickListener(object: View.OnClickListener {
+           override fun onClick(p0: View?) {
+
+               val now = SimpleDateFormat("yyyyMMdd_hhmmss").format(Date(System.currentTimeMillis()))
+               Log.d("media path    " , Environment.getDownloadCacheDirectory().toString())
+               val rootPath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
+                   .toString()
+               val fileName = "${now}.png"
+               val savePath = File(rootPath,"/")
+               savePath.mkdirs()
+
+               val file = File(savePath, fileName)
+               if (file.exists()) file.delete()
+               val view2 = findViewById<View>(R.id.total_view)
+               //val view1 = arFragment!!.view
+               Log.d("arFragment~~~~ : " , view2.width.toString())
+               Log.d("arFragment~~~~ : " , view2.height.toString())
+               val bitmap = Screenshot.takeScreenshotOfRootView(view2)
+
+               try {
+                   val out = FileOutputStream(file)
+                   bitmap.compress(Bitmap.CompressFormat.PNG, 100, out)
+                   out.flush()
+                   out.close()
+
+               } catch (e: Exception) {
+                   e.printStackTrace()
+               }
+
+
+              /* val bitmap = Bitmap.createBitmap(
+                   view2.width,
+                   view2.height,
+                   Bitmap.Config.ARGB_8888
+               )
+               var canvas = Canvas(bitmap)
+               view2.draw(canvas)
+               if(bitmap == null) {
+                   return null!!
+               }else {
+
+                   val imageFile = File(mPath)
+                   Log.d("bitmap~~~~" , imageFile.toString())
+                   val outputStream = FileOutputStream(imageFile)
+                   outputStream.use {
+                       bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream)
+                       outputStream.flush()
+                   }
+                   outputStream.close()
+               }*/
+           }
+       }
+       )
+   }
+    companion object Screenshot {
+        private fun takeScreenshot(view: View): Bitmap {
+            view.isDrawingCacheEnabled = true
+            view.buildDrawingCache(true)
+            val b = Bitmap.createBitmap(view.drawingCache)
+            view.isDrawingCacheEnabled = false
+            return b
+        }
+        fun takeScreenshotOfRootView(v: View): Bitmap {
+            return takeScreenshot(v.rootView)
+        }
     }
 
     private fun clearAllAnchors(){

@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorPrimary"
+    android:id="@+id/total_view"
     tools:context=".Measurement">
 
     <LinearLayout
@@ -40,14 +41,22 @@
             android:id="@+id/distance_mode_spinner"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="0.5"
+            android:layout_weight="1"
             android:spinnerMode="dialog" />
+        <Button
+            android:id="@+id/saveButton"
+            android:text="SAVE"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1.5">
+
+        </Button>
 
         <Button
             android:id="@+id/clearButton"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="0.5"
+            android:layout_weight="1"
             android:background="#18489B"
             android:fontFamily="sans-serif-thin"
             android:text="@string/clear"
