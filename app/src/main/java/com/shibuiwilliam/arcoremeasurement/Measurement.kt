@@ -8,21 +8,17 @@ import android.app.AlertDialog
 import android.content.Context
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
-import android.graphics.Canvas
 import android.graphics.Color
-import android.graphics.Rect
+import android.os.Build
 import android.os.Bundle
 import android.os.Environment
-import android.provider.MediaStore
 import android.util.Log
 import android.view.Gravity
 import android.view.MotionEvent
-import android.view.PixelCopy
 import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
 import com.google.ar.core.*
 import com.google.ar.sceneform.AnchorNode
 import com.google.ar.sceneform.FrameTime
@@ -109,6 +105,7 @@ class Measurement : AppCompatActivity(), Scene.OnUpdateListener {
         initRenderable()
         clearButton()
         saveButton()
+        isStoragePermissionGranted()
 
 
         arFragment!!.setOnTapArPlaneListener { hitResult: HitResult, plane: Plane?, motionEvent: MotionEvent? ->
@@ -364,6 +361,27 @@ class Measurement : AppCompatActivity(), Scene.OnUpdateListener {
     private fun setMode(){
         distanceModeTextView!!.text = distanceMode
     }
+    private fun isStoragePermissionGranted(): Boolean {
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                == PackageManager.PERMISSION_GRANTED
+            ) {
+                Log.v(TAG, "Permission is granted")
+                true
+            } else {
+                Log.v(TAG, "Permission is revoked")
+                ActivityCompat.requestPermissions(
+                    this,
+                    arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
+                    1
+                )
+                false
+            }
+        } else { //permission is automatically granted on sdk<23 upon installation
+            Log.v(TAG, "Permission is granted")
+            true
+        }
+    }
 
     private fun clearButton(){
         clearButton = findViewById(R.id.clearButton)
@@ -376,9 +394,11 @@ class Measurement : AppCompatActivity(), Scene.OnUpdateListener {
    private fun saveButton(){
        saveButton = findViewById(R.id.saveButton)
        saveButton.setOnClickListener(object: View.OnClickListener {
+
            override fun onClick(p0: View?) {
 
-               val now = SimpleDateFormat("yyyyMMdd_hhmmss").format(Date(System.currentTimeMillis()))
+               val now =
+                   SimpleDateFormat("yyyyMMdd_hhmmss").format(Date(System.currentTimeMillis()))
                Log.d("media path    " , Environment.getDownloadCacheDirectory().toString())
                val rootPath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
                    .toString()
