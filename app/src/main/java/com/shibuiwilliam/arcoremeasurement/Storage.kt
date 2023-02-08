@@ -22,7 +22,7 @@ class Storage {
             storageDir.mkdirs()
         }
         imageFile = File(storageDir, imageFileName)
-        var mCurrentPhotoPath = imageFile.absolutePath
+        imageFile.absolutePath
         return imageFile
         // 임시 파일 생성
     }

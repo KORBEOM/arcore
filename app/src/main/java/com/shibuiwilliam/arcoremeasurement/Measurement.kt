@@ -1,6 +1,7 @@
 package com.shibuiwilliam.arcoremeasurement
 
 import android.Manifest
+import android.R.attr.bitmap
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.ActivityManager
@@ -8,15 +9,16 @@ import android.app.AlertDialog
 import android.content.Context
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
+import android.graphics.Canvas
 import android.graphics.Color
+import android.graphics.Rect
 import android.os.Build
 import android.os.Bundle
 import android.os.Environment
 import android.util.Log
-import android.view.Gravity
-import android.view.MotionEvent
-import android.view.View
+import android.view.*
 import android.widget.*
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import com.google.ar.core.*
@@ -32,6 +34,7 @@ import java.io.File
 import java.io.FileOutputStream
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.math.log
 import kotlin.math.pow
 import kotlin.math.sqrt
 import com.google.ar.sceneform.rendering.Color as arColor
@@ -391,76 +394,119 @@ class Measurement : AppCompatActivity(), Scene.OnUpdateListener {
             }
         })
     }
-   private fun saveButton(){
-       saveButton = findViewById(R.id.saveButton)
-       saveButton.setOnClickListener(object: View.OnClickListener {
+    private fun saveButton(){
+        saveButton = findViewById(R.id.saveButton)
+        saveButton.setOnClickListener(object: View.OnClickListener {
 
-           override fun onClick(p0: View?) {
+            @RequiresApi(Build.VERSION_CODES.O)
+            override fun onClick(p0: View?) {
 
-               val now =
-                   SimpleDateFormat("yyyyMMdd_hhmmss").format(Date(System.currentTimeMillis()))
-               Log.d("media path    " , Environment.getDownloadCacheDirectory().toString())
-               val rootPath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
-                   .toString()
-               val fileName = "${now}.png"
-               val savePath = File(rootPath,"/")
-               savePath.mkdirs()
+                val now =
+                    SimpleDateFormat("yyyyMMdd_hhmmss").format(Date(System.currentTimeMillis()))
+                Log.d("media path    " , Environment.getDownloadCacheDirectory().toString())
+                val rootPath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM)
+                    .toString()
+                val fileName = "${now}.png"
+                val savePath = File(rootPath,"/")
+                savePath.mkdirs()
+                savePath.absoluteFile
 
-               val file = File(savePath, fileName)
-               if (file.exists()) file.delete()
-               val view2 = findViewById<View>(R.id.total_view)
-               //val view1 = arFragment!!.view
-               Log.d("arFragment~~~~ : " , view2.width.toString())
-               Log.d("arFragment~~~~ : " , view2.height.toString())
-               val bitmap = Screenshot.takeScreenshotOfRootView(view2)
+                Log.d("save mkdir   ", savePath.mkdirs().toString())
+                Log.d("save Path   ",savePath.absolutePath)
+                Log.d("save file   ", savePath.absoluteFile.toString())
 
-               try {
-                   val out = FileOutputStream(file)
-                   bitmap.compress(Bitmap.CompressFormat.PNG, 100, out)
-                   out.flush()
-                   out.close()
+                val file = File(savePath, fileName)
+                if (file.exists()) file.delete()
+                val view1 = findViewById<View>(R.id.total_view)
+                //val view1 = arFragment!!.view
+                Log.d("arFragment~~~~ : " , view1.width.toString())
+                Log.d("arFragment~~~~ : " , view1.height.toString())
+                val bitmap = takeScreenshotOfRootView(view1)
+                val locationOfViewInWindow = IntArray(2)
+                val xCoordinate = locationOfViewInWindow[0]
+                val yCoordinate = locationOfViewInWindow[1]
+                val scope = Rect(
+                    xCoordinate,
+                    yCoordinate,
+                    xCoordinate + view1.width,
+                    yCoordinate + view1.height
+                )
 
-               } catch (e: Exception) {
-                   e.printStackTrace()
-               }
+                savePath.absolutePath
+                arFragment?.let {
+                    PixelCopy.request(it.arSceneView, bitmap, PixelCopy.OnPixelCopyFinishedListener {10
+                        if (it != PixelCopy.SUCCESS) {
+                            /// Fallback when request fails...
+                            return@OnPixelCopyFinishedListener
+                        }
+                        Log.d(TAG, "svBitmap w : ${bitmap.width} , h : ${bitmap.height}")
+
+                        /// Handle retrieved Bitmap...
+                        Rect(
+                            locationOfViewInWindow[0],
+                            locationOfViewInWindow[1],
+                            locationOfViewInWindow[0] + view1.width,
+                            locationOfViewInWindow[1] + view1.height
+                        )
+                    }, view1.handler)
+                }
+
+                try {
+                    val out = FileOutputStream(file)
+                    bitmap.compress(Bitmap.CompressFormat.PNG, 100, out)
+                    out.flush()
+                    out.close()
+
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
 
 
-              /* val bitmap = Bitmap.createBitmap(
-                   view2.width,
-                   view2.height,
-                   Bitmap.Config.ARGB_8888
-               )
-               var canvas = Canvas(bitmap)
-               view2.draw(canvas)
-               if(bitmap == null) {
-                   return null!!
-               }else {
 
-                   val imageFile = File(mPath)
-                   Log.d("bitmap~~~~" , imageFile.toString())
-                   val outputStream = FileOutputStream(imageFile)
-                   outputStream.use {
-                       bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream)
-                       outputStream.flush()
-                   }
-                   outputStream.close()
-               }*/
-           }
-       }
-       )
-   }
+
+
+                /* val bitmap = Bitmap.createBitmap(
+                     view2.width,
+                     view2.height,
+                     Bitmap.Config.ARGB_8888
+                 )
+                 var canvas = Canvas(bitmap)
+                 view2.draw(canvas)
+                 if(bitmap == null) {
+                     return null!!
+                 }else {
+
+                     val imageFile = File(mPath)
+                     Log.d("bitmap~~~~" , imageFile.toString())
+                     val outputStream = FileOutputStream(imageFile)
+                     outputStream.use {
+                         bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream)
+                         outputStream.flush()
+                     }
+                     outputStream.close()
+                 }*/
+            }
+        }
+        )
+
+    }
     companion object Screenshot {
         private fun takeScreenshot(view: View): Bitmap {
+
             view.isDrawingCacheEnabled = true
             view.buildDrawingCache(true)
-            val b = Bitmap.createBitmap(view.drawingCache)
+            val b = Bitmap.createBitmap(view.width, view.height, Bitmap.Config.ARGB_8888)
             view.isDrawingCacheEnabled = false
+            var canvas = Canvas(b)
+            view.draw(canvas)
             return b
+
         }
         fun takeScreenshotOfRootView(v: View): Bitmap {
             return takeScreenshot(v.rootView)
         }
     }
+
 
     private fun clearAllAnchors(){
         placedAnchors.clear()
