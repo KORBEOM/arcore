@@ -32,6 +32,7 @@ import com.google.ar.sceneform.ux.ArFragment
 import com.google.ar.sceneform.ux.TransformableNode
 import java.io.File
 import java.io.FileOutputStream
+import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.math.log
@@ -109,6 +110,7 @@ class Measurement : AppCompatActivity(), Scene.OnUpdateListener {
         clearButton()
         saveButton()
         isStoragePermissionGranted()
+        createImageFile()
 
 
         arFragment!!.setOnTapArPlaneListener { hitResult: HitResult, plane: Plane?, motionEvent: MotionEvent? ->
@@ -175,6 +177,7 @@ class Measurement : AppCompatActivity(), Scene.OnUpdateListener {
             }
         }
     }
+
 
     private fun initArrowView(){
         arrow1UpLinearLayout = LinearLayout(this)
@@ -394,6 +397,23 @@ class Measurement : AppCompatActivity(), Scene.OnUpdateListener {
             }
         })
     }
+    @Throws(IOException::class)
+    fun createImageFile(): File? { // Create an image file name
+        val timeStamp: String = SimpleDateFormat("yyyyMMdd_HHmmss").format(Date())
+        val imageFileName = "JPEG_$timeStamp.jpg"
+        var imageFile: File?
+        val storageDir = File(
+            Environment.getExternalStorageDirectory().toString() + "/DCIM",
+            "Temporary"
+        )
+        if (!storageDir.exists()) {
+            Log.i("mCurrentPhotoPath1", storageDir.toString())
+            storageDir.mkdirs()
+        }
+        imageFile = File(storageDir, imageFileName)
+        imageFile.absolutePath
+        return imageFile
+    }
     private fun saveButton(){
         saveButton = findViewById(R.id.saveButton)
         saveButton.setOnClickListener(object: View.OnClickListener {
@@ -404,8 +424,8 @@ class Measurement : AppCompatActivity(), Scene.OnUpdateListener {
                 val now =
                     SimpleDateFormat("yyyyMMdd_hhmmss").format(Date(System.currentTimeMillis()))
                 Log.d("media path    " , Environment.getDownloadCacheDirectory().toString())
-                val rootPath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM)
-                    .toString()
+                val rootPath = Environment.getExternalStorageDirectory().toString() + "/DCIM/Temporary"
+
                 val fileName = "${now}.png"
                 val savePath = File(rootPath,"/")
                 savePath.mkdirs()
