@@ -13,64 +13,75 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="0dp"
+    android:orientation="horizontal"
+    android:layout_weight="1">
         <fragment
             android:name="com.google.ar.sceneform.ux.ArFragment"
             android:id="@+id/sceneform_fragment"
             android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            >
+
+        </fragment>
+
+
+</LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="9"/>
+            android:orientation="horizontal"
+            android:layout_weight="0.2">
+<LinearLayout
+    android:layout_width="0dp"
+    android:layout_height="match_parent"
+    android:orientation="horizontal"
+    android:gravity="center"
+    android:layout_weight="0.2">
+
+    <Button
+        android:id="@+id/saveButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="SAVE">
+
+    </Button>
+</LinearLayout>
+        <LinearLayout
+            android:gravity="center"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:layout_weight="0.2">
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/folder"
-            >
-
-        </Button>
-
-        <TextView
-            android:id="@+id/distance_view"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="0.5"
-            android:layout_gravity="bottom"
-            android:gravity="center"
-            android:padding="8dp"
-            android:textColor="@android:color/white"
-            android:textSize="14sp" />
-
-        <TableLayout
-            android:id="@+id/multiple_distance_table"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="0.0"/>
-
-        <Spinner
-            android:id="@+id/distance_mode_spinner"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:spinnerMode="dialog" />
-        <Button
-            android:id="@+id/saveButton"
-            android:text="SAVE"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1.5">
-
-        </Button>
-
-        <Button
+            android:text="clear"
             android:id="@+id/clearButton"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:background="#18489B"
-            android:fontFamily="sans-serif-thin"
-            android:text="@string/clear"
-            android:textAlignment="center"
-            android:textColor="@android:color/white"
-            android:textSize="14sp" />
+            android:gravity="center_horizontal"
+            android:layout_gravity="center"
+            android:textColor="@android:color/black">
+        </Button>
+    </LinearLayout>
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:layout_weight="0.2">
 
+                <ImageButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/folder"
+                    android:layout_gravity="center"
+                    android:id="@+id/downlodfolder"
+                    android:contentDescription="TODO">
+
+                </ImageButton>
+            </LinearLayout>
+    </LinearLayout>
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
