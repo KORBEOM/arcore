@@ -10,7 +10,7 @@ class TemporaryFolder : AppCompatActivity() {
 
         setContentView(R.layout.temporary_folder)
 
-        val gridView = findViewById<GridView>(R.id.gridView)
+
 
 
     }

@@ -22,6 +22,7 @@
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
         <activity android:name=".Measurement" />
+        <activity android:name=".TemporaryFolder"/>
         <activity
             android:name=".ArcoreMeasurement"
             android:configChanges="orientation|screenSize"

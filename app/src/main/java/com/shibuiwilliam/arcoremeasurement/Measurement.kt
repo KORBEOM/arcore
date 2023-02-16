@@ -7,6 +7,7 @@ import android.app.Activity
 import android.app.ActivityManager
 import android.app.AlertDialog
 import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.Canvas
@@ -30,6 +31,7 @@ import com.google.ar.sceneform.math.Vector3
 import com.google.ar.sceneform.rendering.*
 import com.google.ar.sceneform.ux.ArFragment
 import com.google.ar.sceneform.ux.TransformableNode
+import kotlinx.android.synthetic.main.activity_measurement.*
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
@@ -100,7 +102,10 @@ class Measurement : AppCompatActivity(), Scene.OnUpdateListener {
         }
         arFragment = supportFragmentManager.findFragmentById(R.id.sceneform_fragment) as ArFragment?
 
-
+        val intent = Intent(this,TemporaryFolder::class.java)
+        downlodfolder.setOnClickListener {
+            startActivity(intent)
+        }
         initCM = resources.getString(R.string.initCM)
 
         initRenderable()
@@ -108,6 +113,7 @@ class Measurement : AppCompatActivity(), Scene.OnUpdateListener {
         saveButton()
         isStoragePermissionGranted()
         createImageFile()
+
 
 
         arFragment!!.setOnTapArPlaneListener { hitResult: HitResult, plane: Plane?, motionEvent: MotionEvent? ->
