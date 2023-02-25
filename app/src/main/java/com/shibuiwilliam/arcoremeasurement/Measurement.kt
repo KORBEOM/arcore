@@ -12,6 +12,7 @@ import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Color
+import android.graphics.Insets.add
 import android.graphics.Rect
 import android.os.Build
 import android.os.Bundle
@@ -32,6 +33,7 @@ import com.google.ar.sceneform.rendering.*
 import com.google.ar.sceneform.ux.ArFragment
 import com.google.ar.sceneform.ux.TransformableNode
 import kotlinx.android.synthetic.main.activity_measurement.*
+import kotlinx.android.synthetic.main.temporary_folder.*
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
@@ -88,6 +90,7 @@ class Measurement : AppCompatActivity(), Scene.OnUpdateListener {
     private lateinit var clearButton: Button
     private lateinit var saveButton: Button
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (!checkIsSupportedDeviceOrFinish(this)) {
@@ -113,6 +116,7 @@ class Measurement : AppCompatActivity(), Scene.OnUpdateListener {
         saveButton()
         isStoragePermissionGranted()
         createImageFile()
+
 
 
 
