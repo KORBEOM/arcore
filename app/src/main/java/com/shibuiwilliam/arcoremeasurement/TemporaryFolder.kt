@@ -21,8 +21,6 @@ class TemporaryFolder : AppCompatActivity() {
 
 
 
-
-
     }
     private fun initRecycler() {
         val datas = mutableListOf<SnapshotData>()
@@ -37,7 +35,7 @@ class TemporaryFolder : AppCompatActivity() {
             }
         }
         snapshotAdapter = SnapshotAdapter(this)
-        rv_profile.adapter = snapshotAdapter
+       itemrecycle.adapter = snapshotAdapter
 
 
 

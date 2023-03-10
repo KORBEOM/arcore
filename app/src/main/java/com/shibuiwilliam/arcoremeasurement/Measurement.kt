@@ -46,6 +46,7 @@ import kotlin.math.log
 import kotlin.math.pow
 import kotlin.math.sqrt
 import kotlin.time.minutes
+import kotlin.time.times
 import com.google.ar.sceneform.rendering.Color as arColor
 
 
@@ -118,7 +119,7 @@ class Measurement : AppCompatActivity(), Scene.OnUpdateListener {
         initRenderable()
         isStoragePermissionGranted()
         createImageFile()
-        val distancetext = distancetext.findViewById<TextView>(R.id.distancetext)
+        val distancetext = distance_text.findViewById<TextView>(R.id.distance_text)
 
 
         arFragment!!.arSceneView.planeRenderer.isEnabled = false
@@ -258,6 +259,7 @@ class Measurement : AppCompatActivity(), Scene.OnUpdateListener {
         arFragment?.let {
             PixelCopy.request(it.arSceneView, bitmap, PixelCopy.OnPixelCopyFinishedListener {10
                 if (it != PixelCopy.SUCCESS) {
+                    view1.animation.repeatCount.times(10)
                     /// Fallback when request fails...
                     return@OnPixelCopyFinishedListener
                 }

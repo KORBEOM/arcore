@@ -8,7 +8,7 @@
 
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rv_profile"
+        android:id="@+id/itemrecycle"
         android:orientation ="vertical"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         android:layout_width="match_parent"

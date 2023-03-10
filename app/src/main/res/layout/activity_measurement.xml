@@ -31,7 +31,7 @@
     </fragment>
 
     <TextView
-        android:id="@+id/distancetext"
+        android:id="@+id/distance_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text=""
@@ -49,7 +49,7 @@
         android:id="@+id/downlodfolder"
         android:layout_width="70dp"
         android:layout_height="70dp"
-        android:background="@drawable/gallery1"
+        android:background="@drawable/garr"
         android:contentDescription="TODO"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
