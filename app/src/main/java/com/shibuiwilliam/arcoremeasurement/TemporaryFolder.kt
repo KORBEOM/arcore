@@ -2,7 +2,9 @@ package com.shibuiwilliam.arcoremeasurement
 
 import android.os.Bundle
 import android.os.Environment
+import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
+import kotlinx.android.synthetic.main.item_recyclerview.*
 import kotlinx.android.synthetic.main.temporary_folder.*
 import java.io.File
 
@@ -12,9 +14,13 @@ class TemporaryFolder : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+
         setContentView(R.layout.temporary_folder)
 
         initRecycler()
+
+
+
 
 
     }
@@ -36,7 +42,21 @@ class TemporaryFolder : AppCompatActivity() {
 
 
         snapshotAdapter.datas = datas
-                snapshotAdapter.notifyDataSetChanged()
+        snapshotAdapter.notifyDataSetChanged()
     }
+
+    private fun filedelete()
+    {
+        val deletebtn = delete_btn.findViewById<Button>(R.id.delete_btn)
+        deletebtn.setOnClickListener {
+            val rootPath = Environment.getExternalStorageDirectory().toString() + "/DCIM/Temporary"
+            val file = File(rootPath)
+            file.delete()
+        }
+
+    }
+
+
+
 
 }
