@@ -13,65 +13,101 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-<LinearLayout
+<androidx.constraintlayout.widget.ConstraintLayout
     android:layout_width="match_parent"
-    android:layout_height="0dp"
-    android:orientation="horizontal"
-    android:layout_weight="1">
-        <fragment
-            android:name="com.google.ar.sceneform.ux.ArFragment"
-            android:id="@+id/sceneform_fragment"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            >
-
-        </fragment>
-
-
-</LinearLayout>
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:orientation="horizontal"
-            android:layout_weight="0.2">
-<LinearLayout
-    android:layout_width="0dp"
     android:layout_height="match_parent"
     android:orientation="horizontal"
-    android:gravity="center"
-    android:layout_weight="0.2"/>
-        <LinearLayout
-            android:gravity="center"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:layout_weight="0.2">
+   >
 
-            <TextView
-                android:id="@+id/distancetext"
-                android:layout_width="match_parent"
-                android:gravity="center"
-                android:layout_height="wrap_content"
-                android:textSize="50dp"
-                android:text="거리" />
-        </LinearLayout>
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:orientation="vertical"
-                android:layout_weight="0.2">
+    <fragment
+        android:id="@+id/sceneform_fragment"
+        android:name="com.google.ar.sceneform.ux.ArFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:layout_editor_absoluteY="193dp">
 
-                <ImageButton
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/folder"
-                    android:layout_gravity="center"
-                    android:id="@+id/downlodfolder"
-                    android:contentDescription="TODO">
+    </fragment>
 
-                </ImageButton>
-            </LinearLayout>
-    </LinearLayout>
+    <TextView
+        android:id="@+id/distancetext"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=""
+        android:textColor="@color/colorPrimary"
+        android:textSize="50dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="@+id/sceneform_fragment"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.918"
+        tools:ignore="MissingConstraints" />
+
+    <ImageButton
+        android:id="@+id/downlodfolder"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:background="@drawable/gallery1"
+        android:contentDescription="TODO"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.951"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.057"
+        tools:ignore="MissingConstraints" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
+<!--        <LinearLayout-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="0dp"-->
+<!--            android:orientation="horizontal"-->
+<!--            android:layout_weight="0.2">-->
+<!--<LinearLayout-->
+<!--    android:layout_width="0dp"-->
+<!--    android:layout_height="match_parent"-->
+<!--    android:orientation="horizontal"-->
+<!--    android:gravity="center"-->
+<!--    android:layout_weight="0.2"/>-->
+<!--        <LinearLayout-->
+<!--            android:gravity="center"-->
+<!--            android:layout_width="0dp"-->
+<!--            android:layout_height="match_parent"-->
+<!--            android:orientation="vertical"-->
+<!--            android:layout_weight="0.2">-->
+
+<!--            <TextView-->
+<!--                android:id="@+id/distancetext"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:gravity="center"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:textSize="50dp"-->
+<!--                android:text="거리" />-->
+<!--        </LinearLayout>-->
+<!--            <LinearLayout-->
+<!--                android:layout_width="0dp"-->
+<!--                android:layout_height="match_parent"-->
+<!--                android:orientation="vertical"-->
+<!--                android:gravity="center"-->
+<!--                android:layout_weight="0.2">-->
+
+<!--                <ImageButton-->
+<!--                    android:layout_width="50dp"-->
+<!--                    android:layout_height="50dp"-->
+<!--                    android:background="@drawable/gallery"-->
+<!--                    android:layout_gravity="center_horizontal"-->
+<!--                    android:id="@+id/downlodfolder"-->
+<!--                    android:contentDescription="TODO">-->
+
+<!--                </ImageButton>-->
+<!--            </LinearLayout>-->
+<!--    </LinearLayout>-->
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
