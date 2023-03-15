@@ -1,8 +1,6 @@
 package com.shibuiwilliam.arcoremeasurement
 
 import android.Manifest
-import kotlin.math.roundToInt
-import android.R.attr.bitmap
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.ActivityManager
@@ -13,19 +11,17 @@ import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Color
-import android.graphics.Insets.add
 import android.graphics.Rect
 import android.os.Build
 import android.os.Bundle
 import android.os.Environment
 import android.util.Log
 import android.view.*
-import android.view.animation.AlphaAnimation
-import android.view.animation.Animation
 import android.widget.*
-import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
+import com.akexorcist.screenshotdetection.ScreenshotDetectionDelegate
 import com.google.ar.core.*
 import com.google.ar.sceneform.AnchorNode
 import com.google.ar.sceneform.FrameTime
@@ -35,23 +31,25 @@ import com.google.ar.sceneform.math.Vector3
 import com.google.ar.sceneform.rendering.*
 import com.google.ar.sceneform.ux.ArFragment
 import com.google.ar.sceneform.ux.TransformableNode
+import com.shibuiwilliam.arcoremeasurement.Measurement.Screenshot.takeScreenshotOfRootView
 import kotlinx.android.synthetic.main.activity_measurement.*
+import kotlinx.android.synthetic.main.custom_toast.*
 import kotlinx.android.synthetic.main.temporary_folder.*
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.*
-import kotlin.math.log
 import kotlin.math.pow
+import kotlin.math.roundToInt
 import kotlin.math.sqrt
-import kotlin.time.minutes
 import com.google.ar.sceneform.rendering.Color as arColor
 
 
-class Measurement : AppCompatActivity(), Scene.OnUpdateListener {
+class Measurement : AppCompatActivity(), Scene.OnUpdateListener, ScreenshotDetectionDelegate.ScreenshotDetectionListener {
     private val MIN_OPENGL_VERSION = 3.0
     private val TAG: String = Measurement::class.java.getSimpleName()
+  //  private val screenshotDetectionDelegate = ScreenshotDetectionDelegate(this, this)
 
     private var arFragment: ArFragment? = null
 
@@ -91,7 +89,9 @@ class Measurement : AppCompatActivity(), Scene.OnUpdateListener {
         {Array<TextView?>(Constants.maxNumMultiplePoints){null} })
     private lateinit var initCM: String
 
-
+    companion object {
+        private const val REQUEST_CODE_READ_EXTERNAL_STORAGE_PERMISSION = 3009
+    }
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -121,6 +121,7 @@ class Measurement : AppCompatActivity(), Scene.OnUpdateListener {
         val distancetext = distancetext.findViewById<TextView>(R.id.distancetext)
 
 
+
         arFragment!!.arSceneView.planeRenderer.isEnabled = false
 
         arFragment!!.setOnTapArPlaneListener { hitResult: HitResult, plane: Plane?, motionEvent: MotionEvent? ->
@@ -130,7 +131,10 @@ class Measurement : AppCompatActivity(), Scene.OnUpdateListener {
             Log.d("aaaaaaaaaaaaaaaaaaaaaaaa" , hitResult.distance.toString())
 
             distancetext.text = (hitResult.distance * 100).roundToInt().toString()+"cm"
+
             saveButton()
+
+
 
         }
 
@@ -175,8 +179,6 @@ class Measurement : AppCompatActivity(), Scene.OnUpdateListener {
             }
 
     }
-
-
 
     private fun setMode(){
         distanceModeTextView!!.text = distanceMode
@@ -243,7 +245,9 @@ class Measurement : AppCompatActivity(), Scene.OnUpdateListener {
         Log.d("arFragment~~~~ : " , view1.width.toString())
         Log.d("arFragment~~~~ : " , view1.height.toString())
         clearAllAnchors()
+        //onScreenCaptured()
         val bitmap = takeScreenshotOfRootView(view1)
+
         val locationOfViewInWindow = IntArray(2)
         val xCoordinate = locationOfViewInWindow[0]
         val yCoordinate = locationOfViewInWindow[1]
@@ -278,6 +282,39 @@ class Measurement : AppCompatActivity(), Scene.OnUpdateListener {
             bitmap.compress(Bitmap.CompressFormat.PNG, 100, out)
             out.flush()
             out.close()
+            val inflater = layoutInflater
+// Custom 레이아웃 Imflatation '인플레이션', 레이아웃 메모리에 객체화
+// Custom 레이아웃 Imflatation '인플레이션', 레이아웃 메모리에 객체화
+            val layout: View = inflater.inflate(
+                R.layout.custom_toast,
+                findViewById<View>(R.id.custom_toast_layout) as ViewGroup
+            )
+// 보여줄 메시지 설정 위해 TextView 객체 연결, 인플레이션해서 생성된 View를 통해 findViewById 실행
+// 보여줄 메시지 설정 위해 TextView 객체 연결, 인플레이션해서 생성된 View를 통해 findViewById 실행
+            val message: TextView = layout.findViewById(R.id.custom_toast_message)
+            message.text = "커스텀 레이아웃"
+// 보여줄 이미지 설정 위해 ImageView 연결
+// 보여줄 이미지 설정 위해 ImageView 연결
+            val image: ImageView = layout.findViewById(R.id.custom_toast_image)
+            image.setBackgroundResource(R.drawable.gallery)
+
+// Toast 객체 생성
+
+// Toast 객체 생성
+            val toast = Toast(this)
+// 위치설정, Gravity - 기준지정(상단,왼쪽 기준 0,0) / xOffset, yOffset - Gravity기준으로 위치 설정
+// 위치설정, Gravity - 기준지정(상단,왼쪽 기준 0,0) / xOffset, yOffset - Gravity기준으로 위치 설정
+            toast.setGravity(Gravity.TOP or Gravity.LEFT,3,3)
+// Toast 보여줄 시간 'Toast.LENGTH_SHORT 짧게'
+// Toast 보여줄 시간 'Toast.LENGTH_SHORT 짧게'
+            toast.duration = Toast.LENGTH_SHORT
+// CustomLayout 객체 연결
+// CustomLayout 객체 연결
+            toast.view = layout
+// Toast 보여주기
+// Toast 보여주기
+            toast.show()
+
 
         } catch (e: Exception) {
             e.printStackTrace()
@@ -309,7 +346,7 @@ class Measurement : AppCompatActivity(), Scene.OnUpdateListener {
          }*/
 
     }
-    companion object Screenshot {
+     object Screenshot {
         private fun takeScreenshot(view: View): Bitmap {
 
             view.isDrawingCacheEnabled = true
@@ -464,5 +501,39 @@ class Measurement : AppCompatActivity(), Scene.OnUpdateListener {
             return false
         }
         return true
+    }
+
+    override fun onScreenCaptured(path: String) {
+        Toast.makeText(this, path, Toast.LENGTH_SHORT).show();
+        // Do something when screen was captured
+    }
+
+    override fun onScreenCapturedWithDeniedPermission() {
+        Toast.makeText(this, "Please grant read external storage permission for screenshot detection", Toast.LENGTH_SHORT).show()
+        // Do something when screen was captured but read external storage permission has denied
+    }
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        when (requestCode) {
+            REQUEST_CODE_READ_EXTERNAL_STORAGE_PERMISSION -> {
+                if (grantResults.getOrNull(0) == PackageManager.PERMISSION_DENIED) {
+                    showReadExternalStoragePermissionDeniedMessage()
+                }
+            }
+            else -> super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        }
+    }
+
+    private fun checkReadExternalStoragePermission() {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            requestReadExternalStoragePermission()
+        }
+    }
+
+    private fun requestReadExternalStoragePermission() {
+        ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE), REQUEST_CODE_READ_EXTERNAL_STORAGE_PERMISSION)
+    }
+
+    private fun showReadExternalStoragePermissionDeniedMessage() {
+        Toast.makeText(this, "Read external storage permission has denied", Toast.LENGTH_SHORT).show()
     }
 }
