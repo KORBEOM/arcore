@@ -35,6 +35,7 @@ import com.shibuiwilliam.arcoremeasurement.Measurement.Screenshot.takeScreenshot
 import kotlinx.android.synthetic.main.activity_measurement.*
 import kotlinx.android.synthetic.main.custom_toast.*
 import kotlinx.android.synthetic.main.temporary_folder.*
+import org.intellij.lang.annotations.JdkConstants.HorizontalAlignment
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
@@ -260,7 +261,7 @@ class Measurement : AppCompatActivity(), Scene.OnUpdateListener, ScreenshotDetec
 
         savePath.absolutePath
         arFragment?.let {
-            PixelCopy.request(it.arSceneView, bitmap, PixelCopy.OnPixelCopyFinishedListener {10
+            PixelCopy.request(it.arSceneView, bitmap, PixelCopy.OnPixelCopyFinishedListener {100
                 if (it != PixelCopy.SUCCESS) {
                     /// Fallback when request fails...
                     return@OnPixelCopyFinishedListener
@@ -287,16 +288,21 @@ class Measurement : AppCompatActivity(), Scene.OnUpdateListener, ScreenshotDetec
 // Custom 레이아웃 Imflatation '인플레이션', 레이아웃 메모리에 객체화
             val layout: View = inflater.inflate(
                 R.layout.custom_toast,
-                findViewById<View>(R.id.custom_toast_layout) as ViewGroup
+                findViewById<View>(R.id.custom_toast_layout) as ViewGroup?
             )
 // 보여줄 메시지 설정 위해 TextView 객체 연결, 인플레이션해서 생성된 View를 통해 findViewById 실행
 // 보여줄 메시지 설정 위해 TextView 객체 연결, 인플레이션해서 생성된 View를 통해 findViewById 실행
             val message: TextView = layout.findViewById(R.id.custom_toast_message)
-            message.text = "커스텀 레이아웃"
+            message.text = "Save Image"
 // 보여줄 이미지 설정 위해 ImageView 연결
 // 보여줄 이미지 설정 위해 ImageView 연결
-            val image: ImageView = layout.findViewById(R.id.custom_toast_image)
-            image.setBackgroundResource(R.drawable.gallery)
+//            val image: ImageView = layout.findViewById(R.id.custom_toast_image)
+//            image.setBackgroundResource(R.drawable.gallery)
+
+            //val a: Bitmap? = Bitmap.createBitmap(view1.width, view1.height, Bitmap.Config.ARGB_8888)
+            val image = layout.findViewById<ImageView>(R.id.custom_toast_image)
+            image.setImageBitmap(bitmap)
+
 
 // Toast 객체 생성
 
@@ -304,7 +310,7 @@ class Measurement : AppCompatActivity(), Scene.OnUpdateListener, ScreenshotDetec
             val toast = Toast(this)
 // 위치설정, Gravity - 기준지정(상단,왼쪽 기준 0,0) / xOffset, yOffset - Gravity기준으로 위치 설정
 // 위치설정, Gravity - 기준지정(상단,왼쪽 기준 0,0) / xOffset, yOffset - Gravity기준으로 위치 설정
-            toast.setGravity(Gravity.TOP or Gravity.LEFT,3,3)
+            toast.setGravity(Gravity.CENTER or  Gravity.CENTER_HORIZONTAL,0,0)
 // Toast 보여줄 시간 'Toast.LENGTH_SHORT 짧게'
 // Toast 보여줄 시간 'Toast.LENGTH_SHORT 짧게'
             toast.duration = Toast.LENGTH_SHORT
@@ -314,7 +320,7 @@ class Measurement : AppCompatActivity(), Scene.OnUpdateListener, ScreenshotDetec
 // Toast 보여주기
 // Toast 보여주기
             toast.show()
-
+            Log.d("ddddddddddd",toast.toString())
 
         } catch (e: Exception) {
             e.printStackTrace()
