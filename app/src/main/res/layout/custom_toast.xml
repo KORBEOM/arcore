@@ -3,46 +3,38 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="200dp"
+    android:layout_height="match_parent"
     android:id="@+id/custom_toast_layout"
-   android:paddingRight="100dp"
-    android:paddingLeft="100dp"
+    android:paddingTop="50dp"
+    android:paddingBottom="50dp"
+   android:paddingRight="50dp"
+    android:paddingLeft="50dp"
     >
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="288dp"
-        android:layout_height="226dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:background="@drawable/custom_toast_background"
-        android:padding="30dp"
+        android:padding="5dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.495"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
         <ImageView
             android:id="@+id/custom_toast_image"
-            android:layout_width="190dp"
-            android:layout_height="113dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="0dp"
             android:scaleType="fitXY"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.502"
+            app:layout_constraintHorizontal_bias="0.508"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.0" />
+            app:layout_constraintVertical_bias="0.307" />
 
-        <TextView
-            android:id="@+id/custom_toast_message"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="text"
-            android:textColor="@color/colorPrimary"
-            android:textSize="15sp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.919" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

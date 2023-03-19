@@ -17,12 +17,6 @@ class TemporaryFolder : AppCompatActivity() {
 
         setContentView(R.layout.temporary_folder)
 
-        initRecycler()
-
-
-
-    }
-    private fun initRecycler() {
         val datas = mutableListOf<SnapshotData>()
         val rootPath = Environment.getExternalStorageDirectory().toString() + "/DCIM/Temporary"
         val file = File(rootPath)
@@ -35,13 +29,17 @@ class TemporaryFolder : AppCompatActivity() {
             }
         }
         snapshotAdapter = SnapshotAdapter(this)
-       itemrecycle.adapter = snapshotAdapter
+        itemrecycle.adapter = snapshotAdapter
 
 
 
         snapshotAdapter.datas = datas
         snapshotAdapter.notifyDataSetChanged()
+
+
+
     }
+
 
     private fun filedelete()
     {
@@ -53,8 +51,6 @@ class TemporaryFolder : AppCompatActivity() {
         }
 
     }
-
-
 
 
 }

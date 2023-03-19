@@ -290,10 +290,7 @@ class Measurement : AppCompatActivity(), Scene.OnUpdateListener, ScreenshotDetec
                 R.layout.custom_toast,
                 findViewById<View>(R.id.custom_toast_layout) as ViewGroup?
             )
-// 보여줄 메시지 설정 위해 TextView 객체 연결, 인플레이션해서 생성된 View를 통해 findViewById 실행
-// 보여줄 메시지 설정 위해 TextView 객체 연결, 인플레이션해서 생성된 View를 통해 findViewById 실행
-            val message: TextView = layout.findViewById(R.id.custom_toast_message)
-            message.text = "Save Image"
+
 // 보여줄 이미지 설정 위해 ImageView 연결
 // 보여줄 이미지 설정 위해 ImageView 연결
 //            val image: ImageView = layout.findViewById(R.id.custom_toast_image)
@@ -310,7 +307,7 @@ class Measurement : AppCompatActivity(), Scene.OnUpdateListener, ScreenshotDetec
             val toast = Toast(this)
 // 위치설정, Gravity - 기준지정(상단,왼쪽 기준 0,0) / xOffset, yOffset - Gravity기준으로 위치 설정
 // 위치설정, Gravity - 기준지정(상단,왼쪽 기준 0,0) / xOffset, yOffset - Gravity기준으로 위치 설정
-            toast.setGravity(Gravity.CENTER or  Gravity.CENTER_HORIZONTAL,0,0)
+            toast.setGravity(Gravity.CENTER or  Gravity.FILL,0,0)
 // Toast 보여줄 시간 'Toast.LENGTH_SHORT 짧게'
 // Toast 보여줄 시간 'Toast.LENGTH_SHORT 짧게'
             toast.duration = Toast.LENGTH_SHORT
