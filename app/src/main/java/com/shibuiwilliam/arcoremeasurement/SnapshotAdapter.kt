@@ -13,6 +13,8 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import kotlinx.android.synthetic.main.activity_measurement.*
+import kotlinx.android.synthetic.main.item_recyclerview.view.*
 import okhttp3.MediaType
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
@@ -45,6 +47,7 @@ class SnapshotAdapter(private val context: Context) : RecyclerView.Adapter<Snaps
         private val imgProfile: ImageView = view.findViewById(R.id.img_rv_photo)
         private val delete_btn: Button = view.findViewById(R.id.delete_btn)
         private val save_btn : Button = view.findViewById(R.id.save_btn)
+        private val server_text : TextView = view.findViewById(R.id.server_text)
 
         fun bind(item: SnapshotData , itemid : Int) {
             txtName.text = item.name
@@ -52,57 +55,95 @@ class SnapshotAdapter(private val context: Context) : RecyclerView.Adapter<Snaps
             val rootPath = Environment.getExternalStorageDirectory().toString() + "/DCIM/Temporary/" + item.name
             val file = File(rootPath)
 
-            delete_btn.setOnClickListener {
-
-                Log.v(TAG, rootPath)
-
-                val result = file.delete()
-                Log.v(TAG, itemid.toString())
-                Log.v(TAG , datas.toString())
-
-                if (result
-                ) {
-                    Log.v(TAG, "123123213123123delete success")
-                    datas.remove(item)
-                    notifyDataSetChanged()
-                    true
-                } else {
-                    Log.v(TAG, "123213123213123213 reject")
-
-                    false
-                }
-            }
+//            delete_btn.setOnClickListener {
+//
+//                Log.v(TAG, rootPath)
+//
+//                val result = file.delete()
+//                Log.v(TAG, itemid.toString())
+//                Log.v(TAG , datas.toString())
+//
+//                if (result
+//                ) {
+//                    Log.v(TAG, "123123213123123delete success")
+//                    notifyDataSetChanged()
+//
+//                    true
+//                } else {
+//                    Log.v(TAG, "123213123213123213 reject")
+//
+//                    false
+//                }
+//            }
             save_btn.setOnClickListener {
-              getProFileImage(rootPath)
+                getProFileFailImage(rootPath,item,server_text)
 
             }
         }
     }
 
-    fun getProFileImage(imagePath: String){
+    fun getProFileImage(imagePath: String,item: SnapshotData , result : TextView){
 
         val file = File(imagePath)
         val requestFile = RequestBody.create(MediaType.parse("image/*"), file)
         val body = MultipartBody.Part.createFormData("img", file.name, requestFile)
 
-        sendImage(body)
+        sendImage(body,item,file,result)
 
     }
-    fun sendImage(image: MultipartBody.Part) {
+    fun getProFileFailImage(imagePath: String,item: SnapshotData , result : TextView){
+
+
+
+
+
+
+
+    }
+    fun sendImage(image: MultipartBody.Part,item: SnapshotData , file :File, result: TextView) {
         val service = RetrofitSetting.createBaseService(RetrofitPath::class.java) //레트로핏 통신 설정
         val call = service.imageSend(image)!! //통신 API 패스 설정
-
 
         call.enqueue(object : Callback<String> {
             override fun onResponse(call: Call<String>, response: Response<String>) {
                 if (response?.isSuccessful) {
-                    Log.d("로그 ",""+response?.body().toString())
+                    Log.d("로그23132132123213 ",""+response?.body().toString())
                     Toast.makeText(context,"통신성공", Toast.LENGTH_SHORT).show()
-
+                    datas.remove(item)
+                    file.delete()
+                    snapshotAdapter.notifyDataSetChanged()
                 }
                 else {
                     Log.d("로그 ",""+ response )
                     Toast.makeText(context,"통신실패", Toast.LENGTH_SHORT).show()
+
+
+
+                }
+            }
+
+            override fun onFailure(call: Call<String>, t: Throwable) {
+                Log.d("로그 failed",t.message.toString())
+            }
+        })
+    }
+    fun sendFailImage(image: MultipartBody.Part,item: SnapshotData , file :File, result: TextView) {
+        val service = RetrofitSetting.createBaseService(RetrofitFailPath::class.java) //레트로핏 통신 설정
+        val call = service.imageSend(image)!! //통신 API 패스 설정
+
+        call.enqueue(object : Callback<String> {
+            override fun onResponse(call: Call<String>, response: Response<String>) {
+                if (response?.isSuccessful) {
+                    Log.d("로그23132132123213 ",""+response?.body().toString())
+                    Toast.makeText(context,"통신성공", Toast.LENGTH_SHORT).show()
+                    datas.remove(item)
+                    file.delete()
+                    snapshotAdapter.notifyDataSetChanged()
+                }
+                else {
+                    Log.d("로그 ",""+ response )
+                    Toast.makeText(context,"통신실패", Toast.LENGTH_SHORT).show()
+                    result.text = "실패"
                 }
             }
 

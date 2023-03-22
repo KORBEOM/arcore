@@ -13,3 +13,12 @@ interface RetrofitPath {
         @Part img : MultipartBody.Part
     ): Call<String>
 }
+
+interface RetrofitFailPath {
+    @Multipart
+    @POST("/fail")
+    fun imageSend(
+        @Part img : MultipartBody.Part
+    ): Call<String>
+}
+
