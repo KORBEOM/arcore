@@ -110,9 +110,7 @@ class Measurement : AppCompatActivity(), Scene.OnUpdateListener, ScreenshotDetec
         arFragment = supportFragmentManager.findFragmentById(R.id.sceneform_fragment) as ArFragment?
 
         val intent = Intent(this,TemporaryFolder::class.java)
-        downlodfolder.setOnClickListener {
-            startActivity(intent)
-        }
+
         initCM = resources.getString(R.string.initCM)
 
 
@@ -120,6 +118,9 @@ class Measurement : AppCompatActivity(), Scene.OnUpdateListener, ScreenshotDetec
         isStoragePermissionGranted()
         createImageFile()
         val distancetext = distancetext.findViewById<TextView>(R.id.distancetext)
+        downlodfolder.setOnClickListener {
+            startActivity(intent)
+        }
 
 
 

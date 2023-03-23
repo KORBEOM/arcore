@@ -25,7 +25,7 @@ class TemporaryFolder : AppCompatActivity() {
 
         datas.apply {
             for( i in list1  ){
-                add(SnapshotData(img = i , name = i.name, server_text = i.name ))
+                add(SnapshotData(img = i , name = i.name, server_text = String() ))
             }
         }
         snapshotAdapter = SnapshotAdapter(this)
@@ -34,7 +34,7 @@ class TemporaryFolder : AppCompatActivity() {
 
 
         snapshotAdapter.datas = datas
-
+snapshotAdapter.notifyDataSetChanged()
 
 
 

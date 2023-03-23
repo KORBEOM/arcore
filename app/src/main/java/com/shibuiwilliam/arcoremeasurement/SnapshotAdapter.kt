@@ -2,7 +2,9 @@ package com.shibuiwilliam.arcoremeasurement
 
 import android.content.ContentValues.TAG
 import android.content.Context
+import android.graphics.Color
 import android.os.Environment
+import android.text.TextWatcher
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -51,32 +53,35 @@ class SnapshotAdapter(private val context: Context) : RecyclerView.Adapter<Snaps
 
         fun bind(item: SnapshotData , itemid : Int) {
             txtName.text = item.name
+            server_text.text = item.server_text
+            server_text.setTextColor(item.test_color)
             Glide.with(itemView).load(item.img).into(imgProfile)
             val rootPath = Environment.getExternalStorageDirectory().toString() + "/DCIM/Temporary/" + item.name
             val file = File(rootPath)
 
-//            delete_btn.setOnClickListener {
-//
-//                Log.v(TAG, rootPath)
-//
-//                val result = file.delete()
-//                Log.v(TAG, itemid.toString())
-//                Log.v(TAG , datas.toString())
-//
-//                if (result
-//                ) {
-//                    Log.v(TAG, "123123213123123delete success")
-//                    notifyDataSetChanged()
-//
-//                    true
-//                } else {
-//                    Log.v(TAG, "123213123213123213 reject")
-//
-//                    false
-//                }
-//            }
+            delete_btn.setOnClickListener {
+
+                Log.v(TAG, rootPath)
+
+                val result = file.delete()
+                Log.v(TAG, itemid.toString())
+                Log.v(TAG , datas.toString())
+
+                if (result
+                ) {
+                    Log.v(TAG, "123123213123123delete success")
+                    datas.remove(item)
+                    notifyDataSetChanged()
+                    true
+                } else {
+                    Log.v(TAG, "123213123213123213 reject")
+
+                    false
+                }
+            }
             save_btn.setOnClickListener {
                 getProFileFailImage(rootPath,item,server_text)
+                notifyDataSetChanged()
 
             }
         }
@@ -92,10 +97,11 @@ class SnapshotAdapter(private val context: Context) : RecyclerView.Adapter<Snaps
 
     }
     fun getProFileFailImage(imagePath: String,item: SnapshotData , result : TextView){
+        val file = File(imagePath)
+        val requestFile = RequestBody.create(MediaType.parse("image/*"), file)
+        val body = MultipartBody.Part.createFormData("img", file.name, requestFile)
 
-
-
-
+        sendFailImage(body,item,file,result)
 
 
 
@@ -134,16 +140,21 @@ class SnapshotAdapter(private val context: Context) : RecyclerView.Adapter<Snaps
         call.enqueue(object : Callback<String> {
             override fun onResponse(call: Call<String>, response: Response<String>) {
                 if (response?.isSuccessful) {
-                    Log.d("로그23132132123213 ",""+response?.body().toString())
-                    Toast.makeText(context,"통신성공", Toast.LENGTH_SHORT).show()
-                    datas.remove(item)
-                    file.delete()
-                    snapshotAdapter.notifyDataSetChanged()
+//                    Log.d("로그23132132123213 ",""+response?.body().toString())
+//                    Toast.makeText(context,"통신성공", Toast.LENGTH_SHORT).show()
+//                    datas.remove(item)
+//                    file.delete()
+//                    snapshotAdapter.notifyDataSetChanged()
                 }
                 else {
                     Log.d("로그 ",""+ response )
                     Toast.makeText(context,"통신실패", Toast.LENGTH_SHORT).show()
-                    result.text = "실패"
+                    item.server_text="실패"
+                    item.test_color = Color.RED
+                    //result.setText(item.server_text)
+                    //result.setTextSize(30.0f)
+                    snapshotAdapter.notifyDataSetChanged()
+
                 }
             }
 
