@@ -22,11 +22,19 @@ class TemporaryFolder : AppCompatActivity() {
         val file = File(rootPath)
         var list1 =  mutableListOf<File>()
         list1 = file.listFiles().toMutableList()
+        val allbtn = all_btn.findViewById<Button>(R.id.all_btn)
 
         datas.apply {
             for( i in list1  ){
                 add(SnapshotData(img = i , name = i.name, server_text = String() ))
             }
+        }
+        allbtn.setOnClickListener {
+            for(i in datas){
+                snapshotAdapter.getProFileImage(rootPath + "/" + i.name,i)
+                snapshotAdapter.notifyDataSetChanged()
+            }
+
         }
         snapshotAdapter = SnapshotAdapter(this)
         itemrecycle.adapter = snapshotAdapter
@@ -34,7 +42,7 @@ class TemporaryFolder : AppCompatActivity() {
 
 
         snapshotAdapter.datas = datas
-snapshotAdapter.notifyDataSetChanged()
+        snapshotAdapter.notifyDataSetChanged()
 
 
 

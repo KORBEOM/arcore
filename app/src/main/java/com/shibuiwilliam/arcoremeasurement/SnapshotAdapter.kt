@@ -51,6 +51,7 @@ class SnapshotAdapter(private val context: Context) : RecyclerView.Adapter<Snaps
         private val save_btn : Button = view.findViewById(R.id.save_btn)
         private val server_text : TextView = view.findViewById(R.id.server_text)
 
+
         fun bind(item: SnapshotData , itemid : Int) {
             txtName.text = item.name
             server_text.text = item.server_text
@@ -87,13 +88,28 @@ class SnapshotAdapter(private val context: Context) : RecyclerView.Adapter<Snaps
         }
     }
 
-    fun getProFileImage(imagePath: String,item: SnapshotData , result : TextView){
+    fun deleteAllImages(imagepath : String){
+        val file = File(imagepath)
+        val result = file.delete()
+        if (result
+        ) {
+            Log.v(TAG, "123123213123123delete success")
+            notifyDataSetChanged()
+            true
+        } else {
+            Log.v(TAG, "123213123213123213 reject")
+
+            false
+        }
+    }
+
+    fun getProFileImage(imagePath: String,item: SnapshotData ){
 
         val file = File(imagePath)
         val requestFile = RequestBody.create(MediaType.parse("image/*"), file)
         val body = MultipartBody.Part.createFormData("img", file.name, requestFile)
 
-        sendImage(body,item,file,result)
+        sendImage(body,item,file)
 
     }
     fun getProFileFailImage(imagePath: String,item: SnapshotData , result : TextView){
@@ -106,7 +122,7 @@ class SnapshotAdapter(private val context: Context) : RecyclerView.Adapter<Snaps
 
 
     }
-    fun sendImage(image: MultipartBody.Part,item: SnapshotData , file :File, result: TextView) {
+    fun sendImage(image: MultipartBody.Part,item: SnapshotData , file :File) {
         val service = RetrofitSetting.createBaseService(RetrofitPath::class.java) //레트로핏 통신 설정
         val call = service.imageSend(image)!! //통신 API 패스 설정
 
@@ -122,8 +138,6 @@ class SnapshotAdapter(private val context: Context) : RecyclerView.Adapter<Snaps
                 else {
                     Log.d("로그 ",""+ response )
                     Toast.makeText(context,"통신실패", Toast.LENGTH_SHORT).show()
-
-
 
                 }
             }
