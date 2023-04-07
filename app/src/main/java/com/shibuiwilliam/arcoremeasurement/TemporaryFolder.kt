@@ -26,7 +26,7 @@ class TemporaryFolder : AppCompatActivity() {
 
         datas.apply {
             for( i in list1  ){
-                add(SnapshotData(img = i , name = i.name, server_text = String() ))
+                add(SnapshotData(image = i , name = i.name, server_text = String() ))
             }
         }
         allbtn.setOnClickListener {
@@ -42,7 +42,7 @@ class TemporaryFolder : AppCompatActivity() {
 
 
         snapshotAdapter.datas = datas
-        snapshotAdapter.notifyDataSetChanged()
+
 
 
 
