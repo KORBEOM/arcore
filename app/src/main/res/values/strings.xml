@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">ArcoreMeasurement</string>
     <string name="to_measurement_button">To Measurement</string>
@@ -15,5 +16,14 @@
         <item>@string/distance_of_2_points</item>
         <item>@string/distance_of_multiple_points</item>
         <item>@string/distance_from_ground</item>
+    </string-array>
+    <string-array name = "spinner_mainop">
+        <item>인천</item>
+        <item>울산</item>
+        <item>경기도</item>
+        <item>강원</item>
+        <item>충청남도</item>
+        <item>전라북도</item>
+        <item>전라남도</item>
     </string-array>
 </resources>

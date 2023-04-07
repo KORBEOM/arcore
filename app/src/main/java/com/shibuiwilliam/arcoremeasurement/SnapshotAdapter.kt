@@ -1,8 +1,11 @@
 package com.shibuiwilliam.arcoremeasurement
 
+import android.annotation.SuppressLint
 import android.content.ContentValues.TAG
 import android.content.Context
 import android.graphics.Color
+import android.media.Image
+import android.net.Uri
 import android.os.Environment
 import android.text.TextWatcher
 import android.util.Log
@@ -13,6 +16,7 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.core.net.toUri
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import kotlinx.android.synthetic.main.activity_measurement.*
@@ -23,6 +27,7 @@ import okhttp3.RequestBody
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import retrofit2.http.Url
 import java.io.File
 
 
@@ -56,7 +61,7 @@ class SnapshotAdapter(private val context: Context) : RecyclerView.Adapter<Snaps
             txtName.text = item.name
             server_text.text = item.server_text
             server_text.setTextColor(item.test_color)
-            Glide.with(itemView).load(item.img).into(imgProfile)
+            Glide.with(itemView).load(item.image).into(imgProfile)
             val rootPath = Environment.getExternalStorageDirectory().toString() + "/DCIM/Temporary/" + item.name
             val file = File(rootPath)
 
@@ -81,7 +86,7 @@ class SnapshotAdapter(private val context: Context) : RecyclerView.Adapter<Snaps
                 }
             }
             save_btn.setOnClickListener {
-                getProFileFailImage(rootPath,item,server_text)
+                getProFileImage(rootPath,item)
                 notifyDataSetChanged()
 
             }
@@ -106,8 +111,8 @@ class SnapshotAdapter(private val context: Context) : RecyclerView.Adapter<Snaps
     fun getProFileImage(imagePath: String,item: SnapshotData ){
 
         val file = File(imagePath)
-        val requestFile = RequestBody.create(MediaType.parse("image/*"), file)
-        val body = MultipartBody.Part.createFormData("img", file.name, requestFile)
+        val requestFile = RequestBody.create(MediaType.parse("multipart/form-data"), file)
+        val body = MultipartBody.Part.createFormData("image", file.name, requestFile)
 
         sendImage(body,item,file)
 
@@ -124,21 +129,22 @@ class SnapshotAdapter(private val context: Context) : RecyclerView.Adapter<Snaps
     }
     fun sendImage(image: MultipartBody.Part,item: SnapshotData , file :File) {
         val service = RetrofitSetting.createBaseService(RetrofitPath::class.java) //레트로핏 통신 설정
-        val call = service.imageSend(image)!! //통신 API 패스 설정
+        val call = service?.imageSend(image)!! //통신 API 패스 설정
 
         call.enqueue(object : Callback<String> {
+
             override fun onResponse(call: Call<String>, response: Response<String>) {
-                if (response?.isSuccessful) {
+                if (response.isSuccessful) {
                     Log.d("로그23132132123213 ",""+response?.body().toString())
                     Toast.makeText(context,"통신성공", Toast.LENGTH_SHORT).show()
                     datas.remove(item)
                     file.delete()
                     snapshotAdapter.notifyDataSetChanged()
+
                 }
                 else {
-                    Log.d("로그 ",""+ response )
+                    Log.d("로그1354156123 ",""+ response.raw())
                     Toast.makeText(context,"통신실패", Toast.LENGTH_SHORT).show()
-
                 }
             }
 
@@ -149,7 +155,7 @@ class SnapshotAdapter(private val context: Context) : RecyclerView.Adapter<Snaps
     }
     fun sendFailImage(image: MultipartBody.Part,item: SnapshotData , file :File, result: TextView) {
         val service = RetrofitSetting.createBaseService(RetrofitFailPath::class.java) //레트로핏 통신 설정
-        val call = service.imageSend(image)!! //통신 API 패스 설정
+        val call = service?.imageFailSend(image)!! //통신 API 패스 설정
 
         call.enqueue(object : Callback<String> {
             override fun onResponse(call: Call<String>, response: Response<String>) {
@@ -167,7 +173,7 @@ class SnapshotAdapter(private val context: Context) : RecyclerView.Adapter<Snaps
                     item.test_color = Color.RED
                     //result.setText(item.server_text)
                     //result.setTextSize(30.0f)
-                    snapshotAdapter.notifyDataSetChanged()
+
 
                 }
             }
