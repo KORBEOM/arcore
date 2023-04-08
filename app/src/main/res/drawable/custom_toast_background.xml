@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <shape xmlns:android="http://schemas.android.com/apk/res/android">
 
+<<<<<<< Updated upstream
+        <solid android:color="#aaDDF5FF" />
+=======
         <solid android:color="#99C1C0C0" />
+>>>>>>> Stashed changes
         <corners android:radius="5dp" />
 
 </shape>

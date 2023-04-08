@@ -4,10 +4,13 @@ import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.converter.scalars.ScalarsConverterFactory
+import java.util.concurrent.TimeUnit
+import javax.net.SocketFactory
 
 object RetrofitSetting {
-    val API_BASE_URL = "http://192.168.0.48:3000"
+    val API_BASE_URL = "http://oceanit.synology.me:3500"
     val httpClient = OkHttpClient.Builder()
+
 
     val client = Retrofit.Builder()
         .baseUrl(API_BASE_URL)
@@ -15,8 +18,9 @@ object RetrofitSetting {
         .addConverterFactory(GsonConverterFactory.create())
 
 
-    fun <S> createBaseService(serviceClass: Class<S>?): S {
+
+    fun <S> createBaseService(serviceClass: Class<S>?): S? {
         val retrofit = client.client(httpClient.build()).build()
-        return retrofit.create(serviceClass)
+        return serviceClass?.let { retrofit.create(it) }
     }
 }

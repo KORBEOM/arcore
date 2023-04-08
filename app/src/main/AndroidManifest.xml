@@ -15,9 +15,8 @@
     <application
         android:allowBackup="true"
         android:requestLegacyExternalStorage="true"
-        android:icon="@drawable/download"
+        android:icon="@drawable/fishicon2"
         android:label="@string/app_name"
-        android:roundIcon="@drawable/download"
         android:supportsRtl="true"
         android:usesCleartextTraffic="true"
         android:theme="@style/AppTheme"

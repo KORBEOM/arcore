@@ -4,10 +4,9 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.Gravity
 import android.view.View
-import android.widget.Button
-import android.widget.ImageButton
-import android.widget.Toast
+import android.widget.*
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.google.gson.reflect.TypeToken
@@ -20,163 +19,71 @@ import kotlinx.android.synthetic.main.activity_arcore_measurement.*
 import retrofit2.Response
 
 
-class ArcoreMeasurement : AppCompatActivity(), DynamicSpinnerAdapter.SpinnerItemSelectedListener {
+class ArcoreMeasurement : AppCompatActivity(), AdapterView.OnItemSelectedListener,
+    AdapterView.OnItemClickListener {
     private val TAG = "ArcoreMeasurement"
     private val buttonArrayList = ArrayList<String>()
-    private lateinit var toMeasurement: ImageButton
-
+    private lateinit var toMeasurement: Button
+    //val spinnermain = resources.getStringArray(R.array.spinner_mainop)
+    var languages = arrayOf("Java", "PHP", "Kotlin", "Javascript", "Python", "Swift")
+    var seleted : String = "귤"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_arcore_measurement)
+        var listHash = HashMap<String , Int>()
+        listHash.put("귤" , R.array.test)
+        listHash.put("파인애플" , R.array.test2)
+        listHash.put("샤인머스캣" , R.array.test3)
+        listHash.put("무화과" , R.array.test4)
 
-        val planetStructureJson = "{\n" +
-        //        "             \"planetList\" : [\n"+
-           //     "{\n" +
-           //     " \"name\" : \"gg\" ,\n" +
-                "            \"countryList\": [\n" +
-                "            {\n" +
-                "                \"code\": 0,\n" +
-                "                \"name\": \"부산\",\n" +
-                "                \"cityList\": [\n" +
-                "                {\n" +
-                "                    \"name\": \"위판장 번호\",\n" +
-                "                    \"code\": 111\n" +
-                "                },\n" +
-                "                {\n" +
-                "                    \"name\": \"120\",\n" +
-                "                    \"code\": 2\n" +
-                "                },\n" +
-                "                {\n" +
-                "                    \"name\": \"144420\",\n" +
-                "                    \"code\": 2\n" +
-                "                },\n" +
-                "                {\n" +
-                "                    \"name\": \"13320\",\n" +
-                "                    \"code\": 2\n" +
-                "                }\n" +
-                "                ]\n" +
-                "            },\n" +
-                "            {\n" +
-                "                \"code\": 1,\n" +
-                "                \"name\": \"인천\",\n" +
-                "                \"cityList\": [\n" +
-                "                {\n" +
-                "                    \"name\": \"139\",\n" +
-                "                    \"code\": 2\n" +
-                "                }\n" +
-                "                ]\n" +
-                "            },\n" +
-                "            {\n" +
-                "                \"code\": 1,\n" +
-                "                \"name\": \"울산\",\n" +
-                "                \"cityList\": [\n" +
-                "                {\n" +
-                "                    \"name\": \"333\",\n" +
-                "                    \"code\": 2\n" +
-                "                }\n" +
-                "                ]\n" +
-                "            },\n" +
-                "            {\n" +
-                "                \"code\": 1,\n" +
-                "                \"name\": \"경기도\",\n" +
-                "                \"cityList\": [\n" +
-                "                {\n" +
-                "                    \"name\": \"222\",\n" +
-                "                    \"code\": 2\n" +
-                "                }\n" +
-                "                ]\n" +
-                "            },\n" +
-                "            {\n" +
-                "                \"code\": 1,\n" +
-                "                \"name\": \"강원\",\n" +
-                "                \"cityList\": [\n" +
-                "                {\n" +
-                "                    \"name\": \"Tallin\",\n" +
-                "                    \"code\": 2\n" +
-                "                }\n" +
-                "                ]\n" +
-                "            },\n" +
-                "            {\n" +
-                "                \"code\": 1,\n" +
-                "                \"name\": \"충청남도\",\n" +
-                "                \"cityList\": [\n" +
-                "                {\n" +
-                "                    \"name\": \"Tallin\",\n" +
-                "                    \"code\": 2\n" +
-                "                }\n" +
-                "                ]\n" +
-                "            },\n" +
-                "            {\n" +
-                "                \"code\": 1,\n" +
-                "                \"name\": \"전라북도\",\n" +
-                "                \"cityList\": [\n" +
-                "                {\n" +
-                "                    \"name\": \"Tallin\",\n" +
-                "                    \"code\": 2\n" +
-                "                }\n" +
-                "                ]\n" +
-                "            },\n" +
-                "            {\n" +
-                "                \"code\": 1,\n" +
-                "                \"name\": \"전라남도\",\n" +
-                "                \"cityList\": [\n" +
-                "                {\n" +
-                "                    \"name\": \"Tallin\",\n" +
-                "                    \"code\": 2\n" +
-                "                }\n" +
-                "                ]\n" +
-                "            },\n" +
-                "            {\n" +
-                "                \"code\": 1,\n" +
-                "                \"name\": \"경상북도\",\n" +
-                "                \"cityList\": [\n" +
-                "                {\n" +
-                "                    \"name\": \"Tallin\",\n" +
-                "                    \"code\": 2\n" +
-                "                }\n" +
-                "                ]\n" +
-                "            },\n" +
-                "            {\n" +
-                "                \"code\": 1,\n" +
-                "                \"name\": \"경상남도\",\n" +
-                "                \"cityList\": [\n" +
-                "                {\n" +
-                "                    \"name\": \"Tallin\",\n" +
-                "                    \"code\": 2\n" +
-                "                }\n" +
-                "                ]\n" +
-                "            },\n" +
-                "            {\n" +
-                "                \"code\": 1,\n" +
-                "                \"name\": \"제주\",\n" +
-                "                \"cityList\": [\n" +
-                "                {\n" +
-                "                    \"name\": \"Tallin\",\n" +
-                "                    \"code\": 2\n" +
-                "                }\n" +
-                "                ]\n" +
-                "            }\n" +
-                "            ]\n" +
-      //          "            }\n" +
-    //            "            ]\n" +
+        val adapter = ArrayAdapter.createFromResource(this,R.array.fruit, R.layout.spinner_item_go)
 
-         //       "]\n" +
-                "        }"
-        val planetStructure =
-            "{\"planetList\":[{\"countryList\":[{\"code\":1,\"cityList\":[{\"name\":\"West madow\",\"code\":1000,\"avenueList\":[{\"name\":\"Azdlig ave.\",\"code\":10000,\"streetList\":[{\"name\":\"Lev Landau\",\"code\":100000,\"alleyList\":[{\"name\":\"Hajibekov alley\",\"code\":1000000,\"buildingList\":[{\"name\":\"Hyatt\",\"code\":1000002,\"entanceList\":[{\"name\":\"Entrance 1\",\"code\":1000003,\"storeyList\":[{\"name\":\"1st Floor\",\"code\":1000004,\"apartmentList\":[{\"name\":\"Apartment 109\",\"code\":1000005,\"roomList\":[{\"name\":\"Bedroom\",\"code\":1000006,\"itemList\":[{\"name\":\"Laptop\",\"code\":1000008,\"folderList\":[{\"name\":\"Folder -1\",\"code\":1000009,\"fileList\":[{\"name\":\"Rok.txt\",\"code\":1000010,\"contentList\":[{\"name\":\"Letter A\",\"code\":1000011,\"byteList\":[{\"name\":\"-1kb\",\"code\":1000012}]}]}]}]}]}]}]}]}]}]}]},{\"name\":\"East Krakow\",\"code\":1001,\"avenueList\":[{\"name\":\"Bashir Sefereov ave.\",\"code\":10001,\"streetList\":[{\"name\":\"Nikita Labov\",\"code\":100001}]},{\"name\":\"Prehis Albania ave\",\"code\":10003,\"streetList\":[]}]},{\"name\":\"Roden highs\",\"code\":1002,\"avenueList\":[]}]},{\"name\":\"Binagadi\",\"code\":101}]},{\"name\":\"Ganja\",\"code\":11,\"boroughList\":[{\"name\":\"South Ganja\",\"code\":110},{\"name\":\"North Ganja\",\"code\":111}]}],\"name\":\"Azerbaijan\"},{\"code\":2,\"cityList\":[{\"name\":\"Dubai\",\"code\":20},{\"name\":\"Abu Dhabi\",\"code\":21}],\"name\":\"UAE\"},{\"code\":3,\"cityList\":[{\"name\":\"Bangkok\",\"code\":30,\"boroughList\":[{\"name\":\"Kingtown\",\"code\":300}]},{\"name\":\"Pattaya\",\"code\":31}],\"name\":\"Thailand\"},{\"code\":4,\"cityList\":[{\"name\":\"Almaty\",\"code\":40},{\"name\":\"Astana\",\"code\":41}],\"name\":\"Kazakhstan\"},{\"code\":5,\"cityList\":[{\"name\":\"Moscow\",\"code\":50},{\"name\":\"Saint Peterburg\",\"code\":51}],\"name\":\"Russia\"},{\"code\":6,\"cityList\":[{\"name\":\"Tallin\",\"code\":60},{\"name\":\"Tartu\",\"code\":61}],\"name\":\"Estonia\"},{\"code\":7,\"cityList\":[{\"name\":\"Izmir\",\"code\":10},{\"name\":\"Istanbul\",\"code\":11}],\"name\":\"Turkey\"},{\"code\":8,\"cityList\":[{\"name\":\"Rustavi\",\"code\":80},{\"name\":\"Tbilisi\",\"code\":81}],\"name\":\"Georgia\"},{\"code\":1,\"cityList\":[{\"name\":\"Busan\",\"code\":10},{\"name\":\"Daegu\",\"code\":11}],\"name\":\"South Korea\"}],\"name\":\"Earth\"},{\"countryList\":[{\"name\":\"Mercurium country\",\"code\":-1,\"cityList\":[{\"name\":\"Merca city\",\"code\":-2}]}],\"name\":\"Mercury\"},{\"countryList\":[],\"name\":\"Venus\"},{\"countryList\":[],\"name\":\"Mars\"}]}"
+        //activity_main.xml에 입력된 spinner에 어댑터를 연결한다.
+        val spinner = findViewById<Spinner>(R.id.spinner)
+        spinner.adapter = adapter
 
+        val adapter2 = ArrayAdapter.createFromResource(this , R.array.test, R.layout.spinner_item_go)
+        val adapter3 = ArrayAdapter.createFromResource(this , R.array.test2, R.layout.spinner_item_go)
 
+        val spinner2 = findViewById<Spinner>(R.id.spinner2)
+        spinner2.adapter = adapter2
+        //activity_main안에 이미 adapter 속성이 있다. 해당 속성과 위에서 만든 adapter를 연결.
+        spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
+            override fun onItemSelected(p0: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                textView.text = "선택됨: $position ${spinner.getItemAtPosition(position)}"
+                seleted = "${spinner.getItemAtPosition(position)}"
+                if(seleted == "귤"){
+                    spinner2.adapter = adapter2
+                    adapter2.notifyDataSetChanged()
+                }
+                if(seleted == "파인애플"){
+                    spinner2.adapter = adapter3
+                    adapter3.notifyDataSetChanged()
+                }
 
-        val list = Gson().fromJson<com.shibuiwilliam.arcoremeasurement.model.Response>(
-            planetStructureJson, com.shibuiwilliam.arcoremeasurement.model.Response::class.java
-        ).countryList
+            }
 
-
-
-        list?.let {
-            dynamic_spinner.adapter = DynamicSpinnerAdapter(it, this, R.layout.item_spinner)
+            override fun onNothingSelected(p0: AdapterView<*>?) {
+                seleted = "귤"
+            }
         }
+
+        spinner2.onItemSelectedListener = object  : AdapterView.OnItemSelectedListener{
+            override fun onItemSelected(
+                parent: AdapterView<*>?,
+                view: View?,
+                position: Int,
+                id: Long
+            ) {
+
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+                seleted = "귤"
+            }
+        }
+
 
         val buttonArray = resources.getStringArray(R.array.arcore_measurement_buttons)
 
@@ -193,17 +100,58 @@ class ArcoreMeasurement : AppCompatActivity(), DynamicSpinnerAdapter.SpinnerItem
         })
     }
 
-    override fun onItemSelected(itemSpinner: ItemSpinner) {
-        //Log.d("aaaaaaaaaaaaaaaaaaaaaaaaaa" , itemSpinner.itemSpinnerLevel.toString())
-        when (itemSpinner.itemSpinnerLevel) {
+    private fun setupSpinnerMain() {
+        val fruit = resources.getStringArray(R.array.fruit)
 
-            0 -> showToast((itemSpinner as Country).name)
-            1 -> showToast((itemSpinner as City).name)
-        }
+        //fruit이란 변수 안에 value 폴더 안에있는 array.xml,
+        //array의 이름인 fruit을 입력하여 불러온다.
+
+        //layout 폴더안에 있는 item_spinner.xml, 을 어댑터에 적용한다.
+        //fruit이란 매개변수는 30번째 줄에 선언된 fruit.
+
+    }
+
+    private fun setupSpinnerSub(list : HashMap<String , Int>) {
+
+
+    }
+    fun setupSpinnerHandler2(){
+        val spinner = findViewById<Spinner>(R.id.spinner2)
+
+
+    }
+    fun setupSpinnerHandler(adapter : ArrayAdapter<CharSequence>){
+        val spinner = findViewById<Spinner>(R.id.spinner)
+        val textView = findViewById<TextView>(R.id.textView)
+
+
+    }
+
+
+    private fun showToast22( message: String, duration: Int = Toast.LENGTH_LONG) {
+        Toast.makeText(this, message, duration).show()
     }
 
     private fun showToast(message: String) {
         Toast.makeText(this, "Selected item: ${message}", Toast.LENGTH_SHORT).show()
+    }
+
+    override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+        when (view?.id) {
+            1 -> showToast22(message = "Spinner 2 Position:${position} and language: ${languages[position]}")
+            else -> {
+                showToast22(message = "Spinner 1 Position:${position} and language: ${languages[position]}")
+            }
+        }
+    }
+
+    override fun onNothingSelected(parent: AdapterView<*>?) {
+        showToast22(message = "Nothing selected")
+
+    }
+
+    override fun onItemClick(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+        TODO("Not yet implemented")
     }
 
 }
