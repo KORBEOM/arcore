@@ -67,6 +67,7 @@ class SnapshotAdapter(private val context: Context) : RecyclerView.Adapter<Snaps
             server_text.text = item.server_text
             server_text.setTextColor(item.test_color)
             Glide.with(itemView).load(item.image).into(imgProfile)
+
             val rootPath = Environment.getExternalStorageDirectory().toString() + "/DCIM/Temporary/" + item.name
             val file = File(rootPath)
 
@@ -166,6 +167,7 @@ class SnapshotAdapter(private val context: Context) : RecyclerView.Adapter<Snaps
     fun sendFailImage(image: MultipartBody.Part,item: SnapshotData , file :File, result: TextView) {
         val service = RetrofitSetting.createBaseService(RetrofitFailPath::class.java) //레트로핏 통신 설정
         val call = service?.imageFailSend(image)!! //통신 API 패스 설정
+
 
         call.enqueue(object : Callback<String> {
             override fun onResponse(call: Call<String>, response: Response<String>) {

@@ -24,4 +24,3 @@ interface RetrofitFailPath {
         @Part image : MultipartBody.Part
     ): Call<String>
 }
-

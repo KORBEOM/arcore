@@ -8,7 +8,7 @@ import java.util.concurrent.TimeUnit
 import javax.net.SocketFactory
 
 object RetrofitSetting {
-    val API_BASE_URL = "http://oceanit.synology.me:3500"
+    val API_BASE_URL = "http://192.168.0.48:3000"
     val httpClient = OkHttpClient.Builder()
 
 
@@ -22,5 +22,6 @@ object RetrofitSetting {
     fun <S> createBaseService(serviceClass: Class<S>?): S? {
         val retrofit = client.client(httpClient.build()).build()
         return serviceClass?.let { retrofit.create(it) }
+
     }
 }
