@@ -24,65 +24,95 @@ class ArcoreMeasurement : AppCompatActivity(), AdapterView.OnItemSelectedListene
     private val TAG = "ArcoreMeasurement"
     private val buttonArrayList = ArrayList<String>()
     private lateinit var toMeasurement: Button
-    //val spinnermain = resources.getStringArray(R.array.spinner_mainop)
-    var languages = arrayOf("Java", "PHP", "Kotlin", "Javascript", "Python", "Swift")
-    var seleted : String = "귤"
+    var seleted : String = "위판장"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_arcore_measurement)
-        var listHash = HashMap<String , Int>()
-        listHash.put("귤" , R.array.test)
-        listHash.put("파인애플" , R.array.test2)
-        listHash.put("샤인머스캣" , R.array.test3)
-        listHash.put("무화과" , R.array.test4)
 
-        val adapter = ArrayAdapter.createFromResource(this,R.array.fruit, R.layout.spinner_item_go)
+
+        val adapter = ArrayAdapter.createFromResource(this,R.array.위판장, R.layout.spinner_item_go)
+        adapter.setDropDownViewResource(R.layout.spinner_drop_go)
 
         //activity_main.xml에 입력된 spinner에 어댑터를 연결한다.
         val spinner = findViewById<Spinner>(R.id.spinner)
         spinner.adapter = adapter
-
-        val adapter2 = ArrayAdapter.createFromResource(this , R.array.test, R.layout.spinner_item_go)
-        val adapter3 = ArrayAdapter.createFromResource(this , R.array.test2, R.layout.spinner_item_go)
+        val default =  ArrayAdapter.createFromResource(this , R.array.고정, R.layout.spinner_item_go)
+        default.setDropDownViewResource(R.layout.spinner_drop_go)
+        val gyeonggi = ArrayAdapter.createFromResource(this , R.array.경기, R.layout.spinner_item_go)
+        gyeonggi.setDropDownViewResource(R.layout.spinner_drop_go)
+        val incheon = ArrayAdapter.createFromResource(this , R.array.인천, R.layout.spinner_item_go)
+        incheon.setDropDownViewResource(R.layout.spinner_drop_go)
+        val chungnam = ArrayAdapter.createFromResource(this , R.array.충남, R.layout.spinner_item_go)
+        chungnam.setDropDownViewResource(R.layout.spinner_drop_go)
+        val geonam = ArrayAdapter.createFromResource(this , R.array.전남, R.layout.spinner_item_go)
+        geonam.setDropDownViewResource(R.layout.spinner_drop_go)
+        val geobuk = ArrayAdapter.createFromResource(this , R.array.전북, R.layout.spinner_item_go)
+        geobuk.setDropDownViewResource(R.layout.spinner_drop_go)
+        val gangwon = ArrayAdapter.createFromResource(this , R.array.강원, R.layout.spinner_item_go)
+        gangwon.setDropDownViewResource(R.layout.spinner_drop_go)
+        val woolsan = ArrayAdapter.createFromResource(this , R.array.울산, R.layout.spinner_item_go)
+        woolsan.setDropDownViewResource(R.layout.spinner_drop_go)
+        val gyeongbuk = ArrayAdapter.createFromResource(this , R.array.경북, R.layout.spinner_item_go)
+        gyeongbuk.setDropDownViewResource(R.layout.spinner_drop_go)
+        val gyeongnam = ArrayAdapter.createFromResource(this , R.array.경남, R.layout.spinner_item_go)
+        gyeongnam.setDropDownViewResource(R.layout.spinner_drop_go)
+        val boosan = ArrayAdapter.createFromResource(this , R.array.부산, R.layout.spinner_item_go)
+        boosan.setDropDownViewResource(R.layout.spinner_drop_go)
+        val jejoo = ArrayAdapter.createFromResource(this , R.array.제주, R.layout.spinner_item_go)
+        jejoo.setDropDownViewResource(R.layout.spinner_drop_go)
 
         val spinner2 = findViewById<Spinner>(R.id.spinner2)
-        spinner2.adapter = adapter2
+        spinner2.adapter = adapter
         //activity_main안에 이미 adapter 속성이 있다. 해당 속성과 위에서 만든 adapter를 연결.
         spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
             override fun onItemSelected(p0: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 textView.text = "선택됨: $position ${spinner.getItemAtPosition(position)}"
                 seleted = "${spinner.getItemAtPosition(position)}"
-                if(seleted == "귤"){
-                    spinner2.adapter = adapter2
-                    adapter2.notifyDataSetChanged()
-                }
-                if(seleted == "파인애플"){
-                    spinner2.adapter = adapter3
-                    adapter3.notifyDataSetChanged()
-                }
 
+//                if(seleted == "경기도"){
+//                    spinner2.adapter = gyeonggi
+//                    gyeonggi.notifyDataSetChanged()
+//                }
+//                if(seleted == "인천"){
+//                    spinner2.adapter = incheon
+//                    incheon.notifyDataSetChanged()
+//                }
+                when(seleted){
+                    "위판장" -> spinner2.adapter = default
+                    "경기도" ->  spinner2.adapter = gyeonggi
+                    "인천" ->  spinner2.adapter = incheon
+                    "충청남도" ->  spinner2.adapter = chungnam
+                    "전라남도" ->  spinner2.adapter = geonam
+                    "전라북도" ->  spinner2.adapter = geobuk
+                    "강원도" ->  spinner2.adapter = gangwon
+                    "울산" ->  spinner2.adapter = woolsan
+                    "경상북도" ->  spinner2.adapter = gyeongbuk
+                    "경상남도" ->  spinner2.adapter = gyeongnam
+                    "부산" ->  spinner2.adapter = boosan
+                    "제주도" ->  spinner2.adapter = jejoo
+                }
             }
 
             override fun onNothingSelected(p0: AdapterView<*>?) {
-                seleted = "귤"
+                seleted = "위판장"
             }
         }
 
-        spinner2.onItemSelectedListener = object  : AdapterView.OnItemSelectedListener{
-            override fun onItemSelected(
-                parent: AdapterView<*>?,
-                view: View?,
-                position: Int,
-                id: Long
-            ) {
-
-            }
-
-            override fun onNothingSelected(parent: AdapterView<*>?) {
-                seleted = "귤"
-            }
-        }
+//        spinner2.onItemSelectedListener = object  : AdapterView.OnItemSelectedListener{
+//            override fun onItemSelected(
+//                parent: AdapterView<*>?,
+//                view: View?,
+//                position: Int,
+//                id: Long
+//            ) {
+//
+//            }
+//
+//            override fun onNothingSelected(parent: AdapterView<*>?) {
+//                seleted = "경기도"
+//            }
+//        }
 
 
         val buttonArray = resources.getStringArray(R.array.arcore_measurement_buttons)
@@ -101,7 +131,7 @@ class ArcoreMeasurement : AppCompatActivity(), AdapterView.OnItemSelectedListene
     }
 
     private fun setupSpinnerMain() {
-        val fruit = resources.getStringArray(R.array.fruit)
+        val fruit = resources.getStringArray(R.array.위판장)
 
         //fruit이란 변수 안에 value 폴더 안에있는 array.xml,
         //array의 이름인 fruit을 입력하여 불러온다.
@@ -137,13 +167,9 @@ class ArcoreMeasurement : AppCompatActivity(), AdapterView.OnItemSelectedListene
     }
 
     override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-        when (view?.id) {
-            1 -> showToast22(message = "Spinner 2 Position:${position} and language: ${languages[position]}")
-            else -> {
-                showToast22(message = "Spinner 1 Position:${position} and language: ${languages[position]}")
-            }
-        }
+        TODO("Not yet implemented")
     }
+
 
     override fun onNothingSelected(parent: AdapterView<*>?) {
         showToast22(message = "Nothing selected")
