@@ -43,6 +43,7 @@ class TemporaryFolder : AppCompatActivity() {
 
         snapshotAdapter.datas = datas
 
+        snapshotAdapter.notifyDataSetChanged()
 
 
 

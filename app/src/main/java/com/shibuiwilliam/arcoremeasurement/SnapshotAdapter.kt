@@ -1,11 +1,13 @@
 package com.shibuiwilliam.arcoremeasurement
 
+
 import android.annotation.SuppressLint
 import android.content.ContentValues.TAG
 import android.content.Context
 import android.graphics.Color
 import android.media.Image
 import android.net.Uri
+
 import android.os.Environment
 import android.text.TextWatcher
 import android.util.Log
@@ -16,18 +18,20 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+
 import androidx.core.net.toUri
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import kotlinx.android.synthetic.main.activity_measurement.*
 import kotlinx.android.synthetic.main.item_recyclerview.view.*
+
 import okhttp3.MediaType
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import retrofit2.http.Url
+
 import java.io.File
 
 
@@ -54,6 +58,7 @@ class SnapshotAdapter(private val context: Context) : RecyclerView.Adapter<Snaps
         private val imgProfile: ImageView = view.findViewById(R.id.img_rv_photo)
         private val delete_btn: Button = view.findViewById(R.id.delete_btn)
         private val save_btn : Button = view.findViewById(R.id.save_btn)
+
         private val server_text : TextView = view.findViewById(R.id.server_text)
 
 
@@ -86,12 +91,15 @@ class SnapshotAdapter(private val context: Context) : RecyclerView.Adapter<Snaps
                 }
             }
             save_btn.setOnClickListener {
+
                 getProFileImage(rootPath,item)
                 notifyDataSetChanged()
+
 
             }
         }
     }
+
 
     fun deleteAllImages(imagepath : String){
         val file = File(imagepath)
@@ -118,9 +126,11 @@ class SnapshotAdapter(private val context: Context) : RecyclerView.Adapter<Snaps
 
     }
     fun getProFileFailImage(imagePath: String,item: SnapshotData , result : TextView){
+
         val file = File(imagePath)
         val requestFile = RequestBody.create(MediaType.parse("image/*"), file)
         val body = MultipartBody.Part.createFormData("img", file.name, requestFile)
+
 
         sendFailImage(body,item,file,result)
 
@@ -160,20 +170,22 @@ class SnapshotAdapter(private val context: Context) : RecyclerView.Adapter<Snaps
         call.enqueue(object : Callback<String> {
             override fun onResponse(call: Call<String>, response: Response<String>) {
                 if (response?.isSuccessful) {
+
 //                    Log.d("로그23132132123213 ",""+response?.body().toString())
 //                    Toast.makeText(context,"통신성공", Toast.LENGTH_SHORT).show()
 //                    datas.remove(item)
 //                    file.delete()
 //                    snapshotAdapter.notifyDataSetChanged()
+
                 }
                 else {
                     Log.d("로그 ",""+ response )
                     Toast.makeText(context,"통신실패", Toast.LENGTH_SHORT).show()
+
                     item.server_text="실패"
                     item.test_color = Color.RED
                     //result.setText(item.server_text)
                     //result.setTextSize(30.0f)
-
 
                 }
             }
