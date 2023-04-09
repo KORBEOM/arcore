@@ -49,6 +49,8 @@ class SnapshotAdapter(private val context: Context) : RecyclerView.Adapter<Snaps
     override fun getItemCount(): Int = datas.size
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        holder.itemView.layoutParams.width = ViewGroup.LayoutParams.WRAP_CONTENT
+        holder.itemView.layoutParams.height = ViewGroup.LayoutParams.MATCH_PARENT
         holder.bind(datas[position] , position)
     }
 

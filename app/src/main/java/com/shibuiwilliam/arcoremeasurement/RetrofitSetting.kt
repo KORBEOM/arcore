@@ -8,7 +8,7 @@ import java.util.concurrent.TimeUnit
 import javax.net.SocketFactory
 
 object RetrofitSetting {
-    val API_BASE_URL = "http://192.168.0.48:3000"
+    val API_BASE_URL = "http://192.168.0.111:3000"
     val httpClient = OkHttpClient.Builder()
 
 

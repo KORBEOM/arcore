@@ -7,10 +7,12 @@ import android.view.View
 import android.widget.Button
 import android.widget.ViewAnimator
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.item_recyclerview.*
 import kotlinx.android.synthetic.main.temporary_folder.*
 import java.io.File
 import kotlin.concurrent.thread
+
 
 lateinit var snapshotAdapter: SnapshotAdapter
 
@@ -43,7 +45,7 @@ class TemporaryFolder : AppCompatActivity() {
             showProgress(true)
             thread(start = true) {
                 Log.d("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" , datas.size.toString())
-                while(datas.size != 0) {
+                if(datas.size != 0) {
 
                     Thread.sleep(1000)
                 }
@@ -61,7 +63,8 @@ class TemporaryFolder : AppCompatActivity() {
         snapshotAdapter = SnapshotAdapter(this)
         itemrecycle.adapter = snapshotAdapter
 
-
+        itemrecycle.layoutManager = LinearLayoutManager(this,LinearLayoutManager.HORIZONTAL,false)
+        itemrecycle.setHasFixedSize(true)
 
         snapshotAdapter.datas = datas
 
