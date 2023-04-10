@@ -8,15 +8,14 @@
 
     <TextView
         android:id="@+id/screenTitle"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:padding="10dp"
+        android:layout_marginLeft="20dp"
         android:layout_marginTop="20dp"
-        app:layout_constraintVertical_weight="1"
-        app:layout_constraintHorizontal_weight="1"
-        android:layout_marginLeft="10dp"
-        android:text="Screen Shot List"
         android:fontFamily="@font/gwangyang2"
+        android:padding="10dp"
+        android:textColor="@color/cardview_dark_background"
+        android:text="Screen Shot List"
         android:textAllCaps="true"
         android:textSize="20dp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -24,7 +23,7 @@
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.082" />
+        app:layout_constraintVertical_bias="0.072" />
 
     <View
         android:id="@+id/divider"
@@ -39,19 +38,24 @@
         app:layout_constraintTop_toBottomOf="@+id/toolbar2"
         app:layout_constraintVertical_bias="0.066" />
 
-    <androidx.recyclerview.widget.RecyclerView
+
+    <GridView
         android:id="@+id/itemrecycle"
-        android:layout_width="match_parent"
-        android:layout_height="300dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:background="@drawable/recycle_appbar"
+        android:numColumns="3"
         android:orientation="vertical"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        android:paddingTop="160dp"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/toolbar2"
-        app:layout_constraintVertical_bias="0.202" />
+        app:layout_constraintVertical_bias="1.0" />
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar2"
@@ -59,8 +63,8 @@
         android:layout_height="wrap_content"
         app:title="어류 측정"
         android:paddingLeft="30dp"
-        app:titleTextColor="@color/colorPrimary"
-        android:background="@color/colorPrimaryDark"
+        app:titleTextColor="@color/cardview_dark_background"
+        android:background="@color/colorPrimary"
         android:minHeight="?attr/actionBarSize"
         android:theme="?attr/actionBarTheme"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -76,13 +80,13 @@
         android:layout_height="41dp"
         android:layout_marginTop="68dp"
         android:layout_marginBottom="316dp"
-        android:text="Button"
+        android:text="All save"
         app:layout_constraintBottom_toBottomOf="@+id/itemrecycle"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.937"
+        app:layout_constraintHorizontal_bias="0.95"
         app:layout_constraintStart_toStartOf="@+id/toolbar2"
         app:layout_constraintTop_toTopOf="@+id/toolbar2"
-        app:layout_constraintVertical_bias="1.0" />
+        app:layout_constraintVertical_bias="0.039" />
 
     <ProgressBar
         android:id="@+id/progressBar"
@@ -94,6 +98,6 @@
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.328" />
+        app:layout_constraintVertical_bias="0.485" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

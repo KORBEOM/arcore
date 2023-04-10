@@ -15,6 +15,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
@@ -40,7 +41,7 @@ class SnapshotAdapter(private val context: Context) : RecyclerView.Adapter<Snaps
     var datas = mutableListOf<SnapshotData>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val view = LayoutInflater.from(context).inflate(R.layout.item_recyclerview,parent,false)
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.item_recyclerview,parent,false)
         return ViewHolder(view)
 
 
@@ -58,8 +59,8 @@ class SnapshotAdapter(private val context: Context) : RecyclerView.Adapter<Snaps
 
         private val txtName: TextView = view.findViewById(R.id.tv_rv_name)
         private val imgProfile: ImageView = view.findViewById(R.id.img_rv_photo)
-        private val delete_btn: Button = view.findViewById(R.id.delete_btn)
-        private val save_btn : Button = view.findViewById(R.id.save_btn)
+        private val delete_btn: ImageButton = view.findViewById(R.id.delete_btn)
+        private val save_btn : ImageButton = view.findViewById(R.id.save_btn)
 
         private val server_text : TextView = view.findViewById(R.id.server_text)
 
@@ -125,7 +126,7 @@ class SnapshotAdapter(private val context: Context) : RecyclerView.Adapter<Snaps
         val requestFile = RequestBody.create(MediaType.parse("multipart/form-data"), file)
         val body = MultipartBody.Part.createFormData("image", file.name, requestFile)
 
-        sendImage(body,item,file)
+        sendIm3age(body,item,file)
 
     }
     fun getProFileFailImage(imagePath: String,item: SnapshotData , result : TextView){
@@ -140,7 +141,7 @@ class SnapshotAdapter(private val context: Context) : RecyclerView.Adapter<Snaps
 
 
     }
-    fun sendImage(image: MultipartBody.Part,item: SnapshotData , file :File) {
+    fun sendIm3age(image: MultipartBody.Part,item: SnapshotData , file :File) {
         val service = RetrofitSetting.createBaseService(RetrofitPath::class.java) //레트로핏 통신 설정
         val call = service?.imageSend(image)!! //통신 API 패스 설정
 
