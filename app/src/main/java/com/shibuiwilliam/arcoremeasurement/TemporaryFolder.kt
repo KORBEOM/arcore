@@ -5,8 +5,11 @@ import android.os.Environment
 import android.util.Log
 import android.view.View
 import android.widget.Button
+import android.widget.GridView
+import android.widget.ListAdapter
 import android.widget.ViewAnimator
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.item_recyclerview.*
 import kotlinx.android.synthetic.main.temporary_folder.*
@@ -23,6 +26,9 @@ class TemporaryFolder : AppCompatActivity() {
 
         setContentView(R.layout.temporary_folder)
 
+        val gridView : GridView = findViewById(R.id.itemrecycle)
+
+
         val datas = mutableListOf<SnapshotData>()
         val rootPath = Environment.getExternalStorageDirectory().toString() + "/DCIM/Temporary"
         val file = File(rootPath)
@@ -35,42 +41,40 @@ class TemporaryFolder : AppCompatActivity() {
                 add(SnapshotData(image = i , name = i.name, server_text = String() ))
             }
         }
+        val gridAdapter : GridAdapter = GridAdapter(this , datas)
         allbtn.setOnClickListener {
 
             for(i in datas){
-                snapshotAdapter.getProFileImage(rootPath + "/" + i.name,i)
-                snapshotAdapter.notifyDataSetChanged()
+                gridAdapter.getProFileImage(rootPath + "/" + i.name,i)
+                gridAdapter.notifyDataSetChanged()
             }
 
             showProgress(true)
             thread(start = true) {
                 Log.d("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" , datas.size.toString())
-                if(datas.size != 0) {
-
+                while(datas.size != 0) {
                     Thread.sleep(1000)
                 }
                 runOnUiThread{
                     showProgress(false)
                     for(i in datas){
-                        snapshotAdapter.getProFileImage(rootPath + "/" + i.name,i)
-                        snapshotAdapter.notifyDataSetChanged()
+                        gridAdapter.getProFileImage(rootPath + "/" + i.name,i)
+                        gridAdapter.notifyDataSetChanged()
                     }
                 }
 
 
             }
         }
-        snapshotAdapter = SnapshotAdapter(this)
-        itemrecycle.adapter = snapshotAdapter
 
-        itemrecycle.layoutManager = LinearLayoutManager(this,LinearLayoutManager.HORIZONTAL,false)
-        itemrecycle.setHasFixedSize(true)
 
-        snapshotAdapter.datas = datas
+
+        gridView.adapter = gridAdapter
+
 
         init()
 
-        snapshotAdapter.notifyDataSetChanged()
+        gridAdapter.notifyDataSetChanged()
 
 
 
