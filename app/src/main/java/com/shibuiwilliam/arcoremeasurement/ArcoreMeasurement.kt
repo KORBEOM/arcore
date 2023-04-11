@@ -24,7 +24,10 @@ class ArcoreMeasurement : AppCompatActivity(), AdapterView.OnItemSelectedListene
     private val TAG = "ArcoreMeasurement"
     private val buttonArrayList = ArrayList<String>()
     private lateinit var toMeasurement: Button
-    var seleted : String = "위판장"
+    var seleted : String = "지역"
+    var which : String = "위판장"
+    var whichCode : String = "0001"
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -92,6 +95,8 @@ class ArcoreMeasurement : AppCompatActivity(), AdapterView.OnItemSelectedListene
                     "부산" ->  spinner2.adapter = boosan
                     "제주도" ->  spinner2.adapter = jejoo
                 }
+
+
             }
 
             override fun onNothingSelected(p0: AdapterView<*>?) {
@@ -99,20 +104,20 @@ class ArcoreMeasurement : AppCompatActivity(), AdapterView.OnItemSelectedListene
             }
         }
 
-//        spinner2.onItemSelectedListener = object  : AdapterView.OnItemSelectedListener{
-//            override fun onItemSelected(
-//                parent: AdapterView<*>?,
-//                view: View?,
-//                position: Int,
-//                id: Long
-//            ) {
-//
-//            }
-//
-//            override fun onNothingSelected(parent: AdapterView<*>?) {
-//                seleted = "경기도"
-//            }
-//        }
+        spinner2.onItemSelectedListener = object  : AdapterView.OnItemSelectedListener{
+            override fun onItemSelected(
+                parent: AdapterView<*>?,
+                view: View?,
+                position: Int,
+                id: Long
+            ) {
+                which = "${spinner2.getItemAtPosition(position)}"
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+                seleted = "경기도"
+            }
+        }
 
 
         val buttonArray = resources.getStringArray(R.array.arcore_measurement_buttons)
@@ -124,7 +129,12 @@ class ArcoreMeasurement : AppCompatActivity(), AdapterView.OnItemSelectedListene
 
         toMeasurement.setOnClickListener(object : View.OnClickListener {
             override fun onClick(v: View?) {
+                when(which){
+                    "부산공동어시장" -> whichCode = "0001"
+                    "인천수협 연안위판장" -> whichCode = "0010"
+                }
                 val intent = Intent(application, Measurement::class.java)
+                intent.putExtra("whichCode",whichCode)
                 startActivity(intent)
             }
         })
