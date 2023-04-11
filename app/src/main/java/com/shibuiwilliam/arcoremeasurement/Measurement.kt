@@ -89,6 +89,7 @@ class Measurement : AppCompatActivity(), Scene.OnUpdateListener, ScreenshotDetec
     private val multipleDistances = Array(Constants.maxNumMultiplePoints,
         {Array<TextView?>(Constants.maxNumMultiplePoints){null} })
     private lateinit var initCM: String
+    var whichcode : String = "0001"
 
     companion object {
         private const val REQUEST_CODE_READ_EXTERNAL_STORAGE_PERMISSION = 3009
@@ -103,6 +104,7 @@ class Measurement : AppCompatActivity(), Scene.OnUpdateListener, ScreenshotDetec
         }
 
         setContentView(R.layout.activity_measurement)
+        whichcode = intent.getStringExtra("whichCode")
         val distanceModeArray = resources.getStringArray(R.array.distance_mode)
         distanceModeArray.map{it->
             distanceModeArrayList.add(it)
@@ -110,6 +112,8 @@ class Measurement : AppCompatActivity(), Scene.OnUpdateListener, ScreenshotDetec
         arFragment = supportFragmentManager.findFragmentById(R.id.sceneform_fragment) as ArFragment?
 
         val intent = Intent(this,TemporaryFolder::class.java)
+
+
 
         initCM = resources.getString(R.string.initCM)
 
@@ -132,9 +136,9 @@ class Measurement : AppCompatActivity(), Scene.OnUpdateListener, ScreenshotDetec
 
             Log.d("aaaaaaaaaaaaaaaaaaaaaaaa" , hitResult.distance.toString())
 
-            distancetext.text = (hitResult.distance * 100).roundToInt().toString()+"cm"
+            var distance = (hitResult.distance * 100).roundToInt().toString()+"cm"
 
-            saveButton()
+            saveButton(whichcode , distance)
 
 
 
@@ -224,14 +228,14 @@ class Measurement : AppCompatActivity(), Scene.OnUpdateListener, ScreenshotDetec
         imageFile.absolutePath
         return imageFile
     }
-    private fun saveButton(){
+    private fun saveButton(code : String , distance : String){
 
         val now =
             SimpleDateFormat("yyyyMMdd_hhmmss").format(Date(System.currentTimeMillis()))
         Log.d("media path    " , Environment.getDownloadCacheDirectory().toString())
         val rootPath = Environment.getExternalStorageDirectory().toString() + "/DCIM/Temporary"
 
-        val fileName = "${now}.png"
+        val fileName = "${code}_${now}_${distance}.png"
         val savePath = File(rootPath,"/")
         savePath.mkdirs()
         savePath.absoluteFile
