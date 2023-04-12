@@ -49,11 +49,11 @@
                 android:id="@+id/tv_rv_name"
                 android:gravity="top"
                 android:layout_width="match_parent"
-                android:textAlignment="center"
                 android:layout_height="match_parent"
                 android:fontFamily="@font/gwangyang2"
                 android:layout_weight="1"
                 android:text="파일명"
+                android:autoSizeTextType="uniform"
                 android:textSize="20dp"
                 tools:ignore="RtlCompat"></TextView>
 
@@ -78,7 +78,6 @@
                 android:id="@+id/server_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
                 android:text="" />
 
         </LinearLayout>

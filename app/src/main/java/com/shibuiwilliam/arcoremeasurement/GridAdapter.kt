@@ -21,7 +21,9 @@ import retrofit2.Response
 import java.io.File
 
 
+
 class GridAdapter(val context: Context, var itemlist : MutableList<SnapshotData>) : BaseAdapter() {
+
 
 
     override fun getCount(): Int {
@@ -52,6 +54,7 @@ class GridAdapter(val context: Context, var itemlist : MutableList<SnapshotData>
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
         val view : View
         val holder : ViewHolder
+        val toast =
 
         if(convertView == null) {
             view = LayoutInflater.from(context).inflate(R.layout.item_recyclerview , null)
@@ -75,7 +78,14 @@ class GridAdapter(val context: Context, var itemlist : MutableList<SnapshotData>
         }
 
         holder.textview?.let {
-            holder.textview!!.setText(item.name)
+            val maxLength = 50
+
+            if (holder.textview!!.length() > maxLength)
+            {
+                val scaleFactor = maxLength.toFloat()
+                holder.textview!!.textSize = holder.textview!!.textSize * scaleFactor
+            }
+            holder.textview!!.text = item.name
 
         }
 
@@ -127,13 +137,18 @@ class GridAdapter(val context: Context, var itemlist : MutableList<SnapshotData>
     fun sendImage(image: MultipartBody.Part,item: SnapshotData , file :File) {
         val service = RetrofitSetting.createBaseService(RetrofitPath::class.java) //레트로핏 통신 설정
         val call = service?.imageSend(image)!! //통신 API 패스 설정
+        val toast = Toast.makeText(context,"통신성공", Toast.LENGTH_LONG).show()
 
         call.enqueue(object : Callback<String> {
 
             override fun onResponse(call: Call<String>, response: Response<String>) {
                 if (response.isSuccessful) {
                     Log.d("로그23132132123213 ",""+response?.body().toString())
-                    Toast.makeText(context,"통신성공", Toast.LENGTH_SHORT).show()
+                    if (toast == null){
+                        toast
+                    }else{
+                        toast!!
+                    }
                     itemlist.remove(item)
                     file.delete()
                     notifyDataSetChanged()
