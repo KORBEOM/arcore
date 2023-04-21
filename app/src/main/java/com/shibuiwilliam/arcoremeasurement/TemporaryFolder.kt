@@ -1,5 +1,11 @@
 package com.shibuiwilliam.arcoremeasurement
 
+import android.Manifest
+import android.content.ContentValues.TAG
+import android.content.Context
+import android.content.pm.PackageManager
+import android.net.ConnectivityManager
+import android.os.Build
 import android.os.Bundle
 import android.os.Environment
 import android.util.Log
@@ -9,12 +15,14 @@ import android.widget.GridView
 import android.widget.ListAdapter
 import android.widget.ViewAnimator
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.item_recyclerview.*
 import kotlinx.android.synthetic.main.temporary_folder.*
 import java.io.File
 import kotlin.concurrent.thread
+import kotlin.math.max
 
 
 lateinit var snapshotAdapter: SnapshotAdapter
@@ -27,8 +35,9 @@ class TemporaryFolder : AppCompatActivity() {
         setContentView(R.layout.temporary_folder)
 
         val gridView : GridView = findViewById(R.id.itemrecycle)
-
-
+        val connectivityManager = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val networkInfo = connectivityManager.activeNetworkInfo
+        val isConnected = networkInfo != null && networkInfo.isConnected
         val datas = mutableListOf<SnapshotData>()
         val rootPath = Environment.getExternalStorageDirectory().toString() + "/DCIM/Temporary"
         val file = File(rootPath)
@@ -48,15 +57,17 @@ class TemporaryFolder : AppCompatActivity() {
                 gridAdapter.getProFileImage(rootPath + "/" + i.name,i)
                 gridAdapter.notifyDataSetChanged()
             }
-
+            val total_size = datas.size
             showProgress(true)
             thread(start = true) {
                 Log.d("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" , datas.size.toString())
                 while(datas.size != 0) {
-                    Thread.sleep(1000)
+                    send_file.text = datas.size.toString() + "/" + total_size
                 }
+                send_file.text = datas.size.toString() + "/" + total_size
                 runOnUiThread{
                     showProgress(false)
+                    send_file.text = ""
                     for(i in datas){
                         gridAdapter.getProFileImage(rootPath + "/" + i.name,i)
                         gridAdapter.notifyDataSetChanged()
@@ -79,6 +90,7 @@ class TemporaryFolder : AppCompatActivity() {
 
 
     }
+
 
 
     private fun filedelete()

@@ -41,10 +41,9 @@ import java.io.FileOutputStream
 import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.*
-import kotlin.math.pow
-import kotlin.math.roundToInt
-import kotlin.math.sqrt
+import kotlin.math.*
 import com.google.ar.sceneform.rendering.Color as arColor
+
 
 
 class Measurement : AppCompatActivity(), Scene.OnUpdateListener, ScreenshotDetectionDelegate.ScreenshotDetectionListener {
@@ -89,7 +88,11 @@ class Measurement : AppCompatActivity(), Scene.OnUpdateListener, ScreenshotDetec
     private val multipleDistances = Array(Constants.maxNumMultiplePoints,
         {Array<TextView?>(Constants.maxNumMultiplePoints){null} })
     private lateinit var initCM: String
-    var whichcode : String = "0001"
+    var whichcode : String = "0000"
+
+    private var cameraIntrinsics: CameraIntrinsics? = null
+    private var pixelsToDistanceRatio: Float = 0.0f
+    private var distancee: Float = 0.0f
 
     companion object {
         private const val REQUEST_CODE_READ_EXTERNAL_STORAGE_PERMISSION = 3009
@@ -111,17 +114,22 @@ class Measurement : AppCompatActivity(), Scene.OnUpdateListener, ScreenshotDetec
         }
         arFragment = supportFragmentManager.findFragmentById(R.id.sceneform_fragment) as ArFragment?
 
+
+
+
         val intent = Intent(this,TemporaryFolder::class.java)
 
 
 
         initCM = resources.getString(R.string.initCM)
 
-
-        initRenderable()
         isStoragePermissionGranted()
+        initRenderable()
+
         createImageFile()
         val distancetext = distancetext.findViewById<TextView>(R.id.distancetext)
+
+
         downlodfolder.setOnClickListener {
             startActivity(intent)
         }
@@ -134,11 +142,48 @@ class Measurement : AppCompatActivity(), Scene.OnUpdateListener, ScreenshotDetec
             if (cubeRenderable == null || distanceCardViewRenderable == null) return@setOnTapArPlaneListener
             // Creating Anchor.
 
-            Log.d("aaaaaaaaaaaaaaaaaaaaaaaa" , hitResult.distance.toString())
+            val arFrame = arFragment?.arSceneView?.arFrame
+            if (arFrame != null ){
+                val camera = arFrame.camera
+                cameraIntrinsics = camera.imageIntrinsics
+            }else{
+                Log.d(TAG, "aaaaaaaaaaaaaaaaaaaaaaaaARCore camera not available or not tracking ${arFragment?.arSceneView!!.arFrame}")
+            }
 
-            var distance = (hitResult.distance * 100).roundToInt().toString()+"cm"
+            Log.d("hitresult_distance" , hitResult.distance.toString()+"m")
+
+            var distance = (hitResult.distance * 100).roundToInt().toString()
+            var objectDistance = hitResult.distance
+            var result : Float =  0.0f
+            // Compute pixels-to-distance ratio
+            if (cameraIntrinsics != null) {
+                val screenAspectRatio = arFragment!!.arSceneView.width.toFloat() / arFragment!!.arSceneView.height.toFloat()
+                val verticalFov = 2.0f * Math.atan(Math.tan((cameraIntrinsics!!.focalLength[1] / 2.0f).toDouble()) * screenAspectRatio).toFloat()
+                val horizontalFov = 2.0f * Math.atan(Math.tan((cameraIntrinsics!!.focalLength[0] / 2.0f).toDouble()) * screenAspectRatio).toFloat()
+                val imageWidth = cameraIntrinsics!!.imageDimensions[0].toFloat()
+                val imageHeight = cameraIntrinsics!!.imageDimensions[1].toFloat()
+                val diagonalAngle = atan(sqrt(imageWidth.toDouble().pow(2.0) + imageHeight.toDouble()
+                    .pow(2.0)
+                ) * tan(horizontalFov / 2.0) / imageWidth.toDouble())
+                val diagonalDistance = objectDistance * tan(diagonalAngle / 2.0).toFloat() * 2.0f
+                val pixelsToDistanceRatio = sqrt(imageWidth.toDouble().pow(2.0) + imageHeight.toDouble()
+                    .pow(2.0)
+                ).toFloat() / diagonalDistance
+                result = abs((1 / pixelsToDistanceRatio) * 100 )
+                Log.d(TAG, "Pixels-to-distance ratio: $pixelsToDistanceRatio pixels/meter")
+                Log.d(TAG, "Pixels-to-distance ratio: $result pixels/meter")
+            } else {
+                Log.d(TAG, "Camera intrinsics not available.")
+            }
+
+
+            //distancetext.text = (hitResult.distance*100).roundToInt().toString()+"cm"
+            distancetext.text = result.toString()
 
             saveButton(whichcode , distance)
+
+
+
 
 
 

@@ -1,12 +1,17 @@
 package com.shibuiwilliam.arcoremeasurement
 
+import android.Manifest
+import android.content.ContentValues
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.Gravity
 import android.view.View
 import android.widget.*
+import androidx.core.app.ActivityCompat
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.google.gson.reflect.TypeToken
@@ -26,7 +31,7 @@ class ArcoreMeasurement : AppCompatActivity(), AdapterView.OnItemSelectedListene
     private lateinit var toMeasurement: Button
     var seleted : String = "지역"
     var which : String = "위판장"
-    var whichCode : String = "0001"
+    var whichCode : String = "0000"
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -67,6 +72,7 @@ class ArcoreMeasurement : AppCompatActivity(), AdapterView.OnItemSelectedListene
 
         val spinner2 = findViewById<Spinner>(R.id.spinner2)
         spinner2.adapter = adapter
+        isStoragePermissionGranted()
         //activity_main안에 이미 adapter 속성이 있다. 해당 속성과 위에서 만든 adapter를 연결.
         spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
             override fun onItemSelected(p0: AdapterView<*>?, view: View?, position: Int, id: Long) {
@@ -130,14 +136,155 @@ class ArcoreMeasurement : AppCompatActivity(), AdapterView.OnItemSelectedListene
         toMeasurement.setOnClickListener(object : View.OnClickListener {
             override fun onClick(v: View?) {
                 when(which){
-                    "부산공동어시장" -> whichCode = "0001"
-                    "인천수협 연안위판장" -> whichCode = "0010"
+                         "부산공동어시장" -> whichCode = "0001"
+                          "부산시수협 다대공판장" -> whichCode = "0002"
+                            "부산시수협 자갈치공판장" -> whichCode = "0003"
+                            "부산시수협 민락위판장" -> whichCode = "0004"
+                            "기장수협 대변위판장" -> whichCode = "0005"
+                            "기장수협 학리위판장" -> whichCode = "0006"
+                            "제1,2구 잠수기 수협 부산위판장" -> whichCode = "0007"
+                            "부산국제수산물도매시장" -> whichCode = "0008"
+                            "수협중앙회 인천위판장" -> whichCode = "0009"
+                            "인천수협 연안위판장" -> whichCode = "0010"
+                            "인천수협 소래위판장" -> whichCode = "0011"
+                            "옹진 수협 연안위판장" -> whichCode = "0012"
+                            "영흥수협 영흥위판장" -> whichCode = "0013"
+                            "경인북부수협 새우젓산지(외포리) 위판장" -> whichCode = "0014"
+                            "울산수협 울산수협공판장" -> whichCode = "0015"
+                            "울산수협 방어진 위판장" -> whichCode = "0016"
+                            "울산수협 강동위판장" -> whichCode = "0017"
+                            "경기남부수협 궁평리위판장" -> whichCode = "0018"
+                            "옹진수협 대부(방아머리) 위판장" -> whichCode = "0019"
+                            "옹진수협 대부도(탄도) 위판장" -> whichCode = "0020"
+                            "속초시수협 청호항위판장" -> whichCode = "0021"
+                            "속초시수협 동명항위판장" -> whichCode = "0022"
+                            "강릉시수협 주문진항위판장" -> whichCode = "0023"
+                            "강릉시수협 사천진항위판장" -> whichCode = "0024"
+                            "동해시수협 묵호항위판장" -> whichCode = "0025"
+                            "삼척수협 삼척위판장" -> whichCode = "0026"
+                            "삼척수협 장호항위판장" -> whichCode = "0027"
+                            "원덕수협 임원항위판장" -> whichCode = "0028"
+                            "대포수협 대포항위판장" -> whichCode = "0029"
+                            "양양군수협 남애항위판장" -> whichCode = "0030"
+                            "양양군수협 동산항위판장" -> whichCode = "0031"
+                            "양양군수협 기사문항위판장" -> whichCode = "0032"
+                            "양양군수협 물치위판장" -> whichCode = "0033"
+                            "강원 고성군수협 아야진항위판장" -> whichCode = "0034"
+                            "고성군수협 거진항위판장" -> whichCode = "0035"
+                            "고성군수협 대진항위판장" -> whichCode = "0036"
+                            "죽왕수협 가진항위판장" -> whichCode = "0037"
+                            "죽왕수협 공현진항위판장" -> whichCode = "0038"
+                            "죽왕수협 오호항위판장" -> whichCode = "0039"
+                            "죽왕수협 문암1리위판장" -> whichCode = "0040"
+                            "죽왕수협 문암2리위판장" -> whichCode = "0041"
+                            "서산수협 안흥위판장" -> whichCode = "0042"
+                            "서산수협 모항위판장" -> whichCode = "0043"
+                            "서산수협 채석포 위판장" -> whichCode = "0044"
+                            "태안남부수협 몽산포위판장" -> whichCode = "0045"
+                            "태안남부수협 마검포위판장" -> whichCode = "0046"
+                            "태안남부수협 드르니 위판장" -> whichCode = "0047"
+                            "태안남부수협 당암위판장" -> whichCode = "0048"
+                            "안면도수협 백사장위판장" -> whichCode = "0049"
+                            "안면도수협 영목위판장" -> whichCode = "0050"
+                            "대천서부수협 대천항위판장" -> whichCode = "0051"
+                            "서천서부수협 홍원위판장" -> whichCode = "0052"
+                            "서천서부수협 마량위판장" -> whichCode = "0053"
+                            "보령수협 오천사업소위판장" -> whichCode = "0054"
+                            "보령수협 대천항 위판장" -> whichCode = "0055"
+                            "제 3,4,구 잠수기수협 오천위판장" -> whichCode = "0056"
+                        "보령수협 무창포어촌계위판장" -> whichCode = "0057"
+                        "서천군수협 장항위판장" -> whichCode = "0058"
+                        "보령수협 삼길포항 위판장" -> whichCode = "0059"
+                        "군산시수협 해망동위판장" -> whichCode = "0060"
+                        "군산시수협 비응항위판장" -> whichCode = "0061"
+                        "부안수협 격포위판장" -> whichCode = "0062"
+                        "군산시수협 선유도위판장" -> whichCode = "0063"
+                        "여수수협 군내위판장" -> whichCode = "0064"
+                        "여수수협 국동위판장" -> whichCode = "0065"
+                        "목포수협 동부위판장" -> whichCode = "0066"
+                        "목포수협 서부위판장" -> whichCode = "0067"
+                        "제3,4구 잠수기수협 국동위판장" -> whichCode = "0068"
+                        "완도금일수협 활선어위판장" -> whichCode = "0069"
+                        "고흥군수협 녹동위판장" -> whichCode = "0070"
+                        "나로도수협 나로도위판장" -> whichCode = "0071"
+                        "강진군수협 마량(활선어)위판장" -> whichCode = "0072"
+                        "신안군수협 송도위판장" -> whichCode = "0073"
+                        "신안군수협 흑산도 위판장" -> whichCode = "0074"
+                        "거문도수협 거문도위판장" -> whichCode = "0075"
+                        "영광군수협 법성위판장" -> whichCode = "0076"
+                        "진도군수협 서망위판장" -> whichCode = "0077"
+                        "장흥군수협 정남진위판장" -> whichCode = "0078"
+                        "후포수협 후포위판장" -> whichCode = "0079"
+                        "후포수협 구산위판장" -> whichCode = "0080"
+                        "후포수협 사동위판소" -> whichCode = "0081"
+                        "강구수협 강구위판장" -> whichCode = "0082"
+                        "구룡포수협 구룡포 위판장" -> whichCode = "0083"
+                        "구룡포수협 호미곶위판장" -> whichCode = "0084"
+                        "구룡포수협 장기위판장" -> whichCode = "0085"
+                        "포항수협 죽도위판장" -> whichCode = "0086"
+                        "포항수협 송도활어위판장" -> whichCode = "0087"
+                        "죽변수협 죽변위판장" -> whichCode = "0088"
+                        "죽변수협 오산위판장" -> whichCode = "0089"
+                        "경주시수협 감포위판장" -> whichCode = "0090"
+                        "영덕북부수협 축산위판장" -> whichCode = "0091"
+                        "울릉군수협 저동위판장" -> whichCode = "0092"
+                        "울릉군수협 태하위판장" -> whichCode = "0093"
+                        "울릉군수협 천부위판장" -> whichCode = "0094"
+                        "울릉군수협 현포위판장" -> whichCode = "0095"
+                        "삼천포수협 삼천포(선어)위판장" -> whichCode = "0096"
+                        "거제수협 장승포위판장" -> whichCode = "0097"
+                        "거제수협 성포위판장" -> whichCode = "0098"
+                        "통영수협 통영위판장" -> whichCode = "0099"
+                        "마산수협 마산위판장" -> whichCode = "0100"
+                        "제1,2구 잠수기수협 거제위판장" -> whichCode = "0101"
+                        "제1,2구 잠수기수협 남해위판장" -> whichCode = "0102"
+                        "제1.,2구 잠수기수협 통영위판장" -> whichCode = "0103"
+                        "제1,2구 잠수기수협 마산위판장" -> whichCode = "0104"
+                        "멸치권현망수협 통영위판장" -> whichCode = "0105"
+                        "멸치권현말수협 마산위판장" -> whichCode = "0106"
+                        "남해군수협 미조(선어)위판장" -> whichCode = "0107"
+                        "진해시수협 속천위판장" -> whichCode = "0108"
+                        "의창수협 용원위판장" -> whichCode = "0109"
+                        "의창수협 안골위판장" -> whichCode = "0110"
+                        "경남고성군수협 남포항(수남)위판장" -> whichCode = "0111"
+                        "사천수협 활어위판장" -> whichCode = "0112"
+                        "사량수협 사량위판장" -> whichCode = "0113"
+                        "하동군수협 노량위판장" -> whichCode = "0114"
+                        "제주시수협 제주위판장" -> whichCode = "0115"
+                        "한림수협 한림위판장" -> whichCode = "0116"
+                        "서귀포수협 수산물유통센터" -> whichCode = "0117"
+                        "서귀포수협 태흥(남원)위판장" -> whichCode = "0118"
+                        "성산포수협 성산포위판장" -> whichCode = "0119"
+                        "추자도수협 추자항위판장" -> whichCode = "0120"
+                        "모슬포수협 모슬포 위판장" -> whichCode = "0121"
+
                 }
                 val intent = Intent(application, Measurement::class.java)
                 intent.putExtra("whichCode",whichCode)
                 startActivity(intent)
             }
         })
+    }
+    private fun isStoragePermissionGranted(): Boolean {
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                == PackageManager.PERMISSION_GRANTED
+            ) {
+                Log.v(ContentValues.TAG, "Permission is granted")
+                true
+            } else {
+                Log.v(ContentValues.TAG, "Permission is revoked")
+                ActivityCompat.requestPermissions(
+                    this,
+                    arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
+                    1
+                )
+                false
+            }
+        } else { //permission is automatically granted on sdk<23 upon installation
+            Log.v(ContentValues.TAG, "Permission is granted")
+            true
+        }
     }
 
     private fun setupSpinnerMain() {

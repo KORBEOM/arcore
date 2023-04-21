@@ -61,17 +61,17 @@
                 android:layout_marginTop="10dp"
                 android:id="@+id/delete_btn"
                 android:background="@drawable/recycle_bin"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
                 android:text="delete"
                 android:contentDescription="TODO" />
 
             <ImageButton
                 android:id="@+id/save_btn"
                 android:layout_marginTop="10dp"
-                android:background="@drawable/baseline_folder_24"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
+                android:background="@drawable/archive"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
                 android:text="save"
                 android:contentDescription="TODO" />
             <TextView

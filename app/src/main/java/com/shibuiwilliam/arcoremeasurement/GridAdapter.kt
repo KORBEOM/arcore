@@ -100,7 +100,8 @@ class GridAdapter(val context: Context, var itemlist : MutableList<SnapshotData>
 
             if (result
             ) {
-                Log.v(ContentValues.TAG, "123123213123123delete success")
+                Log.v(ContentValues.TAG, "delete success")
+                Toast.makeText(context,"삭제되었습니다", Toast.LENGTH_SHORT).show()
                 itemlist.remove(item)
                 notifyDataSetChanged()
                 true
@@ -137,19 +138,15 @@ class GridAdapter(val context: Context, var itemlist : MutableList<SnapshotData>
     fun sendImage(image: MultipartBody.Part,item: SnapshotData , file :File) {
         val service = RetrofitSetting.createBaseService(RetrofitPath::class.java) //레트로핏 통신 설정
         val call = service?.imageSend(image)!! //통신 API 패스 설정
-        val toast = Toast.makeText(context,"통신성공", Toast.LENGTH_LONG).show()
+
 
         call.enqueue(object : Callback<String> {
 
             override fun onResponse(call: Call<String>, response: Response<String>) {
                 if (response.isSuccessful) {
-                    Log.d("로그23132132123213 ",""+response?.body().toString())
-                    if (toast == null){
-                        toast
-                    }else{
-                        toast!!
-                    }
+                    Log.d("로그23132132123213 ",""+ response?.body().toString())
                     itemlist.remove(item)
+                    Toast.makeText(context,"전송완료", Toast.LENGTH_SHORT).show()
                     file.delete()
                     notifyDataSetChanged()
 
