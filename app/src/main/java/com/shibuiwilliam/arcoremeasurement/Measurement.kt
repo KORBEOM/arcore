@@ -1,6 +1,7 @@
 package com.shibuiwilliam.arcoremeasurement
 
 import android.Manifest
+
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.ActivityManager
@@ -11,11 +12,17 @@ import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Color
+import android.graphics.ImageFormat
 import android.graphics.Rect
+import android.hardware.camera2.CameraCharacteristics
+import android.hardware.camera2.CameraManager
+import android.hardware.camera2.CameraOfflineSession
 import android.os.Build
 import android.os.Bundle
 import android.os.Environment
+import android.util.DisplayMetrics
 import android.util.Log
+import android.util.Size
 import android.view.*
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
@@ -43,8 +50,15 @@ import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.math.*
 import com.google.ar.sceneform.rendering.Color as arColor
-
-
+import com.google.ar.core.Session
+import com.google.ar.core.CameraConfig
+import com.google.ar.core.CameraConfigFilter
+import com.google.ar.core.Config
+import com.google.ar.core.ArCoreApk
+import com.google.ar.core.exceptions.UnavailableApkTooOldException
+import com.google.ar.core.exceptions.UnavailableArcoreNotInstalledException
+import com.google.ar.core.exceptions.UnavailableSdkTooOldException
+import com.google.ar.core.exceptions.UnavailableUserDeclinedInstallationException
 
 class Measurement : AppCompatActivity(), Scene.OnUpdateListener, ScreenshotDetectionDelegate.ScreenshotDetectionListener {
     private val MIN_OPENGL_VERSION = 3.0
@@ -54,23 +68,7 @@ class Measurement : AppCompatActivity(), Scene.OnUpdateListener, ScreenshotDetec
     private var arFragment: ArFragment? = null
 
     private var distanceModeTextView: TextView? = null
-    private lateinit var pointTextView: TextView
 
-    private lateinit var arrow1UpLinearLayout: LinearLayout
-    private lateinit var arrow1DownLinearLayout: LinearLayout
-    private lateinit var arrow1UpView: ImageView
-    private lateinit var arrow1DownView: ImageView
-    private lateinit var arrow1UpRenderable: Renderable
-    private lateinit var arrow1DownRenderable: Renderable
-
-    private lateinit var arrow10UpLinearLayout: LinearLayout
-    private lateinit var arrow10DownLinearLayout: LinearLayout
-    private lateinit var arrow10UpView: ImageView
-    private lateinit var arrow10DownView: ImageView
-    private lateinit var arrow10UpRenderable: Renderable
-    private lateinit var arrow10DownRenderable: Renderable
-
-    private lateinit var multipleDistanceTableLayout: TableLayout
 
     private var cubeRenderable: ModelRenderable? = null
     private var distanceCardViewRenderable: ViewRenderable? = null
@@ -91,14 +89,14 @@ class Measurement : AppCompatActivity(), Scene.OnUpdateListener, ScreenshotDetec
     var whichcode : String = "0000"
 
     private var cameraIntrinsics: CameraIntrinsics? = null
-    private var pixelsToDistanceRatio: Float = 0.0f
-    private var distancee: Float = 0.0f
+
 
     companion object {
         private const val REQUEST_CODE_READ_EXTERNAL_STORAGE_PERMISSION = 3009
     }
 
 
+    @SuppressLint("ServiceCast")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (!checkIsSupportedDeviceOrFinish(this)) {
@@ -107,7 +105,7 @@ class Measurement : AppCompatActivity(), Scene.OnUpdateListener, ScreenshotDetec
         }
 
         setContentView(R.layout.activity_measurement)
-        whichcode = intent.getStringExtra("whichCode")
+        whichcode = intent.getStringExtra("whichCode").toString()
         val distanceModeArray = resources.getStringArray(R.array.distance_mode)
         distanceModeArray.map{it->
             distanceModeArrayList.add(it)
@@ -115,9 +113,62 @@ class Measurement : AppCompatActivity(), Scene.OnUpdateListener, ScreenshotDetec
         arFragment = supportFragmentManager.findFragmentById(R.id.sceneform_fragment) as ArFragment?
 
 
-
+        window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or View.SYSTEM_UI_FLAG_LAYOUT_STABLE
 
         val intent = Intent(this,TemporaryFolder::class.java)
+
+        //val displayMetrics = DisplayMetrics()
+        val displayMetrics = resources.displayMetrics
+        windowManager.defaultDisplay.getMetrics(displayMetrics)
+
+        val screenWidth = displayMetrics.widthPixels
+        val screenHeight = displayMetrics.heightPixels
+        val displayRotation = windowManager.defaultDisplay.rotation
+
+        /*val cameraManager = getSystemService(CAMERA_SERVICE) as CameraManager
+        val cameraId = cameraManager.cameraIdList.find { cameraId ->                    //후면 카메라 가져오기
+            val characteristics = cameraManager.getCameraCharacteristics(cameraId)
+            val lensFacing = characteristics.get(CameraCharacteristics.LENS_FACING)
+            lensFacing == CameraCharacteristics.LENS_FACING_BACK
+        } ?: throw RuntimeException("Unable to find rear camera.")
+        val characteristics = cameraManager.getCameraCharacteristics(cameraId)
+        val streamConfigurationMap =
+            characteristics.get(CameraCharacteristics.SCALER_STREAM_CONFIGURATION_MAP) //주어진 카메라 장치에 대해 지원되는 모든 이미지 크기 및 형식 목록을 얻을 수 있다
+        val resolutions = streamConfigurationMap!!.getOutputSizes(ImageFormat.JPEG)
+        val maxResolution = resolutions?.maxBy { it.width * it.height } ?: Size(1920, 1080)*/
+
+
+
+        if (checkIsSupportedDeviceOrFinish()) {                       //arcore 세션 생성
+            try {
+                //val arsession = Session(this)
+                var sharedSession = Session(this,EnumSet.of(Session.Feature.SHARED_CAMERA ))
+                var sharedCamera = sharedSession.sharedCamera
+                var cameraId = sharedSession.cameraConfig.cameraId
+
+                //val config = arsession.config
+                //config.updateMode = Config.UpdateMode.LATEST_CAMERA_IMAGE
+                //val filter = CameraConfigFilter(arsession)
+                //filter.depthSensorUsage = EnumSet.of(CameraConfig.DepthSensorUsage.REQUIRE_AND_USE)
+                //val cameraConfigList = arsession.getSupportedCameraConfigs(filter)
+                //arsession.cameraConfig = cameraConfigList[0]
+                //rCoreConfig.imageSize = Size(screenWidth , screenHeight)
+                //arCoreConfig.updateMode = Config.UpdateMode.LATEST_CAMERA_IMAGE
+                //arCoreConfig.focusMode = Config.FocusMode.AUTO
+                //arsession.cameraConfig.imageSize.height
+                //arsession.cameraConfig.imageSize.width
+                Log.d("후면 카메라 height", sharedCamera.toString())
+                Log.d("후면 카메라 width", cameraId.toString())
+                //maxResolution.width
+                //maxResolution.height
+                //arsession?.setCameraConfig(filter)
+                //Log.d("max width", arsession.cameraConfig.imageSize.height.toString())
+                //Log.d("max height",arsession.cameraConfig.imageSize.width.toString())
+            } catch (e: Exception) {
+                Log.e("eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee" , e.toString())
+//                Toast.makeText(this, "Failed to create AR session", Toast.LENGTH_SHORT).show()
+            }
+        }
 
 
 
@@ -125,7 +176,6 @@ class Measurement : AppCompatActivity(), Scene.OnUpdateListener, ScreenshotDetec
 
         isStoragePermissionGranted()
         initRenderable()
-
         createImageFile()
         val distancetext = distancetext.findViewById<TextView>(R.id.distancetext)
 
@@ -136,6 +186,11 @@ class Measurement : AppCompatActivity(), Scene.OnUpdateListener, ScreenshotDetec
 
 
 
+        arFragment!!.arSceneView.session?.setDisplayGeometry(displayRotation, screenWidth, screenHeight)
+
+
+
+
         arFragment!!.arSceneView.planeRenderer.isEnabled = false
 
         arFragment!!.setOnTapArPlaneListener { hitResult: HitResult, plane: Plane?, motionEvent: MotionEvent? ->
@@ -143,54 +198,81 @@ class Measurement : AppCompatActivity(), Scene.OnUpdateListener, ScreenshotDetec
             // Creating Anchor.
 
             val arFrame = arFragment?.arSceneView?.arFrame
+
+
+//            val displayMetrics = DisplayMetrics()
+//            windowManager.defaultDisplay.getMetrics(displayMetrics)
+//            val screenWidth = displayMetrics.widthPixels
+//            val screenHeight = displayMetrics.heightPixels
+//            arFragment!!.arSceneView.session?.setDisplayGeometry(displayMetrics..arFragment!!.arSceneView.session?.rotation, screenWidth, screenHeight)
+            var distanceMeter : Float = 0.0F
             if (arFrame != null ){
+
                 val camera = arFrame.camera
-                cameraIntrinsics = camera.imageIntrinsics
+                var anchor = hitResult.createAnchor()
+                var anchorNode = AnchorNode(anchor)
+
+
+                //Log.d("qweqweqweqwewqe", streamConfigurationMap.toString())
+                cameraIntrinsics = camera.imageIntrinsics           //핸드폰 기기 카메라 해상도 가져오기
+
+                distanceMeter = calculateDistance(
+                    anchorNode.worldPosition,
+                    arFrame!!.camera.pose)
+
+
+                Log.d("hitresult_distance",distanceMeter.toString())
             }else{
-                Log.d(TAG, "aaaaaaaaaaaaaaaaaaaaaaaaARCore camera not available or not tracking ${arFragment?.arSceneView!!.arFrame}")
+                Log.d(TAG, "ARCore camera not available or not tracking ${arFragment?.arSceneView!!.arFrame}")
             }
 
-            Log.d("hitresult_distance" , hitResult.distance.toString()+"m")
+            Log.d("지원되는 기기", ArCoreApk.Availability.SUPPORTED_INSTALLED.toString()) // 지원되는 기기인지 확인
+            Log.d("핸드폰 화면 해상도 widthPixels",screenWidth.toString())
+            Log.d("핸드폰 화면 해상도 heightPixels",screenHeight.toString()) //핸드폰 해상도 지원
 
-            var distance = (hitResult.distance * 100).roundToInt().toString()
-            var objectDistance = hitResult.distance
+
             var result : Float =  0.0f
-            // Compute pixels-to-distance ratio
+
+//            Log.d("hitresult_distance" , test?.get(1)?.distance.toString()+"m")
+
+            // 픽셀 대 거리 비율 계산
             if (cameraIntrinsics != null) {
                 val screenAspectRatio = arFragment!!.arSceneView.width.toFloat() / arFragment!!.arSceneView.height.toFloat()
                 val verticalFov = 2.0f * Math.atan(Math.tan((cameraIntrinsics!!.focalLength[1] / 2.0f).toDouble()) * screenAspectRatio).toFloat()
                 val horizontalFov = 2.0f * Math.atan(Math.tan((cameraIntrinsics!!.focalLength[0] / 2.0f).toDouble()) * screenAspectRatio).toFloat()
-                val imageWidth = cameraIntrinsics!!.imageDimensions[0].toFloat()
-                val imageHeight = cameraIntrinsics!!.imageDimensions[1].toFloat()
+                //val imageWidth = cameraIntrinsics!!.imageDimensions[0].toFloat()
+                val imageWidth = screenWidth.toFloat()
+                //val imageHeight = cameraIntrinsics!!.imageDimensions[1].toFloat()
+                val imageHeight = screenHeight.toFloat()
                 val diagonalAngle = atan(sqrt(imageWidth.toDouble().pow(2.0) + imageHeight.toDouble()
                     .pow(2.0)
                 ) * tan(horizontalFov / 2.0) / imageWidth.toDouble())
-                val diagonalDistance = objectDistance * tan(diagonalAngle / 2.0).toFloat() * 2.0f
+                val diagonalDistance = distanceMeter * tan(diagonalAngle / 2.0).toFloat() * 2.0f
                 val pixelsToDistanceRatio = sqrt(imageWidth.toDouble().pow(2.0) + imageHeight.toDouble()
                     .pow(2.0)
                 ).toFloat() / diagonalDistance
-                result = abs((1 / pixelsToDistanceRatio) * 100 )
-                Log.d(TAG, "Pixels-to-distance ratio: $pixelsToDistanceRatio pixels/meter")
-                Log.d(TAG, "Pixels-to-distance ratio: $result pixels/meter")
+                result = abs((1 / pixelsToDistanceRatio) * 100 ).toFloat()            //전체 픽셀을 한 개의 픽셀 값
+                Log.d("kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk" , result.toString())
+                Log.d(TAG, "Pixels-to-distance ratio: $imageWidth pixels/meter")    //장치의 카메라 해상도
+                Log.d(TAG, "Pixels-to-distance ratio: $imageHeight pixels/meter")
+                Log.d("RRRRRRRRRRRRRRRRRRRRRRRRRRRRRR", (imageWidth / screenWidth.toFloat()).toString() )
+
+
             } else {
                 Log.d(TAG, "Camera intrinsics not available.")
             }
 
 
-            //distancetext.text = (hitResult.distance*100).roundToInt().toString()+"cm"
-            distancetext.text = result.toString()
-
-            saveButton(whichcode , distance)
-
-
-
-
-
-
+            distancetext.text = (distanceMeter*100).roundToInt().toString()+"cm"
+            //distancetext.text = result.toString()
+            //distancetext.text = motionEvent?.x.toString()
+            saveButton(whichcode , distanceMeter)
         }
 
 
     }
+
+
 
     private fun initRenderable() {
         MaterialFactory.makeTransparentWithColor(
@@ -273,14 +355,14 @@ class Measurement : AppCompatActivity(), Scene.OnUpdateListener, ScreenshotDetec
         imageFile.absolutePath
         return imageFile
     }
-    private fun saveButton(code : String , distance : String){
+    private fun saveButton(code : String , distance : Float){
 
         val now =
             SimpleDateFormat("yyyyMMdd_hhmmss").format(Date(System.currentTimeMillis()))
         Log.d("media path    " , Environment.getDownloadCacheDirectory().toString())
         val rootPath = Environment.getExternalStorageDirectory().toString() + "/DCIM/Temporary"
 
-        val fileName = "${code}_${now}_${distance}.png"
+        val fileName = "${code}_${now}_${(distance*100).roundToInt()}.png"
         val savePath = File(rootPath,"/")
         savePath.mkdirs()
         savePath.absoluteFile
@@ -541,7 +623,7 @@ class Measurement : AppCompatActivity(), Scene.OnUpdateListener, ScreenshotDetec
     private fun checkIsSupportedDeviceOrFinish(activity: Activity): Boolean {
         val openGlVersionString =
             (Objects.requireNonNull(activity
-                .getSystemService(Context.ACTIVITY_SERVICE)) as ActivityManager)
+                .getSystemService(ACTIVITY_SERVICE)) as ActivityManager)
                 .deviceConfigurationInfo
                 .glEsVersion
         if (openGlVersionString.toDouble() < MIN_OPENGL_VERSION) {
@@ -560,6 +642,7 @@ class Measurement : AppCompatActivity(), Scene.OnUpdateListener, ScreenshotDetec
         Toast.makeText(this, path, Toast.LENGTH_SHORT).show();
         // Do something when screen was captured
     }
+
 
     override fun onScreenCapturedWithDeniedPermission() {
         Toast.makeText(this, "Please grant read external storage permission for screenshot detection", Toast.LENGTH_SHORT).show()
@@ -588,5 +671,47 @@ class Measurement : AppCompatActivity(), Scene.OnUpdateListener, ScreenshotDetec
 
     private fun showReadExternalStoragePermissionDeniedMessage() {
         Toast.makeText(this, "Read external storage permission has denied", Toast.LENGTH_SHORT).show()
+    }
+
+    private fun checkIsSupportedDeviceOrFinish(): Boolean {
+        try {
+            when (ArCoreApk.getInstance().checkAvailability(this)) {
+                ArCoreApk.Availability.UNSUPPORTED_DEVICE_NOT_CAPABLE -> {
+                    Toast.makeText(this, "This device does not support AR", Toast.LENGTH_SHORT).show()
+                    finish()
+                    return false
+                }
+                ArCoreApk.Availability.SUPPORTED_NOT_INSTALLED -> {
+                    Toast.makeText(this, "Please install ARCore", Toast.LENGTH_SHORT).show()
+                    try {
+                        ArCoreApk.getInstance().requestInstall(this, true)
+                    } catch (e: UnavailableUserDeclinedInstallationException) {
+                        // Display request for user to install ARCore
+                        Toast.makeText(this, "Please install ARCore", Toast.LENGTH_SHORT).show()
+                        finish()
+                        return false
+                    }
+                    return false
+                }
+                ArCoreApk.Availability.SUPPORTED_APK_TOO_OLD, ArCoreApk.Availability.UNKNOWN_ERROR, ArCoreApk.Availability.UNKNOWN_TIMED_OUT -> {
+                    Toast.makeText(this, "Please update ARCore", Toast.LENGTH_SHORT).show()
+                    finish()
+                    return false
+                }
+            }
+            return true
+        } catch (e: UnavailableArcoreNotInstalledException) {
+            Toast.makeText(this, "Please install ARCore", Toast.LENGTH_SHORT).show()
+            finish()
+            return false
+        } catch (e: UnavailableApkTooOldException) {
+            Toast.makeText(this, "Please update ARCore", Toast.LENGTH_SHORT).show()
+            finish()
+            return false
+        } catch (e: UnavailableSdkTooOldException) {
+            Toast.makeText(this, "Please update this app", Toast.LENGTH_SHORT).show()
+            finish()
+            return false
+        }
     }
 }

@@ -29,9 +29,11 @@ class ArcoreMeasurement : AppCompatActivity(), AdapterView.OnItemSelectedListene
     private val TAG = "ArcoreMeasurement"
     private val buttonArrayList = ArrayList<String>()
     private lateinit var toMeasurement: Button
+
     var seleted : String = "지역"
     var which : String = "위판장"
     var whichCode : String = "0000"
+
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -72,12 +74,15 @@ class ArcoreMeasurement : AppCompatActivity(), AdapterView.OnItemSelectedListene
 
         val spinner2 = findViewById<Spinner>(R.id.spinner2)
         spinner2.adapter = adapter
+
         isStoragePermissionGranted()
+
         //activity_main안에 이미 adapter 속성이 있다. 해당 속성과 위에서 만든 adapter를 연결.
         spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
             override fun onItemSelected(p0: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                textView.text = "선택됨: $position ${spinner.getItemAtPosition(position)}"
+//                textView.text = "선택됨: $position ${spinner.getItemAtPosition(position)}"
                 seleted = "${spinner.getItemAtPosition(position)}"
+
 
 //                if(seleted == "경기도"){
 //                    spinner2.adapter = gyeonggi
@@ -103,12 +108,14 @@ class ArcoreMeasurement : AppCompatActivity(), AdapterView.OnItemSelectedListene
                 }
 
 
+
             }
 
             override fun onNothingSelected(p0: AdapterView<*>?) {
                 seleted = "위판장"
             }
         }
+
 
         spinner2.onItemSelectedListener = object  : AdapterView.OnItemSelectedListener{
             override fun onItemSelected(
@@ -124,6 +131,7 @@ class ArcoreMeasurement : AppCompatActivity(), AdapterView.OnItemSelectedListene
                 seleted = "경기도"
             }
         }
+
 
 
         val buttonArray = resources.getStringArray(R.array.arcore_measurement_buttons)

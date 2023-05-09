@@ -22,13 +22,20 @@
         android:usesCleartextTraffic="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".Measurement" />
-        <activity android:name=".TemporaryFolder"/>
+        <activity android:name=".Measurement"
+            android:screenOrientation="landscape"
+            android:exported="true"
+            />
+        <activity android:name=".TemporaryFolder"
+            android:screenOrientation="portrait"
+            android:configChanges="orientation|screenSize"
+            android:exported="true"
+            />
         <activity
             android:name=".ArcoreMeasurement"
             android:configChanges="orientation|screenSize"
             android:exported="true"
-            android:screenOrientation="sensor"
+            android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

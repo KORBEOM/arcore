@@ -1,13 +1,18 @@
 package com.shibuiwilliam.arcoremeasurement
 
+import android.annotation.SuppressLint
 import android.content.ContentValues
 import android.content.Context
+import android.content.DialogInterface
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
 import android.os.Environment
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import androidx.appcompat.app.AlertDialog
 import androidx.core.content.getSystemService
 import androidx.core.view.isInvisible
 import androidx.recyclerview.widget.RecyclerView
@@ -54,7 +59,6 @@ class GridAdapter(val context: Context, var itemlist : MutableList<SnapshotData>
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
         val view : View
         val holder : ViewHolder
-        val toast =
 
         if(convertView == null) {
             view = LayoutInflater.from(context).inflate(R.layout.item_recyclerview , null)
@@ -111,11 +115,29 @@ class GridAdapter(val context: Context, var itemlist : MutableList<SnapshotData>
                 false
             }
         }
+
         holder.saveBtn?.setOnClickListener {
 
-            getProFileImage(rootPath,item)
-            notifyDataSetChanged()
 
+            if (isInternetConnected(context)) {
+                try {
+                    getProFileImage(rootPath,item)
+                    notifyDataSetChanged()
+                } catch (e: Exception) {
+                    // Handle the exception, e.g., show an error message
+                }
+            } else {
+                val builder = AlertDialog.Builder(context)
+                builder
+                    .setTitle("네트워크 연결 문제")
+                    .setMessage("인터넷 연결을 확인해주세요.")
+                    .setPositiveButton("확인",
+                        DialogInterface.OnClickListener { dialog, id ->
+                            // Start 버튼 선택시 수행
+                        })
+                builder.create()
+                builder.show()
+            }
 
         }
 
@@ -124,6 +146,14 @@ class GridAdapter(val context: Context, var itemlist : MutableList<SnapshotData>
         TODO("Not yet implemented")
 
 
+    }
+    @SuppressLint("ServiceCast")
+    fun isInternetConnected(context: Context): Boolean {
+        val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val network = connectivityManager.activeNetwork ?: return false
+        val networkCapabilities = connectivityManager.getNetworkCapabilities(network) ?: return false
+
+        return networkCapabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
     }
 
     fun getProFileImage(imagePath: String,item: SnapshotData ){
@@ -161,6 +191,7 @@ class GridAdapter(val context: Context, var itemlist : MutableList<SnapshotData>
                 Log.d("로그 failed",t.message.toString())
             }
         })
+
     }
 
 }

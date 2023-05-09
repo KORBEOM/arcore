@@ -3,8 +3,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
-    android:paddingHorizontal="10dp"
-    android:paddingVertical="10dp"
     android:orientation="vertical"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
@@ -20,38 +18,39 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
             android:layout_weight="4">
 
             <androidx.cardview.widget.CardView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 app:cardCornerRadius="10dp">
+
 
                 <ImageView
                     android:id="@+id/img_rv_photo"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
                     android:scaleType="centerCrop" />
             </androidx.cardview.widget.CardView>
         </LinearLayout>
 
+
+
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
             android:orientation="horizontal"
-            android:paddingBottom="15dp"
-            android:gravity="top"
             android:layout_weight="1">
 
             <TextView
                 android:id="@+id/tv_rv_name"
-                android:gravity="top"
-                android:layout_width="match_parent"
+                android:layout_marginTop="10dp"
+                android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:fontFamily="@font/gwangyang2"
-                android:layout_weight="1"
+                android:layout_weight="3"
                 android:text="파일명"
                 android:autoSizeTextType="uniform"
                 android:textSize="20dp"
@@ -59,10 +58,11 @@
 
             <ImageButton
                 android:layout_marginTop="10dp"
+                android:layout_weight="1"
                 android:id="@+id/delete_btn"
                 android:background="@drawable/recycle_bin"
-                android:layout_width="60dp"
-                android:layout_height="60dp"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
                 android:text="delete"
                 android:contentDescription="TODO" />
 
@@ -70,8 +70,9 @@
                 android:id="@+id/save_btn"
                 android:layout_marginTop="10dp"
                 android:background="@drawable/archive"
-                android:layout_width="60dp"
-                android:layout_height="60dp"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
                 android:text="save"
                 android:contentDescription="TODO" />
             <TextView
@@ -82,6 +83,7 @@
 
         </LinearLayout>
     </LinearLayout>
+
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
