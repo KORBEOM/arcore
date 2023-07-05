@@ -158,6 +158,6 @@
         <item>모슬포수협 모슬포위판장</item>
     </string-array>
     <string-array name="고정">
-        <item>지역을 고르세요</item>
+        <item>위판장을 고르세요</item>
     </string-array>
 </resources>

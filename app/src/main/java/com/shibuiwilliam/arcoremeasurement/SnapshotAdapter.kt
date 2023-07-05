@@ -1,30 +1,22 @@
 package com.shibuiwilliam.arcoremeasurement
 
 
-import android.annotation.SuppressLint
 import android.content.ContentValues.TAG
 import android.content.Context
 import android.graphics.Color
-import android.media.Image
-import android.net.Uri
 
 import android.os.Environment
-import android.text.TextWatcher
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 
-import androidx.core.net.toUri
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import kotlinx.android.synthetic.main.activity_measurement.*
-import kotlinx.android.synthetic.main.item_recyclerview.view.*
 
 import okhttp3.MediaType
 import okhttp3.MultipartBody

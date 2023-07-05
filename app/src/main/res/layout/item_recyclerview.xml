@@ -49,7 +49,7 @@
                 android:layout_marginTop="10dp"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:fontFamily="@font/gwangyang2"
+                android:fontFamily="@font/haesu2"
                 android:layout_weight="3"
                 android:text="파일명"
                 android:autoSizeTextType="uniform"

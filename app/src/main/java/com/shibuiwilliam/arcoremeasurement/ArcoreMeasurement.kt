@@ -12,6 +12,7 @@ import android.view.Gravity
 import android.view.View
 import android.widget.*
 import androidx.core.app.ActivityCompat
+import com.google.ar.core.Point
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.google.gson.reflect.TypeToken
@@ -36,10 +37,23 @@ class ArcoreMeasurement : AppCompatActivity(), AdapterView.OnItemSelectedListene
 
 
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_arcore_measurement)
 
+        val one_text : TextView = findViewById(R.id.title)
+        val two_text : TextView = findViewById(R.id.title2)
+        val logo : ImageView = findViewById(R.id.imageView2)
+
+        val display = windowManager.defaultDisplay
+        val size = android.graphics.Point()
+        display.getRealSize(size)
+        val width = size.x
+        val height = size.y
+
+        Log.d("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" , width.toString())
+        Log.d("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" , height.toString())
 
         val adapter = ArrayAdapter.createFromResource(this,R.array.위판장, R.layout.spinner_item_go)
         adapter.setDropDownViewResource(R.layout.spinner_drop_go)
@@ -317,7 +331,7 @@ class ArcoreMeasurement : AppCompatActivity(), AdapterView.OnItemSelectedListene
     }
     fun setupSpinnerHandler(adapter : ArrayAdapter<CharSequence>){
         val spinner = findViewById<Spinner>(R.id.spinner)
-        val textView = findViewById<TextView>(R.id.textView)
+
 
 
     }

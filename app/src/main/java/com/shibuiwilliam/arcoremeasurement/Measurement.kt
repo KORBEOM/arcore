@@ -112,9 +112,8 @@ class Measurement : AppCompatActivity(), Scene.OnUpdateListener, ScreenshotDetec
         }
         arFragment = supportFragmentManager.findFragmentById(R.id.sceneform_fragment) as ArFragment?
 
-
         window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-
+        window.statusBarColor = Color.TRANSPARENT
         val intent = Intent(this,TemporaryFolder::class.java)
 
         //val displayMetrics = DisplayMetrics()
@@ -124,6 +123,10 @@ class Measurement : AppCompatActivity(), Scene.OnUpdateListener, ScreenshotDetec
         val screenWidth = displayMetrics.widthPixels
         val screenHeight = displayMetrics.heightPixels
         val displayRotation = windowManager.defaultDisplay.rotation
+        back_btn.setOnClickListener{
+            onBackPressed()
+        }
+
 
         /*val cameraManager = getSystemService(CAMERA_SERVICE) as CameraManager
         val cameraId = cameraManager.cameraIdList.find { cameraId ->                    //후면 카메라 가져오기
@@ -137,14 +140,19 @@ class Measurement : AppCompatActivity(), Scene.OnUpdateListener, ScreenshotDetec
         val resolutions = streamConfigurationMap!!.getOutputSizes(ImageFormat.JPEG)
         val maxResolution = resolutions?.maxBy { it.width * it.height } ?: Size(1920, 1080)*/
 
-
+        fun onBackPressed() {
+            super.onBackPressed()
+            finish()
+        }
 
         if (checkIsSupportedDeviceOrFinish()) {                       //arcore 세션 생성
             try {
-                //val arsession = Session(this)
+                val arsession = Session(this)
                 var sharedSession = Session(this,EnumSet.of(Session.Feature.SHARED_CAMERA ))
                 var sharedCamera = sharedSession.sharedCamera
                 var cameraId = sharedSession.cameraConfig.cameraId
+//                configureARCoreCamera(arsession)
+
 
                 //val config = arsession.config
                 //config.updateMode = Config.UpdateMode.LATEST_CAMERA_IMAGE
@@ -152,7 +160,7 @@ class Measurement : AppCompatActivity(), Scene.OnUpdateListener, ScreenshotDetec
                 //filter.depthSensorUsage = EnumSet.of(CameraConfig.DepthSensorUsage.REQUIRE_AND_USE)
                 //val cameraConfigList = arsession.getSupportedCameraConfigs(filter)
                 //arsession.cameraConfig = cameraConfigList[0]
-                //rCoreConfig.imageSize = Size(screenWidth , screenHeight)
+                //arCoreConfig.imageSize = Size(screenWidth , screenHeight)
                 //arCoreConfig.updateMode = Config.UpdateMode.LATEST_CAMERA_IMAGE
                 //arCoreConfig.focusMode = Config.FocusMode.AUTO
                 //arsession.cameraConfig.imageSize.height
@@ -266,7 +274,7 @@ class Measurement : AppCompatActivity(), Scene.OnUpdateListener, ScreenshotDetec
             distancetext.text = (distanceMeter*100).roundToInt().toString()+"cm"
             //distancetext.text = result.toString()
             //distancetext.text = motionEvent?.x.toString()
-            saveButton(whichcode , distanceMeter)
+            saveButton(whichcode , distanceMeter , result)
         }
 
 
@@ -355,14 +363,14 @@ class Measurement : AppCompatActivity(), Scene.OnUpdateListener, ScreenshotDetec
         imageFile.absolutePath
         return imageFile
     }
-    private fun saveButton(code : String , distance : Float){
+    private fun saveButton(code : String , distance : Float , result : Float)  {
 
         val now =
             SimpleDateFormat("yyyyMMdd_hhmmss").format(Date(System.currentTimeMillis()))
         Log.d("media path    " , Environment.getDownloadCacheDirectory().toString())
         val rootPath = Environment.getExternalStorageDirectory().toString() + "/DCIM/Temporary"
 
-        val fileName = "${code}_${now}_${(distance*100).roundToInt()}.png"
+        val fileName = "${code}_${now}_${(distance*100).roundToInt()}_${(result.toString()).substring(2) }.png"
         val savePath = File(rootPath,"/")
         savePath.mkdirs()
         savePath.absoluteFile
@@ -671,6 +679,32 @@ class Measurement : AppCompatActivity(), Scene.OnUpdateListener, ScreenshotDetec
 
     private fun showReadExternalStoragePermissionDeniedMessage() {
         Toast.makeText(this, "Read external storage permission has denied", Toast.LENGTH_SHORT).show()
+    }
+    fun configureARCoreCamera(session: Session) {
+        val filter = CameraConfigFilter(session)
+        val configs = session.getSupportedCameraConfigs(filter)
+
+        // Check if the camera configs are available
+        if (configs.isNotEmpty()) {
+            // Select a desired camera configuration (you can modify this according to your needs)
+            val desiredConfig = findBestCameraConfig(configs)
+
+            // Set the desired camera configuration
+            session.cameraConfig = desiredConfig
+
+            // Restart the AR session for the changes to take effect
+            session.configure(Config(session))
+        } else {
+            // Handle the case when no camera configurations are available
+            // You can display an error message or fallback to a default configuration
+        }
+    }
+
+    // Function to find the best camera configuration based on your preferences
+    fun findBestCameraConfig(configs: List<CameraConfig>): CameraConfig {
+        // Here, you can implement your own logic to select the best camera configuration
+        // This example simply selects the first available configuration
+        return configs.first()
     }
 
     private fun checkIsSupportedDeviceOrFinish(): Boolean {

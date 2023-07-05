@@ -55,10 +55,10 @@
         android:textSize="18dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.446"
+        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.885" />
+        app:layout_constraintVertical_bias="0.891" />
 
     <ImageView
         android:id="@+id/imageView"
@@ -78,50 +78,50 @@
         android:layout_width="95dp"
         android:layout_height="86dp"
         android:src="@drawable/ai2"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/imageView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.439"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.15"
+        app:layout_constraintVertical_bias="0.522"
         tools:ignore="MissingConstraints"></ImageView>
 
     <TextView
         android:id="@+id/title2"
-        android:layout_width="115dp"
-        android:layout_height="43dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:autoSizeTextType="uniform"
-        android:layout_marginTop="64sp"
         android:fontFamily="@font/haesu"
         android:text="옵서버"
         android:textColor="@color/colorAccent"
-        android:textSize="35dp"
-        app:autoSizeMinTextSize="64sp"
-        app:autoSizeMaxTextSize="100sp"
+        android:textSize="35sp"
+        app:autoSizeMaxTextSize="150sp"
+        app:autoSizeMinTextSize="35sp"
         app:layout_constraintBottom_toTopOf="@+id/imageView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toEndOf="@+id/imageView2"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.394"
+        app:layout_constraintVertical_bias="0.551"
         tools:ignore="MissingConstraints" />
 
     <TextView
         android:id="@+id/title"
         android:layout_width="wrap_content"
-        android:layout_height="43dp"
-        android:layout_marginTop="64dp"
+        android:layout_height="wrap_content"
+        android:autoSizeTextType="uniform"
         android:fontFamily="@font/haesu"
         android:text="육상"
-        android:autoSizeTextType="uniform"
         android:textColor="@color/colorAccent"
         android:textSize="35sp"
+        app:autoSizeMaxTextSize="100sp"
+        app:autoSizeMinTextSize="35sp"
         app:layout_constraintBottom_toTopOf="@+id/imageView"
         app:layout_constraintEnd_toStartOf="@+id/imageView2"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.394"
+        app:layout_constraintVertical_bias="0.551"
         tools:ignore="MissingConstraints" />
 
     <ImageView

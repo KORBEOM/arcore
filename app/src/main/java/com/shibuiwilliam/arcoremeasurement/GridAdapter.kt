@@ -13,9 +13,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import androidx.appcompat.app.AlertDialog
-import androidx.core.content.getSystemService
-import androidx.core.view.isInvisible
-import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import okhttp3.MediaType
 import okhttp3.MultipartBody
@@ -123,6 +120,7 @@ class GridAdapter(val context: Context, var itemlist : MutableList<SnapshotData>
                 try {
                     getProFileImage(rootPath,item)
                     notifyDataSetChanged()
+                    Toast.makeText(context,"서버에 전송했습니다.", Toast.LENGTH_SHORT).show()
                 } catch (e: Exception) {
                     // Handle the exception, e.g., show an error message
                 }
@@ -156,12 +154,15 @@ class GridAdapter(val context: Context, var itemlist : MutableList<SnapshotData>
         return networkCapabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
     }
 
-    fun getProFileImage(imagePath: String,item: SnapshotData ){
+    fun getProFileImage(imagePath: String,item: SnapshotData ){0
 
         val file = File(imagePath)
-        val requestFile = RequestBody.create(MediaType.parse("multipart/form-data"), file)
-        val body = MultipartBody.Part.createFormData("image", file.name, requestFile)
-
+        val requestFile = RequestBody.create(MediaType.parse("image/png"), file)
+        //val requestPix = RequestBody.create(MediaType.parse("text/plain"), )
+        val body = MultipartBody.Part.createFormData("images", file.name, requestFile)
+        Log.d("gimoring ",""+ body?.toString())
+        Log.d("gimoring ",""+ file.name)
+        Log.d("gimoring ",""+ file?.toString())
         sendImage(body,item,file)
 
     }
@@ -183,7 +184,7 @@ class GridAdapter(val context: Context, var itemlist : MutableList<SnapshotData>
                 }
                 else {
                     Log.d("로그1354156123 ",""+ response.raw())
-                    Toast.makeText(context,"통신실패", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context,"전송실패", Toast.LENGTH_SHORT).show()
                 }
             }
 
