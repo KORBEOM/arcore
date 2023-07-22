@@ -57,7 +57,7 @@ class SnapshotAdapter(private val context: Context) : RecyclerView.Adapter<Snaps
         private val server_text : TextView = view.findViewById(R.id.server_text)
 
 
-        fun bind(item: SnapshotData , itemid : Int) {
+        fun bind(item: SnapshotData, itemid : Int) {
             txtName.text = item.name
             server_text.text = item.server_text
             server_text.setTextColor(item.test_color)
@@ -112,7 +112,7 @@ class SnapshotAdapter(private val context: Context) : RecyclerView.Adapter<Snaps
         }
     }
 
-    fun getProFileImage(imagePath: String,item: SnapshotData ){
+    fun getProFileImage(imagePath: String,item: SnapshotData){
 
         val file = File(imagePath)
         val requestFile = RequestBody.create(MediaType.parse("multipart/form-data"), file)
@@ -121,7 +121,7 @@ class SnapshotAdapter(private val context: Context) : RecyclerView.Adapter<Snaps
         sendIm3age(body,item,file)
 
     }
-    fun getProFileFailImage(imagePath: String,item: SnapshotData , result : TextView){
+    fun getProFileFailImage(imagePath: String, item: SnapshotData, result : TextView){
 
         val file = File(imagePath)
         val requestFile = RequestBody.create(MediaType.parse("image/*"), file)
@@ -133,7 +133,7 @@ class SnapshotAdapter(private val context: Context) : RecyclerView.Adapter<Snaps
 
 
     }
-    fun sendIm3age(image: MultipartBody.Part,item: SnapshotData , file :File) {
+    fun sendIm3age(image: MultipartBody.Part, item: SnapshotData, file :File) {
         val service = RetrofitSetting.createBaseService(RetrofitPath::class.java) //레트로핏 통신 설정
         val call = service?.imageSend(image)!! //통신 API 패스 설정
 
@@ -159,7 +159,7 @@ class SnapshotAdapter(private val context: Context) : RecyclerView.Adapter<Snaps
             }
         })
     }
-    fun sendFailImage(image: MultipartBody.Part,item: SnapshotData , file :File, result: TextView) {
+    fun sendFailImage(image: MultipartBody.Part, item: SnapshotData, file :File, result: TextView) {
         val service = RetrofitSetting.createBaseService(RetrofitFailPath::class.java) //레트로핏 통신 설정
         val call = service?.imageFailSend(image)!! //통신 API 패스 설정
 

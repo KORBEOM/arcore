@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">ArcoreMeasurement</string>
+    <string name="app_name">육상용AI옵서버</string>
     <string name="to_measurement_button">To Measurement</string>
     <string-array name="arcore_measurement_buttons">
         <item>@string/to_measurement_button</item>

@@ -34,27 +34,24 @@
                 android:background="@drawable/back"
                 android:contentDescription="TODO"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.01"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.475"
+                app:layout_constraintVertical_bias="0.525"
                 tools:ignore="MissingConstraints" />
 
             <TextView
                 android:id="@+id/textView"
-                android:layout_width="98dp"
-                android:layout_height="52dp"
+                android:layout_width="93dp"
+                android:layout_height="32dp"
                 android:fontFamily="@font/haesu3"
                 android:gravity="center_vertical"
                 android:text="이전화면"
                 android:textColor="@color/colorAccent"
                 android:textSize="18dp"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.062"
-                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/back_btn"
                 app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.531"
                 tools:ignore="MissingConstraints">
 
             </TextView>
@@ -75,21 +72,49 @@
 
             </TextView>
 
+
             <ImageButton
                 android:id="@+id/downlodfolder"
                 android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginBottom="10dp"
-                android:background="@drawable/gallery"
+                android:layout_height="0dp"
+                android:layout_marginEnd="4dp"
+                android:adjustViewBounds="true"
+                app:srcCompat="@drawable/gallery"
                 android:contentDescription="TODO"
+                android:cropToPadding="true"
+                android:scaleType="fitXY"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.958"
-                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.425"
+                app:layout_constraintVertical_bias="0.0"
                 tools:ignore="MissingConstraints" />
+
+            <ImageButton
+                android:id="@+id/success_folder"
+                android:layout_width="50dp"
+                android:layout_height="0dp"
+                android:layout_marginEnd="4dp"
+                android:adjustViewBounds="true"
+                android:cropToPadding="true"
+                android:scaleType="fitXY"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/downlodfolder"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.0"
+                app:srcCompat="@drawable/download" />
+
+            <ImageButton
+                android:id="@+id/fail_folder"
+                android:layout_width="50dp"
+                android:layout_height="0dp"
+                android:layout_marginEnd="4dp"
+                android:adjustViewBounds="true"
+                android:scaleType="fitXY"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/success_folder"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.266"
+                app:srcCompat="@drawable/filefolder" />
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>
@@ -102,7 +127,7 @@
 
             <fragment
                 android:id="@+id/sceneform_fragment"
-                android:name="com.google.ar.sceneform.ux.ArFragment"
+                android:name="com.shibuiwilliam.arcoremeasurement.CustomArFragment"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 app:layout_constraintBottom_toBottomOf="parent"

@@ -6,12 +6,14 @@ import android.content.Context
 import android.content.DialogInterface
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
+import android.os.Build
 import android.os.Environment
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
 import com.bumptech.glide.Glide
 import okhttp3.MediaType
@@ -21,11 +23,11 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import java.io.File
-
+import java.nio.file.Files
+import java.nio.file.StandardCopyOption
 
 
 class GridAdapter(val context: Context, var itemlist : MutableList<SnapshotData>) : BaseAdapter() {
-
 
 
     override fun getCount(): Int {
@@ -53,6 +55,7 @@ class GridAdapter(val context: Context, var itemlist : MutableList<SnapshotData>
         var deleteBtn : ImageButton? = null
         var saveBtn : ImageButton? = null
     }
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
         val view : View
         val holder : ViewHolder
@@ -91,7 +94,10 @@ class GridAdapter(val context: Context, var itemlist : MutableList<SnapshotData>
         }
 
         val rootPath = Environment.getExternalStorageDirectory().toString() + "/DCIM/Temporary/" + item.name
+        val testPath = Environment.getExternalStorageDirectory().toString() + "/DCIM/Fail/" + item.name
+        val SuccessPath = Environment.getExternalStorageDirectory().toString() + "/DCIM/Success/" + item.name
         val file = File(rootPath)
+        //val testfile = File(testPath)
 
         holder.deleteBtn?.setOnClickListener {
 
@@ -102,7 +108,7 @@ class GridAdapter(val context: Context, var itemlist : MutableList<SnapshotData>
             if (result
             ) {
                 Log.v(ContentValues.TAG, "delete success")
-                Toast.makeText(context,"삭제되었습니다", Toast.LENGTH_SHORT).show()
+                makeToast("삭제되었습니다")
                 itemlist.remove(item)
                 notifyDataSetChanged()
                 true
@@ -118,7 +124,7 @@ class GridAdapter(val context: Context, var itemlist : MutableList<SnapshotData>
 
             if (isInternetConnected(context)) {
                 try {
-                    getProFileImage(rootPath,item)
+                    getProFileImage(rootPath,item , testPath , SuccessPath)
                     notifyDataSetChanged()
                     Toast.makeText(context,"서버에 전송했습니다.", Toast.LENGTH_SHORT).show()
                 } catch (e: Exception) {
@@ -154,37 +160,53 @@ class GridAdapter(val context: Context, var itemlist : MutableList<SnapshotData>
         return networkCapabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
     }
 
-    fun getProFileImage(imagePath: String,item: SnapshotData ){0
+    fun getProFileImage(imagePath: String,item: SnapshotData , movePath : String , success : String){0
 
         val file = File(imagePath)
+        val testfile = File(movePath)
+        val successfile = File(success)
         val requestFile = RequestBody.create(MediaType.parse("image/png"), file)
         //val requestPix = RequestBody.create(MediaType.parse("text/plain"), )
         val body = MultipartBody.Part.createFormData("images", file.name, requestFile)
         Log.d("gimoring ",""+ body?.toString())
         Log.d("gimoring ",""+ file.name)
         Log.d("gimoring ",""+ file?.toString())
-        sendImage(body,item,file)
+        sendImage(body,item,file , testfile , successfile)
 
     }
-    fun sendImage(image: MultipartBody.Part,item: SnapshotData , file :File) {
+    fun sendImage(image: MultipartBody.Part,item: SnapshotData , file :File , testfile : File , successfile : File) {
         val service = RetrofitSetting.createBaseService(RetrofitPath::class.java) //레트로핏 통신 설정
         val call = service?.imageSend(image)!! //통신 API 패스 설정
+        val rootPath = Environment.getExternalStorageDirectory().toString() + "/DCIM/Temporary"
+        val savePath = File(rootPath, "/")
 
 
         call.enqueue(object : Callback<String> {
 
+            @RequiresApi(Build.VERSION_CODES.O)
             override fun onResponse(call: Call<String>, response: Response<String>) {
                 if (response.isSuccessful) {
                     Log.d("로그23132132123213 ",""+ response?.body().toString())
+                    Files.move(file.toPath() , successfile.toPath() , StandardCopyOption.REPLACE_EXISTING)
                     itemlist.remove(item)
                     Toast.makeText(context,"전송완료", Toast.LENGTH_SHORT).show()
-                    file.delete()
+                    //file.delete()
                     notifyDataSetChanged()
 
                 }
                 else {
                     Log.d("로그1354156123 ",""+ response.raw())
                     Toast.makeText(context,"전송실패", Toast.LENGTH_SHORT).show()
+                    Files.move(file.toPath() , testfile.toPath() , StandardCopyOption.REPLACE_EXISTING)
+                    Log.d("에러코드 ",response.code().toString())
+                    itemlist.remove(item)
+                    if (response.code() == 404) {
+                        Toast.makeText(context, "위판장을 다시 선택해주세요", Toast.LENGTH_SHORT).show()
+                    }
+                    if (response.code() == 500) {
+                        Toast.makeText(context, "다시 촬영 해주세요", Toast.LENGTH_SHORT).show()
+                    }
+                    notifyDataSetChanged()
                 }
             }
 
@@ -193,6 +215,12 @@ class GridAdapter(val context: Context, var itemlist : MutableList<SnapshotData>
             }
         })
 
+    }
+    private fun makeToast(message: String) {
+        var toast: Toast? = null
+        toast?.cancel()
+        toast = Toast.makeText(context, message, Toast.LENGTH_SHORT)
+        toast.show()
     }
 
 }

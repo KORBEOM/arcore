@@ -1,4 +1,4 @@
-package com.shibuiwilliam.arcoremeasurement
+package com.shibuiwilliam.arcoremeasurement.model
 
 import android.content.Context
 import android.graphics.Bitmap

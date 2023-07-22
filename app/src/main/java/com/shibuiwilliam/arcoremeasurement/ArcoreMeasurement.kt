@@ -107,7 +107,7 @@ class ArcoreMeasurement : AppCompatActivity(), AdapterView.OnItemSelectedListene
 //                    incheon.notifyDataSetChanged()
 //                }
                 when(seleted){
-                    "위판장" -> spinner2.adapter = default
+                    "지역" -> spinner2.adapter = default
                     "경기도" ->  spinner2.adapter = gyeonggi
                     "인천" ->  spinner2.adapter = incheon
                     "충청남도" ->  spinner2.adapter = chungnam

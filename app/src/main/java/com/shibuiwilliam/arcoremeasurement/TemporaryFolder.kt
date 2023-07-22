@@ -34,7 +34,7 @@ import kotlin.math.max
 
 lateinit var snapshotAdapter: SnapshotAdapter
 
-class TemporaryFolder : AppCompatActivity() {
+open class TemporaryFolder : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -50,6 +50,8 @@ class TemporaryFolder : AppCompatActivity() {
         gridView.verticalSpacing = 50
         val datas = mutableListOf<SnapshotData>()
         val rootPath = Environment.getExternalStorageDirectory().toString() + "/DCIM/Temporary"
+        val testPath = Environment.getExternalStorageDirectory().toString() + "/DCIM/Fail/"
+        val successPath = Environment.getExternalStorageDirectory().toString() + "/DCIM/Success/"
         val file = File(rootPath)
         var list1 =  mutableListOf<File>()
         val connectivityManager = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
@@ -70,7 +72,7 @@ class TemporaryFolder : AppCompatActivity() {
 
         allbtn.setOnClickListener {
                     for (i in datas) {
-                        gridAdapter.getProFileImage(rootPath + "/" + i.name, i)
+                        gridAdapter.getProFileImage(rootPath + "/" + i.name, i ,testPath+ i.name ,successPath+ i.name)
                         gridAdapter.notifyDataSetChanged()
                     }
             if (isInternetConnected(applicationContext))
@@ -88,7 +90,7 @@ class TemporaryFolder : AppCompatActivity() {
                             showProgress(false)
                             send_file.text = ""
                             for (i in datas) {
-                                gridAdapter.getProFileImage(rootPath + "/" + i.name, i)
+                                gridAdapter.getProFileImage(rootPath + "/" + i.name, i,testPath+ i.name,successPath+ i.name)
                                 gridAdapter.notifyDataSetChanged()
                             }
                         }

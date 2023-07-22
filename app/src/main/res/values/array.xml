@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string-array name="위판장">
-        <item>위판장</item>
+        <item>지역</item>
         <item>경기도</item>
         <item>인천</item>
         <item>충청남도</item>
