@@ -11,9 +11,11 @@ import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Rect
+import android.media.SoundPool
 import android.os.Build
 import android.os.Bundle
 import android.os.Environment
+import android.os.Handler
 import android.util.Log
 import android.view.*
 import android.widget.*
@@ -38,7 +40,6 @@ import kotlinx.android.synthetic.main.activity_measurement.*
 import kotlinx.android.synthetic.main.activity_measurement.view.*
 import kotlinx.android.synthetic.main.custom_toast.*
 import kotlinx.android.synthetic.main.temporary_folder.*
-import kotlinx.android.synthetic.main.test_arcore.*
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
@@ -51,8 +52,6 @@ open class Measurement : AppCompatActivity(), Scene.OnUpdateListener,
     ScreenshotDetectionDelegate.ScreenshotDetectionListener {
     private val MIN_OPENGL_VERSION = 3.0
     private val TAG: String = Measurement::class.java.getSimpleName()
-    //  private val screenshotDetectionDelegate = ScreenshotDetectionDelegate(this, this)
-
     private var arFragment: CustomArFragment? = null
 
     private var distanceModeTextView: TextView? = null
@@ -70,12 +69,12 @@ open class Measurement : AppCompatActivity(), Scene.OnUpdateListener,
     private val midAnchors: MutableMap<String, Anchor> = mutableMapOf()
     private val midAnchorNodes: MutableMap<String, AnchorNode> = mutableMapOf()
     private val fromGroundNodes = ArrayList<List<Node>>()
-
+    val soundPool = SoundPool.Builder().build()
+    var soundId : Int = 0
     private val multipleDistances = Array(Constants.maxNumMultiplePoints,
         { Array<TextView?>(Constants.maxNumMultiplePoints) { null } })
     private lateinit var initCM: String
     var whichcode: String = "0000"
-
     private var cameraIntrinsics: CameraIntrinsics? = null
     private var cameraconfig : CameraConfig? = null
 
@@ -120,7 +119,7 @@ open class Measurement : AppCompatActivity(), Scene.OnUpdateListener,
         val screenHeight = displayMetrics.heightPixels
         val displayRotation = windowManager.defaultDisplay.rotation
 
-       back_btn.setOnClickListener {
+        back_btn.setOnClickListener {
             onBackPressed()
         }
 
@@ -237,8 +236,25 @@ open class Measurement : AppCompatActivity(), Scene.OnUpdateListener,
             if (cubeRenderable == null || distanceCardViewRenderable == null) return@setOnTapArPlaneListener
             // Creating Anchor.
 
-            val arFrame = arFragment?.arSceneView?.arFrame
 
+            val arFrame = arFragment?.arSceneView?.arFrame
+            val screenwidth_pos = screenWidth / 3
+            val screenheight_pos = screenHeight / 2
+            var hitTestresult = arFrame!!.hitTest(screenwidth_pos.toFloat(), screenheight_pos.toFloat())
+            var hitTestresult2 = arFrame!!.hitTest( (screenwidth_pos+200).toFloat(), screenheight_pos.toFloat())
+            Log.d("1번 좌좌좌표", screenwidth_pos.toString())
+            Log.d("2번 좌좌좌표", screenheight_pos.toString())
+            Log.d("3번 좌좌좌표" , (screenwidth_pos+200).toFloat().toString())
+
+
+            var anchor1 = hitTestresult[0].createAnchor()
+            var anchorNode1 = AnchorNode(anchor1)
+            var anchor2 = hitTestresult2[0].createAnchor()
+            var anchorNode2 = AnchorNode(anchor2)
+            var distance1 = calculateDistance2(anchorNode1.worldPosition, anchorNode2.worldPosition)
+            var resultt = distance1 / 2
+            Log.d("1번 좌좌좌표", distance1.toString())
+            Log.d("2번 좌좌좌표", resultt.toString())
 
 //            arFragment!!.arSceneView.session?.setDisplayGeometry(displayMetrics..arFragment!!.arSceneView.session?.rotation, screenWidth, screenHeight)
             var distanceMeter: Float = 0.0F
@@ -266,7 +282,7 @@ open class Measurement : AppCompatActivity(), Scene.OnUpdateListener,
                     "ARCore camera not available or not tracking ${arFragment?.arSceneView!!.arFrame}"
                 )
             }
-            Log.d("ㅎ핸드폰 기기 카메라 해상도", cameraconfig!!.imageSize.width.toString())
+
             Log.d("지원되는 기기", ArCoreApk.Availability.SUPPORTED_INSTALLED.toString()) // 지원되는 기기인지 확인
             //Log.d("핸드폰 화면 해상도 widthPixels", view1.width.toString())
             //Log.d("핸드폰 화면 해상도 heightPixels",  view1.height.toString()) //핸드폰 해상도 지원
@@ -291,18 +307,18 @@ open class Measurement : AppCompatActivity(), Scene.OnUpdateListener,
                     2.0f * Math.atan(Math.tan(cameraIntrinsics!!.focalLength[0].toDouble()) * screenAspectRatio).toFloat()
 
 
-               //val imageWidth = cameraIntrinsics!!.imageDimensions[0].toFloat()
-                val imageWidth = arFragment!!.arSceneView.width.toFloat()
+                //val imageWidth = cameraIntrinsics!!.imageDimensions[0].toFloat()
+                val imageWidth = 640f
                 //val imageHeight = cameraIntrinsics!!.imageDimensions[1].toFloat()
-                val imageHeight = arFragment!!.arSceneView.height.toFloat()
+                val imageHeight = 480f
                 val diagonalAngle = atan(
                     sqrt(
                         imageWidth.toDouble().pow(2.0) + imageHeight.toDouble()
                             .pow(2.0)
-                    ) * tan(horizontalFov1 / 2.0) / imageWidth.toDouble()
+                    ) * tan(verticalFov1 / 2.0) / imageWidth.toDouble()
                 )
                 val diagonalDistance = distanceMeter * tan(diagonalAngle / 2.0).toFloat() * 2.0f
-              //  val testDistance = Math.tan(horizontalFov / 2) * cameraIntrinsics!!.focalLength[0].toDouble() / 10/ distanceMeter
+                //  val testDistance = Math.tan(horizontalFov / 2) * cameraIntrinsics!!.focalLength[0].toDouble() / 10/ distanceMeter
                 val pixelsToDistanceRatio = sqrt(
                     imageWidth.toDouble().pow(2.0) + imageHeight.toDouble()
                         .pow(2.0)
@@ -312,7 +328,7 @@ open class Measurement : AppCompatActivity(), Scene.OnUpdateListener,
                 Log.d("kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk", result.toString())
                 Log.d(TAG, "Pixels-to-distance ratio: $imageWidth pixels/meter")    //장치의 카메라 해상도
                 Log.d(TAG, "Pixels-to-distance ratio: $imageHeight pixels/meter")
-              //  Log.d(TAG, "diagonalangle: $testDistance pixels/meter")
+                //  Log.d(TAG, "diagonalangle: $testDistance pixels/meter")
                 Log.d(TAG, "Pixels-to-distance ratio: $diagonalDistance pixels/meter")
                 Log.d(
                     "RRRRRRRRRRRRRRRRRRRRRRRRRRRRRR",
@@ -334,7 +350,11 @@ open class Measurement : AppCompatActivity(), Scene.OnUpdateListener,
             //distancetext.text = motionEvent?.x.toString()
             Log.d("motionEvent x", motionEvent?.x.toString())
             Log.d("motionEvent y", motionEvent?.y.toString())
-            saveButton(whichcode, distanceMeter, result)
+
+            val x = motionEvent?.x.toString().toFloat()
+            val y = motionEvent?.y.toString().toFloat()
+
+            saveButton(whichcode, distanceMeter, resultt,x, y)
         }
 
 
@@ -460,7 +480,7 @@ open class Measurement : AppCompatActivity(), Scene.OnUpdateListener,
     }
 
     private fun saveButton(
-        code: String, distance: Float, result: Float) {
+        code: String, distance: Float, result: Float,x: Float,y: Float) {
 
         val now =
             SimpleDateFormat("yyyyMMdd_hhmmss").format(Date(System.currentTimeMillis()))
@@ -468,7 +488,7 @@ open class Measurement : AppCompatActivity(), Scene.OnUpdateListener,
         val rootPath = Environment.getExternalStorageDirectory().toString() + "/DCIM/Temporary"
 
         val fileName =
-            "${code}_${now}_${(distance * 100).roundToInt()}_${(result.toString()).substring(2)}.png"
+            "${code}_${now}_${(distance * 100).roundToInt()}_${(result.toString()).substring(2)}_${x.toInt()}_${y.toInt()}.png"
         val savePath = File(rootPath, "/")
         savePath.mkdirs()
         savePath.absoluteFile
@@ -481,7 +501,7 @@ open class Measurement : AppCompatActivity(), Scene.OnUpdateListener,
         if (file.exists()) file.delete()
         //val new_test = arFragment!!.arSceneView
         val vieww = arFragment!!.arSceneView
-
+        soundId = soundPool.load(this,R.raw.camera,0)
         //val view1 = arFragment!!.view
 
         clearAllAnchors()
@@ -516,18 +536,20 @@ open class Measurement : AppCompatActivity(), Scene.OnUpdateListener,
         }
 
         try {
+            soundPool.play(soundId,1.0f,1.0f,0,0,1.5f)
             val out = FileOutputStream(file)
             bitmap.compress(Bitmap.CompressFormat.PNG, 100, out)
 
             out.flush()
             out.close()
+
             val inflater = layoutInflater
 // Custom 레이아웃 Imflatation '인플레이션', 레이아웃 메모리에 객체화
 // Custom 레이아웃 Imflatation '인플레이션', 레이아웃 메모리에 객체화
-            val layout: View = inflater.inflate(
-                R.layout.custom_toast,
-                findViewById<View>(R.id.custom_toast_layout) as ViewGroup?
-            )
+//            val layout: View = inflater.inflate(
+//                R.layout.custom_toast,
+//                findViewById<View>(R.id.custom_toast_layout) as ViewGroup?
+//            )
 
 // 보여줄 이미지 설정 위해 ImageView 연결
 // 보여줄 이미지 설정 위해 ImageView 연결
@@ -535,27 +557,32 @@ open class Measurement : AppCompatActivity(), Scene.OnUpdateListener,
 //            image.setBackgroundResource(R.drawable.gallery)
 
             //val a: Bitmap? = Bitmap.createBitmap(view1.width, view1.height, Bitmap.Config.ARGB_8888)
-            val image = layout.findViewById<ImageView>(R.id.custom_toast_image)
-            image.setImageBitmap(bitmap)
+//            val image = layout.findViewById<ImageView>(R.id.custom_toast_image)
+//            image.setImageBitmap(bitmap)
 
 
 // Toast 객체 생성
 
 // Toast 객체 생성
-            val toast = Toast(this)
+//            val toast = Toast(this)
 // 위치설정, Gravity - 기준지정(상단,왼쪽 기준 0,0) / xOffset, yOffset - Gravity기준으로 위치 설정
 // 위치설정, Gravity - 기준지정(상단,왼쪽 기준 0,0) / xOffset, yOffset - Gravity기준으로 위치 설정
-            toast.setGravity(Gravity.CENTER or Gravity.FILL, 0, 0)
+//            toast.setGravity(Gravity.CENTER or Gravity.FILL, 0, 0)
 // Toast 보여줄 시간 'Toast.LENGTH_SHORT 짧게'
 // Toast 보여줄 시간 'Toast.LENGTH_SHORT 짧게'
-            toast.duration = Toast.LENGTH_SHORT
+
 // CustomLayout 객체 연결
 // CustomLayout 객체 연결
-            toast.view = layout
+//            toast.view = layout
 // Toast 보여주기
 // Toast 보여주기
-            toast.show()
-            Log.d("ddddddddddd", toast.toString())
+//            toast.show()
+//            Handler().postDelayed(Runnable{
+//                run(){
+//                    toast.cancel()
+//                }
+//            },100)
+//            Log.d("ddddddddddd", toast.toString())
 
         } catch (e: Exception) {
             e.printStackTrace()
@@ -587,7 +614,7 @@ open class Measurement : AppCompatActivity(), Scene.OnUpdateListener,
 
     object Screenshot {
         private fun takeScreenshot(view: View): Bitmap {
-
+            view.isFocusable = true
             view.isDrawingCacheEnabled = true
             view.buildDrawingCache(true)
             val b = Bitmap.createBitmap(view.width, view.height, Bitmap.Config.ARGB_8888)
@@ -716,6 +743,14 @@ open class Measurement : AppCompatActivity(), Scene.OnUpdateListener,
         )
     }
 
+    private fun calculateDistance2(objectPose0: Vector3, objectPose1: Vector3): Float {
+        return calculateDistance(
+            objectPose0.x - objectPose1.x,
+            objectPose0.y - objectPose1.y,
+            objectPose0.z - objectPose1.z
+        )
+    }
+
 
     private fun changeUnit(distanceMeter: Float, unit: String): Float {
         return when (unit) {
@@ -724,7 +759,6 @@ open class Measurement : AppCompatActivity(), Scene.OnUpdateListener,
             else -> distanceMeter
         }
     }
-
 
     private fun checkIsSupportedDeviceOrFinish(activity: Activity): Boolean {
         val openGlVersionString =

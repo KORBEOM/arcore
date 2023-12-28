@@ -1,35 +1,21 @@
 package com.shibuiwilliam.arcoremeasurement
 
-import android.Manifest
-import android.content.ContentValues.TAG
 import android.content.Context
 import android.content.DialogInterface
-import android.content.pm.PackageManager
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
-import android.net.NetworkInfo
-import android.os.Build
 import android.os.Bundle
 import android.os.Environment
 
-import android.util.DisplayMetrics
 import android.util.Log
 import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.app.ActivityCompat
-import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.item_recyclerview.*
 import kotlinx.android.synthetic.main.temporary_folder.*
 import java.io.File
 import kotlin.concurrent.thread
-
-
-
-import kotlin.math.max
-
 
 
 lateinit var snapshotAdapter: SnapshotAdapter
@@ -71,10 +57,9 @@ open class TemporaryFolder : AppCompatActivity() {
 
 
         allbtn.setOnClickListener {
-                    for (i in datas) {
-                        gridAdapter.getProFileImage(rootPath + "/" + i.name, i ,testPath+ i.name ,successPath+ i.name)
-                        gridAdapter.notifyDataSetChanged()
-                    }
+            gridAdapter.getProFileImage(rootPath , datas ,testPath ,successPath)
+            gridAdapter.notifyDataSetChanged()
+
             if (isInternetConnected(applicationContext))
             {
                 try {
@@ -85,14 +70,13 @@ open class TemporaryFolder : AppCompatActivity() {
                         while (datas.size != 0) {
                             send_file.text = datas.size.toString() + "/" + total_size
                         }
+                        Log.d("gimoring ","aaaaaaaaaaaaaaaaaaaaaaaaddddddddddd")
                         send_file.text = datas.size.toString() + "/" + total_size
                         runOnUiThread {
                             showProgress(false)
                             send_file.text = ""
-                            for (i in datas) {
-                                gridAdapter.getProFileImage(rootPath + "/" + i.name, i,testPath+ i.name,successPath+ i.name)
-                                gridAdapter.notifyDataSetChanged()
-                            }
+                            //gridAdapter.getProFileImage(rootPath , datas,testPath,successPath)
+                            //gridAdapter.notifyDataSetChanged()
                         }
                     }
                 }catch (e: java.lang.Exception){
