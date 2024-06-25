@@ -49,15 +49,15 @@
                 android:layout_marginTop="10dp"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:fontFamily="@font/haesu2"
-                android:layout_weight="3"
+                android:fontFamily="@font/haesu3"
+                android:layout_weight="4"
                 android:text="파일명"
                 android:autoSizeTextType="uniform"
-                android:textSize="20dp"
+                android:textSize="25dp"
                 tools:ignore="RtlCompat"></TextView>
 
             <ImageButton
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="5dp"
                 android:layout_weight="1"
                 android:id="@+id/delete_btn"
                 android:background="@drawable/recycle_bin"
@@ -68,7 +68,7 @@
 
             <ImageButton
                 android:id="@+id/save_btn"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="5dp"
                 android:background="@drawable/archive"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"

@@ -28,7 +28,7 @@ import java.nio.file.StandardCopyOption
 import java.util.*
 
 
-class GridAdapter(val context: Context, var itemlist : MutableList<SnapshotData>) : BaseAdapter() {
+class GridAdapter(val context: Context, var itemlist : MutableList<SnapshotData> , var user: String) : BaseAdapter() {
 
 
     override fun getCount(): Int {
@@ -78,7 +78,7 @@ class GridAdapter(val context: Context, var itemlist : MutableList<SnapshotData>
         val item = itemlist[position]
 
         holder.imageview?.let {
-            Glide.with(context).load(item.image).override(850,850).error(R.drawable.ic_close).into(holder.imageview!!)
+            Glide.with(context).load(item.image).override(1000,1000).error(R.drawable.ic_close).into(holder.imageview!!)
             Log.d("이미지 리스트" , item.image.toString())
         }
 
@@ -124,7 +124,7 @@ class GridAdapter(val context: Context, var itemlist : MutableList<SnapshotData>
 
             if (isInternetConnected(context)) {
                 try {
-                    getProFileoneImage(rootPath,item , testPath , SuccessPath)
+                    getProFileoneImage(rootPath,item , testPath , SuccessPath , user)
                     notifyDataSetChanged()
                     Toast.makeText(context,"서버에 전송했습니다.", Toast.LENGTH_SHORT).show()
                 } catch (e: Exception) {
@@ -160,8 +160,14 @@ class GridAdapter(val context: Context, var itemlist : MutableList<SnapshotData>
         return networkCapabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
     }
 
-    fun getProFileImage(imagePath: String, item: MutableList<SnapshotData>, movePath: String, success: String){
-
+    fun getProFileImage(
+        imagePath: String,
+        item: MutableList<SnapshotData>,
+        movePath: String,
+        success: String,
+        user: String,
+    ){
+        val user = RequestBody.create(MediaType.parse("text/plain"), user)
         val countRequestBody = RequestBody.create(MediaType.parse("text/plain"), item.size.toString())
         val fileList = mutableListOf<File>()
         for (i in item){
@@ -183,27 +189,29 @@ class GridAdapter(val context: Context, var itemlist : MutableList<SnapshotData>
         //Log.d("gimoring ",""+ body?.toString())
         //Log.d("gimoring ",""+ file.name)
         //Log.d("gimoring ",""+ file?.toString())
-        sendImage(listPart,item,imagePath , movePath , success ,countRequestBody)
+        sendImage(listPart,item,imagePath , movePath , success ,countRequestBody, user)
 
     }
-    fun getProFileoneImage(imagePath: String,item: SnapshotData,movePath : String , success : String ){
+    fun getProFileoneImage(imagePath: String,item: SnapshotData,movePath : String , success : String ,user: String,){
 
         val file = File(imagePath)
         val testfile = File(movePath)
         val successfile = File(success)
+        val user = RequestBody.create(MediaType.parse("text/plain"), user)
+        val countRequestBody = RequestBody.create(MediaType.parse("text/plain"), item.toString())
         val requestFile = RequestBody.create(MediaType.parse("image/png"), file)
         //val requestPix = RequestBody.create(MediaType.parse("text/plain"), )
         val body = MultipartBody.Part.createFormData("images", file.name, requestFile)
 
         Log.d("gimoring ",""+ file.name)
         Log.d("gimoring ",""+ file?.toString())
-        sendOneImage(body,item,file)
+        sendOneImage(body,item,file , countRequestBody , user)
 
     }
 
-    fun sendImage(image: List<MultipartBody.Part>,item: List<SnapshotData> , imagepath :String , move : String , success : String , countRequestBody: RequestBody) {
-        val service = RetrofitSetting.createBaseService(RetrofitPath3::class.java) //레트로핏 통신 설정
-        val call = service?.imageSend(image , countRequestBody)!! //통신 API 패스 설정
+    fun sendImage(image: List<MultipartBody.Part>,item: List<SnapshotData> , imagepath :String , move : String , success : String , countRequestBody: RequestBody, user:RequestBody) {
+        val service = RetrofitSetting.createBaseService(RetrofitPath4::class.java) //레트로핏 통신 설정
+        val call = service?.imageSend(image , countRequestBody, user)!! //통신 API 패스 설정
         val rootPath = Environment.getExternalStorageDirectory().toString() + "/DCIM/Temporary"
         val savePath = File(rootPath, "/")
 
@@ -252,16 +260,16 @@ class GridAdapter(val context: Context, var itemlist : MutableList<SnapshotData>
         })
 
     }
-    fun sendOneImage(image: MultipartBody.Part, item: SnapshotData, file :File) {
+    fun sendOneImage(image: MultipartBody.Part, item: SnapshotData, file :File , countRequestBody: RequestBody, user:RequestBody) {
         val service = RetrofitSetting.createBaseService(RetrofitPath2::class.java) //레트로핏 통신 설정
-        val call = service?.imageSend(image)!! //통신 API 패스 설정
+        val call = service?.imageSend(image, countRequestBody, user)!! //통신 API 패스 설정
 
 
         call.enqueue(object : Callback<String> {
 
             override fun onResponse(call: Call<String>, response: Response<String>) {
                 if (response.isSuccessful) {
-                    Log.d("로그23132132123213 ",""+ response?.body().toString())
+                    Log.d("responseOne ",""+ response?.body().toString())
                     itemlist.remove(item)
                     Toast.makeText(context,"전송완료", Toast.LENGTH_SHORT).show()
                     file.delete()
@@ -269,13 +277,13 @@ class GridAdapter(val context: Context, var itemlist : MutableList<SnapshotData>
 
                 }
                 else {
-                    Log.d("로그1354156123 ",""+ response.raw())
+                    Log.d("responeFail ",""+ response.raw())
                     Toast.makeText(context,"전송실패", Toast.LENGTH_SHORT).show()
                 }
             }
 
             override fun onFailure(call: Call<String>, t: Throwable) {
-                Log.d("로그 failed",t.message.toString())
+                Log.d("sendFail",t.message.toString())
             }
         })
 

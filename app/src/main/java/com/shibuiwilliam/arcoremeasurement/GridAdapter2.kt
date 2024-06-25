@@ -24,7 +24,7 @@ import java.io.File
 
 
 
-class GridAdapter2(val context: Context, var itemlist : MutableList<SnapshotData>) : BaseAdapter()  {
+class GridAdapter2(val context: Context, var itemlist : MutableList<SnapshotData> , var user : String) : BaseAdapter()  {
 
 
 
@@ -157,18 +157,20 @@ class GridAdapter2(val context: Context, var itemlist : MutableList<SnapshotData
     fun getProFileImage(imagePath: String,item: SnapshotData){
 
         val file = File(imagePath)
+        val user = RequestBody.create(MediaType.parse("text/plain"), user)
+        val countRequestBody = RequestBody.create(MediaType.parse("text/plain"), item.toString())
         val requestFile = RequestBody.create(MediaType.parse("image/png"), file)
         //val requestPix = RequestBody.create(MediaType.parse("text/plain"), )
         val body = MultipartBody.Part.createFormData("images", file.name, requestFile)
         Log.d("gimoring ",""+ body?.toString())
         Log.d("gimoring ",""+ file.name)
         Log.d("gimoring ",""+ file?.toString())
-        sendImage(body,item,file)
+        sendImage(body,item,file , countRequestBody , user)
 
     }
-    fun sendImage(image: MultipartBody.Part, item: SnapshotData, file :File) {
+    fun sendImage(image: MultipartBody.Part, item: SnapshotData, file :File , countRequestBody: RequestBody, user:RequestBody) {
         val service = RetrofitSetting.createBaseService(RetrofitPath2::class.java) //레트로핏 통신 설정
-        val call = service?.imageSend(image)!! //통신 API 패스 설정
+        val call = service?.imageSend(image ,countRequestBody , user)!! //통신 API 패스 설정
 
 
         call.enqueue(object : Callback<String> {

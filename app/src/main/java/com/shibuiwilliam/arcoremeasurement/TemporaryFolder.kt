@@ -27,12 +27,12 @@ open class TemporaryFolder : AppCompatActivity() {
         val displayMetrics = resources.displayMetrics
         windowManager.defaultDisplay.getMetrics(displayMetrics)
         val screenWidth = displayMetrics.densityDpi
-
+        val user = intent.getStringExtra("user") ?: "유저 없음"
         setContentView(R.layout.temporary_folder)
         val gridView : GridView = findViewById(R.id.itemrecycle)
         Log.d("popopopopo" , screenWidth.toString())
-        gridView.numColumns = if(screenWidth < 450 ) 2 else 1
-        gridView.horizontalSpacing = 20
+        gridView.numColumns = if(screenWidth < 450 ) 2 else 2
+        gridView.horizontalSpacing = 50
         gridView.verticalSpacing = 50
         val datas = mutableListOf<SnapshotData>()
         val rootPath = Environment.getExternalStorageDirectory().toString() + "/DCIM/Temporary"
@@ -52,12 +52,12 @@ open class TemporaryFolder : AppCompatActivity() {
                 add(SnapshotData(image = i , name = i.name, server_text = String() ))
             }
         }
-        val gridAdapter : GridAdapter = GridAdapter(this , datas)
+        val gridAdapter : GridAdapter = GridAdapter(this , datas , user)
 
 
-
+        Log.d("user", user)
         allbtn.setOnClickListener {
-            gridAdapter.getProFileImage(rootPath , datas ,testPath ,successPath)
+            gridAdapter.getProFileImage(rootPath , datas ,testPath ,successPath,user)
             gridAdapter.notifyDataSetChanged()
 
             if (isInternetConnected(applicationContext))
@@ -96,7 +96,6 @@ open class TemporaryFolder : AppCompatActivity() {
             }
 
             }
-
 
 
         gridView.adapter = gridAdapter

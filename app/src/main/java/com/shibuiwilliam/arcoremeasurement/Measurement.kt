@@ -75,6 +75,7 @@ open class Measurement : AppCompatActivity(), Scene.OnUpdateListener,
         { Array<TextView?>(Constants.maxNumMultiplePoints) { null } })
     private lateinit var initCM: String
     var whichcode: String = "0000"
+    var nametext: String = ""
     private var cameraIntrinsics: CameraIntrinsics? = null
     private var cameraconfig : CameraConfig? = null
 
@@ -93,6 +94,7 @@ open class Measurement : AppCompatActivity(), Scene.OnUpdateListener,
 
         setContentView(R.layout.activity_measurement)
         whichcode = intent.getStringExtra("whichCode").toString()
+        nametext = intent.getStringExtra("name").toString()
         val distanceModeArray = resources.getStringArray(R.array.distance_mode)
         distanceModeArray.map { it ->
             distanceModeArrayList.add(it)
@@ -105,11 +107,17 @@ open class Measurement : AppCompatActivity(), Scene.OnUpdateListener,
         window.decorView.systemUiVisibility =
             View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or View.SYSTEM_UI_FLAG_LAYOUT_STABLE
         window.statusBarColor = Color.TRANSPARENT
-        val intent = Intent(this, TemporaryFolder::class.java)
+        val intent = Intent(this, TemporaryFolder::class.java).apply {
+            putExtra("user",nametext)
+            putExtra("whichCode",whichcode)
+        }
         val intent2 = Intent(this,SuccessFolder::class.java)
-        val intent3 = Intent(this,FailFolder::class.java)
-
-
+        val intent3 = Intent(this,FailFolder::class.java).apply {
+            putExtra("user",nametext)
+            putExtra("whichCode",whichcode)
+        }
+        Log.d("wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww", nametext)
+        Log.d("wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww", whichcode)
         //val displayMetrics = DisplayMetrics()
         val displayMetrics = resources.displayMetrics
         windowManager.defaultDisplay.getMetrics(displayMetrics)

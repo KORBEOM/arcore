@@ -41,7 +41,7 @@ open class FailFolder : AppCompatActivity() {
         val displayMetrics = resources.displayMetrics
         windowManager.defaultDisplay.getMetrics(displayMetrics)
         val screenWidth = displayMetrics.densityDpi
-
+        val user = intent.getStringExtra("user") ?: "유저 없음"
         setContentView(R.layout.temporary_folder)
         val gridView : GridView = findViewById(R.id.itemrecycle)
         Log.d("popopopopo" , screenWidth.toString())
@@ -64,7 +64,7 @@ open class FailFolder : AppCompatActivity() {
                 add(SnapshotData(image = i , name = i.name, server_text = String() ))
             }
         }
-        val gridAdapter3 : GridAdapter3 = GridAdapter3(this , datas)
+        val gridAdapter3 : GridAdapter3 = GridAdapter3(this , datas , user)
         allbtn.setOnClickListener {
             for (i in datas) {
                 gridAdapter3.getProFileImage(rootPath + "/" + i.name, i )

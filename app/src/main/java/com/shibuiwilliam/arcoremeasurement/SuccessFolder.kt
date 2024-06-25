@@ -45,6 +45,7 @@ open class SuccessFolder : AppCompatActivity() {
         setContentView(R.layout.temporary_folder)
         val gridView : GridView = findViewById(R.id.itemrecycle)
         Log.d("popopopopo" , screenWidth.toString())
+        val user = intent.getStringExtra("user") ?: "유저 없음"
         gridView.numColumns = if(screenWidth < 450 ) 2 else 1
         gridView.horizontalSpacing = 20
         gridView.verticalSpacing = 50
@@ -64,7 +65,7 @@ open class SuccessFolder : AppCompatActivity() {
                 add(SnapshotData(image = i , name = i.name, server_text = String() ))
             }
         }
-        val gridAdapter2 : GridAdapter2 = GridAdapter2(this , datas)
+        val gridAdapter2 : GridAdapter2 = GridAdapter2(this , datas , user)
 
 
 

@@ -19,19 +19,29 @@ interface RetrofitPath {
 }
 interface RetrofitPath2 {
     @Multipart
-    @POST("/test")
+    @POST("/emit")
     fun imageSend(
-        @Part image: MultipartBody.Part?
-        //@Part image : RequestBody
-        //@Part pixel: RequestBody
+        @Part image: MultipartBody.Part?,
+        @Part("count") count: RequestBody,
+        @Part("user") user: RequestBody
     ): Call<String>
 }
 interface RetrofitPath3 {
     @Multipart
-    @POST("/emit")
+    @POST("/emitest")
     fun imageSend(
         @Part image: List<MultipartBody.Part?>,
         @Part("count") count: RequestBody
+        //@Part pixel: RequestBody
+    ): Call<String>
+}
+interface RetrofitPath4 {
+    @Multipart
+    @POST("/emit")
+    fun imageSend(
+        @Part image: List<MultipartBody.Part?>,
+        @Part("count") count: RequestBody,
+        @Part("user") user: RequestBody
         //@Part pixel: RequestBody
     ): Call<String>
 }
