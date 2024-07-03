@@ -17,7 +17,7 @@
         <item>@string/distance_of_multiple_points</item>
         <item>@string/distance_from_ground</item>
     </string-array>
-    <string-array name = "spinner_mainop">
+    <string-array name="spinner_mainop">
         <item>인천</item>
         <item>울산</item>
         <item>경기도</item>
@@ -26,4 +26,6 @@
         <item>전라북도</item>
         <item>전라남도</item>
     </string-array>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

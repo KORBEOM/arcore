@@ -23,6 +23,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.akexorcist.screenshotdetection.ScreenshotDetectionDelegate
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.ar.core.*
 import com.google.ar.core.exceptions.UnavailableApkTooOldException
 import com.google.ar.core.exceptions.UnavailableArcoreNotInstalledException
@@ -35,10 +36,12 @@ import com.google.ar.sceneform.Scene
 import com.google.ar.sceneform.math.Vector3
 import com.google.ar.sceneform.rendering.*
 import com.google.ar.sceneform.ux.TransformableNode
+
 import com.shibuiwilliam.arcoremeasurement.Measurement.Screenshot.takeScreenshotOfRootView
 import kotlinx.android.synthetic.main.activity_measurement.*
 import kotlinx.android.synthetic.main.activity_measurement.view.*
 import kotlinx.android.synthetic.main.custom_toast.*
+import kotlinx.android.synthetic.main.fish_data.*
 import kotlinx.android.synthetic.main.temporary_folder.*
 import java.io.File
 import java.io.FileOutputStream
@@ -116,6 +119,7 @@ open class Measurement : AppCompatActivity(), Scene.OnUpdateListener,
             putExtra("user",nametext)
             putExtra("whichCode",whichcode)
         }
+        val intent4 = Intent(this,SuccessFolder::class.java)
         Log.d("wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww", nametext)
         Log.d("wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww", whichcode)
         //val displayMetrics = DisplayMetrics()
@@ -130,6 +134,8 @@ open class Measurement : AppCompatActivity(), Scene.OnUpdateListener,
         back_btn.setOnClickListener {
             onBackPressed()
         }
+
+
 
 
         /*val cameraManager = getSystemService(CAMERA_SERVICE) as CameraManager

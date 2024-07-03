@@ -348,7 +348,7 @@ class ArcoreMeasurement : AppCompatActivity(), AdapterView.OnItemSelectedListene
                     putString("LastSelectedWhichCode",whichCode)
                     apply()
                 }
-                val intent = Intent(application, Measurement::class.java)
+                val intent = Intent(application, HomeActivity::class.java)
                 intent.putExtra("whichCode", whichCode)
                 intent.putExtra("name",nameText)
                 Log.d("whichCode" , whichCode)
