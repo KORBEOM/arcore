@@ -120,6 +120,7 @@ open class Measurement : AppCompatActivity(), Scene.OnUpdateListener,
             putExtra("whichCode",whichcode)
         }
         val intent4 = Intent(this,SuccessFolder::class.java)
+        val intent5 = Intent(this,HomeActivity::class.java)
         Log.d("wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww", nametext)
         Log.d("wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww", whichcode)
         //val displayMetrics = DisplayMetrics()
@@ -132,7 +133,7 @@ open class Measurement : AppCompatActivity(), Scene.OnUpdateListener,
         val displayRotation = windowManager.defaultDisplay.rotation
 
         back_btn.setOnClickListener {
-            onBackPressed()
+            startActivity(intent5)
         }
 
 
