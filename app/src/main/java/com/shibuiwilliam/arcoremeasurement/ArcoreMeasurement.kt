@@ -110,7 +110,7 @@ class ArcoreMeasurement : AppCompatActivity(), AdapterView.OnItemSelectedListene
                 putExtra("name", nameText)
             }
             startActivity(intent)
-            //finish() // Finish ArcoreMeasurement activity
+            finish() // Finish ArcoreMeasurement activity
         }
         //activity_main.xml에 입력된 spinner에 어댑터를 연결한다.
         val spinner = findViewById<Spinner>(R.id.spinner)

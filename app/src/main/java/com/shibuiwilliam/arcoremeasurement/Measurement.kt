@@ -120,7 +120,10 @@ open class Measurement : AppCompatActivity(), Scene.OnUpdateListener,
             putExtra("whichCode",whichcode)
         }
         val intent4 = Intent(this,SuccessFolder::class.java)
-        val intent5 = Intent(this,HomeActivity::class.java)
+        val intent5 = Intent(this,HomeActivity::class.java).apply {
+            putExtra("user",nametext)
+            putExtra("whichCode",whichcode)
+        }
         Log.d("wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww", nametext)
         Log.d("wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww", whichcode)
         //val displayMetrics = DisplayMetrics()
