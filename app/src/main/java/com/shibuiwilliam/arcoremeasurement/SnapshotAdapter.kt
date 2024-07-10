@@ -54,13 +54,13 @@ class SnapshotAdapter(private val context: Context) : RecyclerView.Adapter<Snaps
         private val delete_btn: ImageButton = view.findViewById(R.id.delete_btn)
         private val save_btn : ImageButton = view.findViewById(R.id.save_btn)
 
-        private val server_text : TextView = view.findViewById(R.id.server_text)
+        //private val server_text : TextView = view.findViewById(R.id.server_text)
 
 
         fun bind(item: SnapshotData, itemid : Int) {
             txtName.text = item.name
-            server_text.text = item.server_text
-            server_text.setTextColor(item.test_color)
+           // server_text.text = item.server_text
+           // server_text.setTextColor(item.test_color)
             Glide.with(itemView).load(item.image).into(imgProfile)
 
             val rootPath = Environment.getExternalStorageDirectory().toString() + "/DCIM/Temporary/" + item.name

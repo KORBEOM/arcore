@@ -105,7 +105,7 @@ class ArcoreMeasurement : AppCompatActivity(), AdapterView.OnItemSelectedListene
         if (sharedPreferences.getBoolean("MeasurementScreenOpened", false)) {
             val nameText = sharedPreferences.getString("LastEnteredName", "")
             val whichCode = sharedPreferences.getString("LastSelectedWhichCode", "DefaultCode")
-            val intent = Intent(this, Measurement::class.java).apply {
+            val intent = Intent(this, HomeActivity::class.java).apply {
                 putExtra("whichCode", whichCode)
                 putExtra("name", nameText)
             }

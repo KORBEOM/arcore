@@ -1,37 +1,21 @@
 package com.shibuiwilliam.arcoremeasurement
 
-import android.Manifest
-import android.content.ContentValues.TAG
 import android.content.Context
 import android.content.DialogInterface
-import android.content.pm.PackageManager
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
-import android.net.NetworkInfo
-import android.os.Build
 import android.os.Bundle
 import android.os.Environment
 
-import android.util.DisplayMetrics
 import android.util.Log
 import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.app.ActivityCompat
-import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.item_recyclerview.*
 import kotlinx.android.synthetic.main.temporary_folder.*
 import java.io.File
 import kotlin.concurrent.thread
-
-
-
-import kotlin.math.max
-
-
-
 
 
 open class FailFolder : AppCompatActivity() {
@@ -61,7 +45,7 @@ open class FailFolder : AppCompatActivity() {
 
         datas.apply {
             for( i in list1  ){
-                add(SnapshotData(image = i , name = i.name, server_text = String() ))
+                add(createSnapshotData(i))
             }
         }
         val gridAdapter3 : GridAdapter3 = GridAdapter3(this , datas , user)
@@ -156,5 +140,14 @@ open class FailFolder : AppCompatActivity() {
         else progressBar.visibility =View.GONE
     }
 
-
+    fun createSnapshotData(file: File): SnapshotData {
+        val originalName = file.name
+        val dateTime = originalName.substringBefore("_") // 날짜와 시간 부분 추출
+        return SnapshotData(
+            name = originalName,
+            image = file.absolutePath,
+            displayName = dateTime,
+            server_text = ""
+        )
+    }
 }

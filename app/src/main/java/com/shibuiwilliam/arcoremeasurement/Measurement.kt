@@ -15,7 +15,6 @@ import android.media.SoundPool
 import android.os.Build
 import android.os.Bundle
 import android.os.Environment
-import android.os.Handler
 import android.util.Log
 import android.view.*
 import android.widget.*
@@ -23,7 +22,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.akexorcist.screenshotdetection.ScreenshotDetectionDelegate
-import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.ar.core.*
 import com.google.ar.core.exceptions.UnavailableApkTooOldException
 import com.google.ar.core.exceptions.UnavailableArcoreNotInstalledException
@@ -372,7 +370,8 @@ open class Measurement : AppCompatActivity(), Scene.OnUpdateListener,
             val x = motionEvent?.x.toString().toFloat()
             val y = motionEvent?.y.toString().toFloat()
 
-            saveButton(whichcode, distanceMeter, resultt,x, y)
+            saveButton(nametext,whichcode, distanceMeter, resultt,x, y)
+            Log.d("save22", nametext.toString())
         }
 
 
@@ -498,7 +497,8 @@ open class Measurement : AppCompatActivity(), Scene.OnUpdateListener,
     }
 
     private fun saveButton(
-        code: String, distance: Float, result: Float,x: Float,y: Float) {
+        code: String, whichcode: String, distance: Float, result: Float, x: Float, y: Float
+    ) {
 
         val now =
             SimpleDateFormat("yyyyMMdd_hhmmss").format(Date(System.currentTimeMillis()))
