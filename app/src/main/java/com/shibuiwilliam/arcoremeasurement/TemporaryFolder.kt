@@ -151,9 +151,16 @@ open class TemporaryFolder : AppCompatActivity() {
         val originalName = file.name
         val parts = originalName.split("_")
         val displayName = if (parts.size >= 3) {
-            val datePart = parts[1].takeLast(4)  // YYYYMMDD에서 MMDD만 가져옴
-            val timePart = parts[2].substringBefore(".").take(4)  // HHMMSS에서 HHMM만 가져옴
-            "$datePart$timePart"  // MMDDHHMM 형식
+            val datePart = parts[1]  // YYYYMMDD
+            val timePart = parts[2].substringBefore(".")  // HHMMSS
+
+            val year = datePart.take(4)
+            val month = datePart.substring(4, 6)
+            val day = datePart.takeLast(2)
+            val hour = timePart.take(2)
+            val minute = timePart.substring(2, 4)
+
+            "$year/$month/$day $hour:$minute"  // YYYY/MM/DD HH:MM 형식
         } else {
             originalName.substringBeforeLast(".")  // 파일 확장자만 제거
         }

@@ -89,14 +89,13 @@ class GridAdapter(
                 .into(it)
         }
 
+
         holder.textview?.let {
             it.text = item.displayName
-            it.maxLines = 1
-            it.ellipsize = null
-            it.isHorizontalScrollBarEnabled = false
-            it.isSingleLine = true
+            it.maxLines = 2  // 최대 2줄로 설정
+            it.ellipsize = TextUtils.TruncateAt.END
+            it.isSingleLine = false  // 한 줄 제한 해제
         }
-
         val rootPath = Environment.getExternalStorageDirectory().toString() + "/DCIM/Temporary/" + item.name
         val testPath = Environment.getExternalStorageDirectory().toString() + "/DCIM/Fail/" + item.name
         val SuccessPath = Environment.getExternalStorageDirectory().toString() + "/DCIM/Success/" + item.name

@@ -28,43 +28,36 @@
             <TextView
                 android:id="@+id/tv_rv_name"
                 android:layout_width="0dp"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:ellipsize="end"
                 android:fontFamily="@font/haesu"
-                android:maxLines="1"
-                android:scrollHorizontally="false"
-                android:singleLine="true"
-                android:textColor="#3F51B5"
-                android:textSize="14sp"
+                android:maxLines="2"
+                android:layout_gravity="center"
                 android:gravity="center"
-                android:layout_gravity="center_vertical" />
+                android:textColor="#3F51B5"
+                android:textSize="12sp" />
 
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
+            <ImageButton
+                android:id="@+id/delete_btn"
+                android:layout_width="37dp"
+                android:layout_height="37dp"
+                android:src="@drawable/recycle_bin"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:padding="8dp"
+                android:scaleType="fitCenter"
+                app:tint="#3F51B5" />
 
-                <ImageButton
-                    android:id="@+id/delete_btn"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:src="@drawable/recycle_bin"
-                    android:background="?attr/selectableItemBackgroundBorderless"
-                    android:padding="8dp"
-                    android:scaleType="fitCenter"
-                    app:tint="#3F51B5" />
+            <ImageButton
+                android:id="@+id/save_btn"
+                android:layout_width="37dp"
+                android:layout_height="37dp"
+                android:src="@drawable/server"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:padding="8dp"
+                android:scaleType="fitCenter"
+                app:tint="#3F51B5" />
 
-                <ImageButton
-                    android:id="@+id/save_btn"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:src="@drawable/server"
-                    android:background="?attr/selectableItemBackgroundBorderless"
-                    android:padding="8dp"
-                    android:scaleType="fitCenter"
-                    app:tint="#3F51B5" />
-            </LinearLayout>
         </LinearLayout>
     </LinearLayout>
 </androidx.cardview.widget.CardView>
