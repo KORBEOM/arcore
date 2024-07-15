@@ -20,11 +20,11 @@
         android:background="@drawable/spinner_background"
         android:contentDescription="지역"
         android:spinnerMode="dropdown"
-        app:layout_constraintBottom_toTopOf="@+id/spinner2"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.981"
+        app:layout_constraintVertical_bias="0.517"
         tools:ignore="MissingConstraints" />
 
     <Spinner
@@ -35,11 +35,12 @@
         android:layout_marginRight="40dp"
         android:background="@drawable/spinner_background"
         android:spinnerMode="dropdown"
-        app:layout_constraintBottom_toTopOf="@+id/nameEditText"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.35"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.978" />
+        app:layout_constraintTop_toBottomOf="@+id/spinner"
+        app:layout_constraintVertical_bias="0.043" />
 
     <EditText
         android:id="@+id/nameEditText"
@@ -50,6 +51,7 @@
         android:background="@drawable/spinner_background"
         android:fontFamily="@font/haesu"
         android:hint="이름을 입력하세요"
+        android:maxLines="1"
         android:paddingLeft="20dp"
         android:textColor="@color/textcolor"
         android:textColorHint="@color/textcolor"
@@ -58,8 +60,29 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.774" />
+        app:layout_constraintTop_toBottomOf="@+id/spinner2"
+        app:layout_constraintVertical_bias="0.074" />
+
+    <EditText
+        android:id="@+id/passwordEditText"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_marginStart="40dp"
+        android:layout_marginEnd="40dp"
+        android:background="@drawable/spinner_background"
+        android:fontFamily="@font/haesu"
+        android:hint="패스워드를 입력하세요"
+        android:inputType="textPassword"
+        android:paddingLeft="20dp"
+        android:textColor="@color/textcolor"
+        android:textColorHint="@color/textcolor"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/nameEditText"
+        app:layout_constraintVertical_bias="0.101" />
 
     <Button
         android:id="@+id/to_measurement"
@@ -75,20 +98,19 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.926" />
+        app:layout_constraintTop_toBottomOf="@+id/passwordEditText" />
 
     <ImageView
         android:id="@+id/imageView"
-        android:layout_width="154dp"
-        android:layout_height="167dp"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
         android:src="@drawable/haerang"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.315"
+        app:layout_constraintVertical_bias="0.291"
         tools:ignore="MissingConstraints"></ImageView>
 
     <ImageView
