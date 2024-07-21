@@ -4,6 +4,7 @@ import okhttp3.MultipartBody
 import okhttp3.RequestBody
 
 import retrofit2.Call
+import retrofit2.http.Body
 import retrofit2.http.Multipart
 import retrofit2.http.POST
 import retrofit2.http.Part
@@ -17,6 +18,12 @@ interface RetrofitPath {
         //@Part pixel: RequestBody
     ): Call<String>
 }
+interface ApiService {
+    @POST("login")  // 서버의 실제 로그인 엔드포인트에 맞게 수정
+    fun login(@Body request: LoginRequest): Call<LoginResponse>
+}
+data class LoginRequest(val username: String, val password: String)
+data class LoginResponse(val success: Boolean, val message: String)
 interface RetrofitPath2 {
     @Multipart
     @POST("/emit")
