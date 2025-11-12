@@ -12,6 +12,7 @@ import kotlinx.android.synthetic.main.activity_settings.*
 
 class Bottomfragment_two : Fragment() {
     private lateinit var logoutButton: Button
+    private var name: String = ""
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -42,6 +43,8 @@ class Bottomfragment_two : Fragment() {
         startActivity(intent)
         activity?.finishAffinity() // 모든 액티비티 종료
     }
-
+    fun setName(name: String) {
+        this.name = name
+    }
 
 }

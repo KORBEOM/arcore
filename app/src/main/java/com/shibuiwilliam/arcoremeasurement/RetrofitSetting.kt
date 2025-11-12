@@ -8,8 +8,12 @@ import java.util.concurrent.TimeUnit
 import javax.net.SocketFactory
 
 object RetrofitSetting {
-    val API_BASE_URL = "http://211.41.73.17:8000"
+    val API_BASE_URL = "http://210.119.107.193:9836"
+    
     val httpClient = OkHttpClient.Builder()
+        .connectTimeout(30, TimeUnit.SECONDS)
+        .readTimeout(60, TimeUnit.SECONDS)
+        .writeTimeout(60, TimeUnit.SECONDS)
 
 
     val client = Retrofit.Builder()

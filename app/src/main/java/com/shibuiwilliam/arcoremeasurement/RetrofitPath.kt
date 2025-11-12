@@ -19,8 +19,8 @@ interface RetrofitPath {
     ): Call<String>
 }
 interface ApiService {
-    @POST("login")  // 서버의 실제 로그인 엔드포인트에 맞게 수정
-    fun login(@Body request: LoginRequest): Call<LoginResponse>
+    @POST("login")
+    fun login(@Body loginRequest: LoginRequest): Call<LoginResponse>
 }
 data class LoginRequest(val username: String, val password: String)
 data class LoginResponse(val success: Boolean, val message: String)
@@ -30,7 +30,7 @@ interface RetrofitPath2 {
     fun imageSend(
         @Part image: MultipartBody.Part?,
         @Part("count") count: RequestBody,
-        @Part("user") user: RequestBody
+        @Part("user") user: RequestBody,
     ): Call<String>
 }
 interface RetrofitPath3 {
@@ -48,8 +48,7 @@ interface RetrofitPath4 {
     fun imageSend(
         @Part image: List<MultipartBody.Part?>,
         @Part("count") count: RequestBody,
-        @Part("user") user: RequestBody
-        //@Part pixel: RequestBody
+        @Part("user") user: RequestBody,
     ): Call<String>
 }
 interface RetrofitFailPath {

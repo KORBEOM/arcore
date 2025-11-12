@@ -6,19 +6,19 @@ import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.os.Bundle
 import android.os.Environment
-
 import android.util.Log
 import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import kotlinx.android.synthetic.main.item_recyclerview.*
 import kotlinx.android.synthetic.main.temporary_folder.*
 import java.io.File
 import kotlin.concurrent.thread
 
-
 open class FailFolder : AppCompatActivity() {
+    private lateinit var whichCode: String
+    private lateinit var gridAdapter3: GridAdapter3
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -39,8 +39,9 @@ open class FailFolder : AppCompatActivity() {
         val connectivityManager = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
         val networkInfo = connectivityManager.activeNetworkInfo
         val isConnected = networkInfo != null && networkInfo.isConnected
+        whichCode = intent.getStringExtra("whichCode") ?: "0000"
 
-        list1 = file.listFiles().toMutableList()
+        list1 = file.listFiles()?.toMutableList() ?: mutableListOf()
         val allbtn = all_btn.findViewById<Button>(R.id.all_btn)
 
         datas.apply {
@@ -48,88 +49,75 @@ open class FailFolder : AppCompatActivity() {
                 add(createSnapshotData(i))
             }
         }
-        val gridAdapter3 : GridAdapter3 = GridAdapter3(this , datas , user)
-        allbtn.setOnClickListener {
-            for (i in datas) {
-                gridAdapter3.getProFileImage(rootPath + "/" + i.name, i )
-                gridAdapter3.notifyDataSetChanged()
+
+        // 초기 이미지 카운트 설정
+        imageCount.text = "Total Images: ${datas.size}"
+
+        gridAdapter3 = GridAdapter3(this, datas, user, whichCode) { totalImages ->
+            // 이미지 카운트 업데이트 콜백
+            runOnUiThread {
+                imageCount.text = "Total Images: $totalImages"
             }
-            if (isInternetConnected(applicationContext))
-            {
+        }
+
+        allbtn.setOnClickListener {
+            if (isInternetConnected(applicationContext)) {
                 try {
                     val total_size = datas.size
+                    if (total_size == 0) {
+                        Toast.makeText(applicationContext, "전송할 이미지가 없습니다", Toast.LENGTH_SHORT).show()
+                        return@setOnClickListener
+                    }
+
                     showProgress(true)
+                    val datasCopy = ArrayList(datas) // 데이터 복사본 생성
+
                     thread(start = true) {
-                        Log.d("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", datas.size.toString())
-                        while (datas.size != 0) {
-                            send_file.text = datas.size.toString() + "/" + total_size
+                        for (item in datasCopy) {
+                            runOnUiThread {
+                                val remainingImages = datas.size
+                                send_file.text = "$remainingImages/$total_size"
+                                imageCount.text = "Total Images: $remainingImages"
+
+                                gridAdapter3.getProFileImage(rootPath + "/" + item.name, item)
+                            }
+                            Thread.sleep(100) // UI 업데이트를 위한 짧은 딜레이
                         }
-                        send_file.text = datas.size.toString() + "/" + total_size
+
                         runOnUiThread {
                             showProgress(false)
                             send_file.text = ""
-                            for (i in datas) {
-                                gridAdapter3.getProFileImage(rootPath + "/" + i.name, i)
-                                gridAdapter3.notifyDataSetChanged()
+                            if (datas.isEmpty()) {
+                                Toast.makeText(applicationContext, "모든 이미지 전송 완료", Toast.LENGTH_SHORT).show()
                             }
                         }
                     }
-                }catch (e: java.lang.Exception){
-
+                } catch (e: Exception) {
+                    runOnUiThread {
+                        showProgress(false)
+                        Toast.makeText(applicationContext, "오류 발생: ${e.message}", Toast.LENGTH_SHORT).show()
+                    }
                 }
             } else {
-                val builder = AlertDialog.Builder(this)
-                builder
+                AlertDialog.Builder(this)
                     .setTitle("네트워크 연결 문제")
                     .setMessage("인터넷 연결을 확인해주세요.")
-                    .setPositiveButton("확인",
-                        DialogInterface.OnClickListener { dialog, id ->
-                            // Start 버튼 선택시 수행
-                        })
-                builder.create()
-                builder.show()
+                    .setPositiveButton("확인", null)
+                    .show()
             }
-
         }
-
-
-
-
-
 
         gridView.adapter = gridAdapter3
-
-
         init()
-
         gridAdapter3.notifyDataSetChanged()
-
-
     }
-
-
-
-    private fun filedelete()
-    {
-        val deletebtn = delete_btn.findViewById<Button>(R.id.delete_btn)
-        deletebtn.setOnClickListener {
-            val rootPath = Environment.getExternalStorageDirectory().toString() + "/DCIM/Fail"
-            val file = File(rootPath)
-            file.delete()
-        }
-
-
-    }
-
 
     fun isInternetConnected(context: Context): Boolean {
         val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
         val network = connectivityManager.activeNetwork ?: return false
         val networkCapabilities = connectivityManager.getNetworkCapabilities(network) ?: return false
-
         return networkCapabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
     }
-
 
     private fun init(){
         showProgress(false)
@@ -142,11 +130,17 @@ open class FailFolder : AppCompatActivity() {
 
     fun createSnapshotData(file: File): SnapshotData {
         val originalName = file.name
-        val dateTime = originalName.substringBefore("_") // 날짜와 시간 부분 추출
+        val nameData = originalName.split("_")
+        val displayText = if (nameData.size > 3) {
+            "${nameData[0]}_${nameData[1]}_${nameData[2]}"  // 날짜, 시간, 위치 정보만 표시
+        } else {
+            originalName
+        }
+
         return SnapshotData(
             name = originalName,
             image = file.absolutePath,
-            displayName = dateTime,
+            displayName = displayText,
             server_text = ""
         )
     }

@@ -25,6 +25,8 @@ class HomeActivity : AppCompatActivity() {
 
         whichCode = intent.getStringExtra("whichCode") ?: ""
         name = intent.getStringExtra("name") ?: ""
+        bottomFragmentOne.setName(name)
+        bottomFragmentTwo.setName(name)
         val sharedPreferences = getSharedPreferences("AppPreferences", MODE_PRIVATE)
         with(sharedPreferences.edit()) {
             putBoolean("MeasurementScreenOpened", true)
@@ -32,6 +34,8 @@ class HomeActivity : AppCompatActivity() {
             putString("LastSelectedWhichCode",whichCode)
             apply()
         }
+        Log.d("whichCode123" , whichCode)
+        Log.d("name123" , name)
         bottomNavigation.setOnNavigationItemSelectedListener  { item ->
             when(item.itemId) {
                 R.id.page_1 -> {

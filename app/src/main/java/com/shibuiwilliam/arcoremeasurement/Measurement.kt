@@ -75,8 +75,8 @@ open class Measurement : AppCompatActivity(), Scene.OnUpdateListener,
     private val multipleDistances = Array(Constants.maxNumMultiplePoints,
         { Array<TextView?>(Constants.maxNumMultiplePoints) { null } })
     private lateinit var initCM: String
-    var whichcode: String = "0000"
-    var nametext: String = ""
+    private lateinit var whichcode: String
+    private lateinit var name: String
     private var cameraIntrinsics: CameraIntrinsics? = null
     private var cameraconfig : CameraConfig? = null
 
@@ -94,8 +94,8 @@ open class Measurement : AppCompatActivity(), Scene.OnUpdateListener,
         }
 
         setContentView(R.layout.activity_measurement)
-        whichcode = intent.getStringExtra("whichCode").toString()
-        nametext = intent.getStringExtra("name").toString()
+        whichcode = intent.getStringExtra("whichCode") ?: ""
+        name = intent.getStringExtra("name") ?: ""
         val distanceModeArray = resources.getStringArray(R.array.distance_mode)
         distanceModeArray.map { it ->
             distanceModeArrayList.add(it)
@@ -109,20 +109,22 @@ open class Measurement : AppCompatActivity(), Scene.OnUpdateListener,
             View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or View.SYSTEM_UI_FLAG_LAYOUT_STABLE
         window.statusBarColor = Color.TRANSPARENT
         val intent = Intent(this, TemporaryFolder::class.java).apply {
-            putExtra("user",nametext)
+            putExtra("user",name)
             putExtra("whichCode",whichcode)
         }
         val intent2 = Intent(this,SuccessFolder::class.java)
         val intent3 = Intent(this,FailFolder::class.java).apply {
-            putExtra("user",nametext)
+            putExtra("user",name)
             putExtra("whichCode",whichcode)
         }
         val intent4 = Intent(this,SuccessFolder::class.java)
         val intent5 = Intent(this,HomeActivity::class.java).apply {
-            putExtra("user",nametext)
+            putExtra("user",name)
             putExtra("whichCode",whichcode)
         }
-        Log.d("wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww", nametext)
+        Log.d("촬영화면 넘어온 위판장" , whichcode)
+        Log.d("촬영화면 넘어온 이름" , name)
+        Log.d("wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww", name)
         Log.d("wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww", whichcode)
         //val displayMetrics = DisplayMetrics()
         val displayMetrics = resources.displayMetrics
@@ -232,6 +234,10 @@ open class Measurement : AppCompatActivity(), Scene.OnUpdateListener,
         //val button = findViewById<Button>(R.id.button2)
 
         downlodfolder.setOnClickListener {
+            val intent = Intent(this, TemporaryFolder::class.java).apply {
+                putExtra("name", name)
+                putExtra("whichCode", whichcode)
+            }
             startActivity(intent)
         }
         success_folder.setOnClickListener{
@@ -258,11 +264,6 @@ open class Measurement : AppCompatActivity(), Scene.OnUpdateListener,
             val screenheight_pos = screenHeight / 2
             var hitTestresult = arFrame!!.hitTest(screenwidth_pos.toFloat(), screenheight_pos.toFloat())
             var hitTestresult2 = arFrame!!.hitTest( (screenwidth_pos+200).toFloat(), screenheight_pos.toFloat())
-            Log.d("1번 좌좌좌표", screenwidth_pos.toString())
-            Log.d("2번 좌좌좌표", screenheight_pos.toString())
-            Log.d("3번 좌좌좌표" , (screenwidth_pos+200).toFloat().toString())
-
-
             var anchor1 = hitTestresult[0].createAnchor()
             var anchorNode1 = AnchorNode(anchor1)
             var anchor2 = hitTestresult2[0].createAnchor()
@@ -370,8 +371,8 @@ open class Measurement : AppCompatActivity(), Scene.OnUpdateListener,
             val x = motionEvent?.x.toString().toFloat()
             val y = motionEvent?.y.toString().toFloat()
 
-            saveButton(nametext,whichcode, distanceMeter, resultt,x, y)
-            Log.d("save22", nametext.toString())
+            saveButton(name,whichcode, distanceMeter, resultt,x, y)
+            Log.d("save22", name.toString())
         }
 
 
@@ -506,7 +507,7 @@ open class Measurement : AppCompatActivity(), Scene.OnUpdateListener,
         val rootPath = Environment.getExternalStorageDirectory().toString() + "/DCIM/Temporary"
 
         val fileName =
-            "${code}_${now}_${(distance * 100).roundToInt()}_${(result.toString()).substring(2)}_${x.toInt()}_${y.toInt()}.png"
+            "${whichcode}_${now}_${(distance * 100).roundToInt()}_${(result.toString()).substring(2)}_${x.toInt()}_${y.toInt()}.png"
         val savePath = File(rootPath, "/")
         savePath.mkdirs()
         savePath.absoluteFile

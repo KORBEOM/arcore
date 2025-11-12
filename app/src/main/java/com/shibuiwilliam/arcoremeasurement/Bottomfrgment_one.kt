@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
 class Bottomfrgment_one : Fragment(R.layout.fragment_bottomfrgment_one) {
-
+    private var name: String = ""
     private val fishInfo = listOf(
         FishData("꽃게", R.drawable.crab, "금어기: 일반, 특정해역 6.21~8.20 \n연편어장, 백령도, 대청도, 소청도 주변해역 7.1~8.31", "금지체장: 갑장 6.4cm 이하"),
         FishData("참조기", R.drawable.croaker,  "금어기: 7.1~7.31, 근해유자망 4.22~8.10", "금지체장: 전장 15cm 이하"),
@@ -49,4 +49,7 @@ class Bottomfrgment_one : Fragment(R.layout.fragment_bottomfrgment_one) {
         val habitat: String,
         val size: String
     )
+    fun setName(name: String) {
+        this.name = name
+    }
 }

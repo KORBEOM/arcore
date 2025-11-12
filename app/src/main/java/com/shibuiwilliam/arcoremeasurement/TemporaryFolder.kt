@@ -26,14 +26,16 @@ open class TemporaryFolder : AppCompatActivity() {
     private lateinit var totalImagesTextView: TextView
     private lateinit var gridAdapter: GridAdapter
     private val datas = mutableListOf<SnapshotData>()
-
+    private lateinit var whichcode: String
+    private lateinit var name: String
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         val displayMetrics = resources.displayMetrics
         windowManager.defaultDisplay.getMetrics(displayMetrics)
         val screenWidth = displayMetrics.densityDpi
-        val user = intent.getStringExtra("user") ?: "유저 없음"
+        name = intent.getStringExtra("name") ?: "유저 없음"
+        whichcode = intent.getStringExtra("whichCode") ?: "0000"
         setContentView(R.layout.temporary_folder)
         val gridView: GridView = findViewById(R.id.itemrecycle)
         totalImagesTextView = findViewById(R.id.imageCount)
@@ -64,44 +66,29 @@ open class TemporaryFolder : AppCompatActivity() {
 
         updateTotalImages(datas.size)
 
-        gridAdapter = GridAdapter(this, datas, user) { totalImages ->
+        gridAdapter = GridAdapter(this, datas, name) { totalImages ->
             updateTotalImages(totalImages)
         }
 
-        Log.d("user", user)
+        Log.d("이미지 리스트에 넘어온 이름", name)
+        Log.d("이미지 리스트에 넘어온 위판장", whichcode)
+        Log.d("user", name)
         allbtn.setOnClickListener {
-            gridAdapter.getProFileImage(rootPath, datas, testPath, successPath, user)
-            gridAdapter.notifyDataSetChanged()
-            updateTotalImages(datas.size)
-
             if (isInternetConnected(applicationContext)) {
-                try {
-                    val total_size = datas.size
-                    showProgress(true)
-                    thread(start = true) {
-                        Log.d("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", datas.size.toString())
-                        while (datas.size != 0) {
-                            runOnUiThread { updateTotalImages(datas.size) }
-                        }
-                        Log.d("gimoring ", "aaaaaaaaaaaaaaaaaaaaaaaaddddddddddd")
-                        runOnUiThread {
-                            showProgress(false)
-                            send_file.text = ""
-                        }
-                    }
-                } catch (e: java.lang.Exception) {
+                if (datas.isEmpty()) {
+                    Toast.makeText(applicationContext, "전송할 이미지가 없습니다", Toast.LENGTH_SHORT).show()
+                    return@setOnClickListener
                 }
+
+                val datasCopy = ArrayList(datas)
+                gridAdapter.uploadAllImages(datasCopy)
+
             } else {
-                val builder = AlertDialog.Builder(this)
-                builder
+                AlertDialog.Builder(this)
                     .setTitle("네트워크 연결 문제")
                     .setMessage("인터넷 연결을 확인해주세요.")
-                    .setPositiveButton("확인",
-                        DialogInterface.OnClickListener { dialog, id ->
-                            // Start 버튼 선택시 수행
-                        })
-                builder.create()
-                builder.show()
+                    .setPositiveButton("확인", null)
+                    .show()
             }
         }
 
@@ -112,7 +99,7 @@ open class TemporaryFolder : AppCompatActivity() {
         gridAdapter.notifyDataSetChanged()
     }
 
-    private fun updateTotalImages(total: Int) {
+    fun updateTotalImages(total: Int) {
         totalImagesTextView.text = "Total Images: $total"
     }
 
@@ -147,6 +134,7 @@ open class TemporaryFolder : AppCompatActivity() {
         if (isShow) progressBar.visibility = View.VISIBLE
         else progressBar.visibility = View.GONE
     }
+
     fun createSnapshotData(file: File): SnapshotData {
         val originalName = file.name
         val parts = originalName.split("_")
@@ -160,17 +148,17 @@ open class TemporaryFolder : AppCompatActivity() {
             val hour = timePart.take(2)
             val minute = timePart.substring(2, 4)
 
-            "$year/$month/$day $hour:$minute"  // YYYY/MM/DD HH:MM 형식
+            "$year/$month/$day\n$hour:$minute"  // YYYY/MM/DD HH:MM 형식, 줄바꿈 추가
         } else {
             originalName.substringBeforeLast(".")  // 파일 확장자만 제거
         }
+        Log.d("이미지 이름 ", originalName)
 
         return SnapshotData(
-            name = originalName,
+            name = originalName,  // 원본 파일 이름 유지
             image = file.absolutePath,
-            displayName = displayName,
+            displayName = displayName,  // 표시용 이름
             server_text = ""
         )
     }
 }
-

@@ -365,11 +365,11 @@ class ArcoreMeasurement : AppCompatActivity(), AdapterView.OnItemSelectedListene
                         handleSuccessfulLogin(username)
                     } else {
                         Log.d(TAG, "Login failed: ${loginResponse?.message}")
-                        showSnackbar("로그인 실패")
+                        showSnackbar("로그인 실패: ${loginResponse?.message}")
                     }
                 } else {
                     Log.e(TAG, "Server error: ${response.code()}")
-                    showSnackbar("서버 오류가 발생했습니다람쥐")
+                    showSnackbar("서버 오류가 발생했습니다")
                 }
             }
 
