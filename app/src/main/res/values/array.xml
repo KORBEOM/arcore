@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string-array name="위판장">
-        <item>위판장</item>
+        <item>지역</item>
         <item>경기도</item>
         <item>인천</item>
         <item>충청남도</item>
@@ -158,6 +158,6 @@
         <item>모슬포수협 모슬포위판장</item>
     </string-array>
     <string-array name="고정">
-        <item>지역을 고르세요</item>
+        <item>위판장을 고르세요</item>
     </string-array>
 </resources>

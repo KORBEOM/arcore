@@ -6,6 +6,6 @@
     android:layout_width="match_parent"
     android:layout_height="?android:attr/listPreferredItemHeight"
     android:ellipsize="marquee"
-    android:fontFamily="@font/gwangyang2"
+    android:fontFamily="@font/haesu"
     android:background="@color/colorPrimary"
     android:textColor="@color/textcolor"/>

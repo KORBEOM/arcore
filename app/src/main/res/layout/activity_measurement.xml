@@ -4,150 +4,231 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorPrimary"
+    android:background="@color/white2"
     android:id="@+id/total_view"
     tools:context=".Measurement">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
-
-<androidx.constraintlayout.widget.ConstraintLayout
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="horizontal"
-   >
-
-    <fragment
-        android:id="@+id/sceneform_fragment"
-        android:name="com.google.ar.sceneform.ux.ArFragment"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        tools:layout_editor_absoluteY="193dp">
-
-    </fragment>
-
-    <TextView
-        android:id="@+id/distancetext"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text=""
-        android:textColor="@color/colorPrimary"
-        android:textSize="50dp"
+        android:orientation="vertical"
+        android:weightSum="10"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="@+id/sceneform_fragment"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.975"
-        tools:ignore="MissingConstraints" />
-
-    <ImageButton
-        android:id="@+id/downlodfolder"
-        android:layout_width="70dp"
-        android:layout_height="70dp"
-        android:background="@drawable/download"
-        android:contentDescription="TODO"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.951"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.057"
-        tools:ignore="MissingConstraints" />
-
-<!--    <androidx.constraintlayout.widget.ConstraintLayout-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="85dp"-->
-<!--        android:layout_marginRight="130dp"-->
-<!--        android:layout_marginLeft="130dp"-->
-<!--        android:background="@drawable/custom_toast_background"-->
-<!--        app:layout_constraintBottom_toBottomOf="@+id/sceneform_fragment"-->
-<!--        app:layout_constraintEnd_toEndOf="parent"-->
-<!--        app:layout_constraintHorizontal_bias="0.495"-->
-<!--        app:layout_constraintStart_toStartOf="parent"-->
-<!--        app:layout_constraintTop_toTopOf="parent"-->
-<!--        app:layout_constraintVertical_bias="0.077">-->
-
-<!--        <ImageView-->
-<!--            android:id="@+id/toast_image"-->
-<!--            android:layout_width="81dp"-->
-<!--            android:layout_height="56dp"-->
-<!--            app:layout_constraintBottom_toBottomOf="parent"-->
-<!--            app:layout_constraintEnd_toEndOf="parent"-->
-<!--            app:layout_constraintHorizontal_bias="0.134"-->
-<!--            app:layout_constraintStart_toStartOf="parent"-->
-<!--            app:layout_constraintTop_toTopOf="parent"-->
-<!--            app:layout_constraintVertical_bias="0.497" />-->
-
-<!--        <TextView-->
-<!--            android:id="@+id/toast_text"-->
-<!--            android:layout_width="0dp"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_marginStart="40dp"-->
-<!--            android:text="저장되었습니다."-->
-<!--            android:textColor="@color/colorPrimary"-->
-<!--            android:textSize="14sp"-->
-<!--            app:layout_constraintBottom_toBottomOf="parent"-->
-<!--            app:layout_constraintEnd_toEndOf="parent"-->
-<!--            app:layout_constraintHorizontal_bias="0.0"-->
-<!--            app:layout_constraintStart_toEndOf="@+id/toast_image"-->
-<!--            app:layout_constraintTop_toTopOf="parent" />-->
-
-<!--    </androidx.constraintlayout.widget.ConstraintLayout>-->
+        app:layout_constraintTop_toTopOf="parent">
 
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1.5"
+            android:background="@color/white2"
+            android:orientation="horizontal">
+
+            <ImageButton
+                android:id="@+id/back_btn"
+                android:layout_width="40dp"
+                android:layout_height="30dp"
+                android:background="@drawable/back"
+                android:contentDescription="TODO"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.525"
+                tools:ignore="MissingConstraints" />
+
+
+            <TextView
+                android:id="@+id/textView2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/haesu3"
+                android:gravity="center_vertical"
+                android:text="Fish Photography"
+                android:textColor="@color/colorAccent"
+                android:textSize="15dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.138"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+            </TextView>
+
+            <ImageButton
+                android:id="@+id/downlodfolder"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_marginEnd="16dp"
+                android:adjustViewBounds="true"
+                android:contentDescription="TODO"
+                android:cropToPadding="true"
+                android:scaleType="fitXY"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.41"
+                app:srcCompat="@drawable/picturesfolder"
+                tools:ignore="MissingConstraints" />
+
+            <ImageButton
+                android:id="@+id/success_folder"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_marginStart="80dp"
+                android:adjustViewBounds="true"
+                android:cropToPadding="true"
+                android:scaleType="fitXY"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/downlodfolder"
+                app:layout_constraintHorizontal_bias="1.0"
+                app:layout_constraintStart_toEndOf="@+id/textView2"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.41"
+                app:srcCompat="@drawable/successfolder" />
+
+            <ImageButton
+                android:id="@+id/fail_folder"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:adjustViewBounds="true"
+                android:scaleType="fitXY"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/success_folder"
+                app:layout_constraintHorizontal_bias="1.0"
+                app:layout_constraintStart_toEndOf="@+id/textView2"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.41"
+                app:srcCompat="@drawable/failfolder" />
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="8.5"
+            android:orientation="horizontal">
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+            <fragment
+                android:id="@+id/sceneform_fragment"
+                android:name="com.shibuiwilliam.arcoremeasurement.CustomArFragment"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+            </fragment>
+
+            <TextView
+                android:id="@+id/distancetext"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:layout_marginBottom="20dp"
+                android:layout_gravity="bottom|center"
+                android:textSize="50dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
 
 
 
-<!--        <LinearLayout-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="0dp"-->
-<!--            android:orientation="horizontal"-->
-<!--            android:layout_weight="0.2">-->
-<!--<LinearLayout-->
-<!--    android:layout_width="0dp"-->
-<!--    android:layout_height="match_parent"-->
-<!--    android:orientation="horizontal"-->
-<!--    android:gravity="center"-->
-<!--    android:layout_weight="0.2"/>-->
-<!--        <LinearLayout-->
-<!--            android:gravity="center"-->
-<!--            android:layout_width="0dp"-->
-<!--            android:layout_height="match_parent"-->
-<!--            android:orientation="vertical"-->
-<!--            android:layout_weight="0.2">-->
+            </FrameLayout>
 
-<!--            <TextView-->
-<!--                android:id="@+id/distancetext"-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:gravity="center"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:textSize="50dp"-->
-<!--                android:text="거리" />-->
-<!--        </LinearLayout>-->
-<!--            <LinearLayout-->
-<!--                android:layout_width="0dp"-->
-<!--                android:layout_height="match_parent"-->
-<!--                android:orientation="vertical"-->
-<!--                android:gravity="center"-->
-<!--                android:layout_weight="0.2">-->
+        </LinearLayout>
 
-<!--                <ImageButton-->
-<!--                    android:layout_width="50dp"-->
-<!--                    android:layout_height="50dp"-->
-<!--                    android:background="@drawable/gallery"-->
-<!--                    android:layout_gravity="center_horizontal"-->
-<!--                    android:id="@+id/downlodfolder"-->
-<!--                    android:contentDescription="TODO">-->
 
-<!--                </ImageButton>-->
-<!--            </LinearLayout>-->
-<!--    </LinearLayout>-->
+        <!--    <androidx.constraintlayout.widget.ConstraintLayout-->
+        <!--        android:layout_width="match_parent"-->
+        <!--        android:layout_height="85dp"-->
+        <!--        android:layout_marginRight="130dp"-->
+        <!--        android:layout_marginLeft="130dp"-->
+        <!--        android:background="@drawable/custom_toast_background"-->
+        <!--        app:layout_constraintBottom_toBottomOf="@+id/sceneform_fragment"-->
+        <!--        app:layout_constraintEnd_toEndOf="parent"-->
+        <!--        app:layout_constraintHorizontal_bias="0.495"-->
+        <!--        app:layout_constraintStart_toStartOf="parent"-->
+        <!--        app:layout_constraintTop_toTopOf="parent"-->
+        <!--        app:layout_constraintVertical_bias="0.077">-->
+
+        <!--        <ImageView-->
+        <!--            android:id="@+id/toast_image"-->
+        <!--            android:layout_width="81dp"-->
+        <!--            android:layout_height="56dp"-->
+        <!--            app:layout_constraintBottom_toBottomOf="parent"-->
+        <!--            app:layout_constraintEnd_toEndOf="parent"-->
+        <!--            app:layout_constraintHorizontal_bias="0.134"-->
+        <!--            app:layout_constraintStart_toStartOf="parent"-->
+        <!--            app:layout_constraintTop_toTopOf="parent"-->
+        <!--            app:layout_constraintVertical_bias="0.497" />-->
+
+        <!--        <TextView-->
+        <!--            android:id="@+id/toast_text"-->
+        <!--            android:layout_width="0dp"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            android:layout_marginStart="40dp"-->
+        <!--            android:text="저장되었습니다."-->
+        <!--            android:textColor="@color/colorPrimary"-->
+        <!--            android:textSize="14sp"-->
+        <!--            app:layout_constraintBottom_toBottomOf="parent"-->
+        <!--            app:layout_constraintEnd_toEndOf="parent"-->
+        <!--            app:layout_constraintHorizontal_bias="0.0"-->
+        <!--            app:layout_constraintStart_toEndOf="@+id/toast_image"-->
+        <!--            app:layout_constraintTop_toTopOf="parent" />-->
+
+        <!--    </androidx.constraintlayout.widget.ConstraintLayout>-->
+
+
+        <!--        <LinearLayout-->
+        <!--            android:layout_width="match_parent"-->
+        <!--            android:layout_height="0dp"-->
+        <!--            android:orientation="horizontal"-->
+        <!--            android:layout_weight="0.2">-->
+        <!--<LinearLayout-->
+        <!--    android:layout_width="0dp"-->
+        <!--    android:layout_height="match_parent"-->
+        <!--    android:orientation="horizontal"-->
+        <!--    android:gravity="center"-->
+        <!--    android:layout_weight="0.2"/>-->
+        <!--        <LinearLayout-->
+        <!--            android:gravity="center"-->
+        <!--            android:layout_width="0dp"-->
+        <!--            android:layout_height="match_parent"-->
+        <!--            android:orientation="vertical"-->
+        <!--            android:layout_weight="0.2">-->
+
+        <!--            <TextView-->
+        <!--                android:id="@+id/distancetext"-->
+        <!--                android:layout_width="match_parent"-->
+        <!--                android:gravity="center"-->
+        <!--                android:layout_height="wrap_content"-->
+        <!--                android:textSize="50dp"-->
+        <!--                android:text="거리" />-->
+        <!--        </LinearLayout>-->
+        <!--            <LinearLayout-->
+        <!--                android:layout_width="0dp"-->
+        <!--                android:layout_height="match_parent"-->
+        <!--                android:orientation="vertical"-->
+        <!--                android:gravity="center"-->
+        <!--                android:layout_weight="0.2">-->
+
+        <!--                <ImageButton-->
+        <!--                    android:layout_width="50dp"-->
+        <!--                    android:layout_height="50dp"-->
+        <!--                    android:background="@drawable/gallery"-->
+        <!--                    android:layout_gravity="center_horizontal"-->
+        <!--                    android:id="@+id/downlodfolder"-->
+        <!--                    android:contentDescription="TODO">-->
+
+        <!--                </ImageButton>-->
+        <!--            </LinearLayout>-->
+        <!--    </LinearLayout>-->
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
